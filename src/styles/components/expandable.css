@@ -1,0 +1,52 @@
+/* --- expandable.css ---
+ * Self-sufficient expand/collapse utility for content panels.
+ * Uses grid-template-rows animation (0fr ↔ 1fr) — the only
+ * cross-browser approach to animate 0 ↔ auto height smoothly.
+ *
+ * Both grid-template-rows AND content-visibility are transitioned:
+ *   - grid-template-rows → smooth height expansion (layout-triggering, animated)
+ *   - content-visibility → discrete flip at ~50% of duration (allow-discrete)
+ *     This prevents the content from vanishing instantly on collapse —
+ *     it defers the hidden→visible toggle to mid-transition so the grid
+ *     animation has time to visually carry the open/close.
+ *
+ * Without content-visibility in the transition, collapse would snap
+ * content invisible at frame 0 while the grid row is still animating.
+ *
+ * Usage:
+ *   <div class="expandable" aria-expanded="false">    ← collapsed
+ *   <div class="expandable" aria-expanded="true">     ← expanded
+ */
+
+@utility expandable {
+  @layer components.l1.l2.l3 {
+    @apply grid grid-rows-[0fr] [content-visibility:hidden];
+
+    transition:
+      grid-template-rows 200ms ease-out,
+      content-visibility 200ms ease-out allow-discrete;
+
+    & > * {
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+
+    @supports not (content-visibility: hidden) {
+      visibility: hidden;
+    }
+  }
+
+  @layer components.l1.l2 {
+    &[aria-expanded="true"] {
+      @apply grid-rows-[1fr] [content-visibility:visible];
+
+      @supports not (content-visibility: visible) {
+        visibility: visible;
+      }
+    }
+  }
+}

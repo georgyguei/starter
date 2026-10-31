@@ -1,0 +1,224 @@
+/* --- collapse.css --- */
+@utility collapse {
+  &:not(td, tr, colgroup) {
+    visibility: revert-layer;
+  }
+
+  @layer components.l1.l2.l3 {
+    --collapse-duration: var(--tw-duration, 200ms);
+    @apply relative isolate grid w-full grid-cols-1 grid-rows-[max-content_0fr] overflow-hidden;
+    transition: var(--collapse-duration) cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: grid-template-rows;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+
+    &:focus-visible,
+    &:has(> label input:is([type="checkbox"], [type="radio"]):focus-visible),
+    &:has(> summary:focus-visible) {
+      @apply outline-2 outline-offset-2 outline-current;
+    }
+
+    &:is([open], [tabindex]:focus, [tabindex]:focus-within),
+    &:has(> label input:is([type="checkbox"], [type="radio"]):checked),
+    &:has(.collapse-trigger:is([type="checkbox"], [type="radio"]):checked) {
+      grid-template-rows: max-content 1fr;
+
+      & > .collapse-content {
+        @apply min-h-fit pb-4 [content-visibility:visible];
+
+        @supports not (content-visibility: visible) {
+          visibility: visible;
+        }
+      }
+    }
+
+    &[tabindex]:focus:not(.collapse[open]),
+    &[tabindex]:focus-within:not(.collapse[open]) {
+      & > .collapse-title {
+        cursor: unset;
+      }
+    }
+  }
+
+  @layer components.l1.l2.l3 {
+    &:is(details) {
+      &::details-content {
+        @apply h-0 [interpolate-size:allow-keywords];
+        transition: var(--collapse-duration) ease-out allow-discrete;
+        transition-property: content-visibility, visibility, padding, background-color, height;
+
+        @media (prefers-reduced-motion: reduce) {
+          transition: none !important;
+        }
+      }
+
+      &:where([open])::details-content {
+        height: auto;
+      }
+
+      & > summary {
+        @apply relative block cursor-pointer [outline:none];
+
+        &::-webkit-details-marker {
+          display: none;
+        }
+      }
+
+      & > .collapse-content {
+        content-visibility: visible;
+      }
+    }
+  }
+}
+
+@utility collapse-content {
+  @layer components.l1.l2.l3 {
+    @apply col-start-1 row-start-2 min-h-0 cursor-[unset] px-4 [content-visibility:hidden];
+    transition: var(--collapse-duration) ease-out allow-discrete;
+    transition-property: content-visibility, visibility, padding, background-color;
+
+    @supports not (content-visibility: hidden) {
+      visibility: hidden;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+  }
+}
+
+@utility collapse-arrow {
+  @layer components.l1.l2 {
+    & > .collapse-title:after {
+      @apply pointer-events-none absolute inset-e-[1.4rem] top-[50%] block h-2 w-2 origin-[75%_75%] -translate-y-full rotate-45 [box-shadow:2px_2px] content-[""];
+      transition: all var(--collapse-duration) cubic-bezier(0.4, 0, 0.2, 1);
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none !important;
+      }
+    }
+
+    &[open] {
+      & > .collapse-title:after {
+        @apply translate-y-[-50%] rotate-225;
+      }
+    }
+
+    &.collapse-open {
+      & > .collapse-title:after {
+        @apply translate-y-[-50%] rotate-225;
+      }
+    }
+
+    &[tabindex]:is(:focus, :focus-within) {
+      & > .collapse-title:after {
+        @apply translate-y-[-50%] rotate-225;
+      }
+    }
+
+    &:has(> label input:is([type="checkbox"], [type="radio"]):checked),
+    &:has(.collapse-trigger:is([type="checkbox"], [type="radio"]):checked) {
+      & > .collapse-title:after {
+        @apply translate-y-[-50%] rotate-225;
+      }
+    }
+  }
+}
+
+@utility collapse-plus {
+  @layer components.l1.l2 {
+    & > .collapse-title:after {
+      @apply pointer-events-none absolute inset-e-[1.4rem] top-[0.9rem] block h-2 w-2 content-["+"];
+      transition: all var(--collapse-duration) cubic-bezier(0.4, 0, 0.2, 1);
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none !important;
+      }
+    }
+
+    &[open] {
+      & > .collapse-title:after {
+        @apply content-["−"];
+      }
+    }
+
+    &.collapse-open {
+      & > .collapse-title:after {
+        @apply content-["−"];
+      }
+    }
+
+    &[tabindex]:is(:focus, :focus-within) {
+      & > .collapse-title:after {
+        @apply content-["−"];
+      }
+    }
+
+    &:has(> label input:is([type="checkbox"], [type="radio"]):checked),
+    &:has(.collapse-trigger:is([type="checkbox"], [type="radio"]):checked) {
+      & > .collapse-title:after {
+        @apply content-["−"];
+      }
+    }
+  }
+}
+
+@utility collapse-title {
+  @layer components.l1.l2.l3 {
+    @apply relative col-start-1 row-start-1 min-h-lh w-full p-4 pe-3;
+
+    &:is(label):has(input:is([type="checkbox"], [type="radio"])) {
+      @apply block [outline:none];
+
+      input:is([type="checkbox"], [type="radio"]) {
+        @apply absolute inset-0 appearance-none border-0 p-0 opacity-0;
+
+        &[type="checkbox"] {
+          @apply cursor-pointer;
+        }
+
+        &[type="radio"]:not(:checked) {
+          @apply cursor-pointer;
+        }
+      }
+    }
+
+    transition: background-color var(--collapse-duration) ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+  }
+}
+
+@utility collapse-open {
+  @layer components.l1.l2 {
+    grid-template-rows: max-content 1fr;
+
+    & > .collapse-content {
+      @apply min-h-fit pb-4 [content-visibility:visible];
+
+      @supports not (content-visibility: visible) {
+        visibility: visible;
+      }
+    }
+  }
+}
+
+@utility collapse-trigger {
+  @layer components.l1.l2 {
+    &:is([type="checkbox"], [type="radio"]) {
+      @apply absolute inset-0 appearance-none border-0 p-0 opacity-0;
+
+      &[type="checkbox"] {
+        @apply cursor-pointer;
+      }
+
+      &[type="radio"]:not(:checked) {
+        @apply cursor-pointer;
+      }
+    }
+  }
+}

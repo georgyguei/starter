@@ -1,0 +1,253 @@
+/* --- dialog.css --- */
+@utility dialog-* {
+  --dialog-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number)%
+  );
+}
+
+@utility dialog-* {
+  --dialog-color: --value(--color-*, [*]);
+}
+
+@utility dialog-offset-* {
+  @layer components.l1.l2 {
+    --dialog-offset: calc(
+      var(--spacing) *
+        --value(
+          "0",
+          "0.5",
+          "1",
+          "1.5",
+          "2",
+          "2.5",
+          "3",
+          "4",
+          "5",
+          "6",
+          "8",
+          "10",
+          "12",
+          "16",
+          "20",
+          "24",
+          "32",
+          "40",
+          "48",
+          "56",
+          "64",
+          "72",
+          "80",
+          "96",
+          number
+        )
+    );
+    --dialog-offset: --value([*]);
+  }
+}
+
+@utility -dialog-offset-* {
+  @layer components.l1.l2 {
+    --dialog-offset: calc(
+      var(--spacing) *
+        --value(
+          "0",
+          "0.5",
+          "1",
+          "1.5",
+          "2",
+          "2.5",
+          "3",
+          "4",
+          "5",
+          "6",
+          "8",
+          "10",
+          "12",
+          "16",
+          "20",
+          "24",
+          "32",
+          "40",
+          "48",
+          "56",
+          "64",
+          "72",
+          "80",
+          "96",
+          number
+        ) *
+        -1
+    );
+    --dialog-offset: --value([*]);
+  }
+}
+
+@utility dialog {
+  @layer components.l1.l2.l3 {
+    --dialog-bg: var(--dialog-color, oklch(0% _0_0/0));
+    --dialog-fg: var(--color-contrast, currentColor);
+    --dialog-duration: var(--tw-duration, 700ms);
+
+    @apply fixed m-0 h-(--dialog-h) max-h-none w-(--dialog-w) max-w-none origin-(--dialog-origin) scrollbar-gutter-auto overflow-visible overscroll-contain [background-color:var(--dialog-bg)] p-0 text-(--dialog-fg) color-contrast-(--dialog-color);
+
+    top: var(--dialog-top, auto);
+    right: var(--dialog-right, auto);
+    bottom: var(--dialog-bottom, auto);
+    left: var(--dialog-left, auto);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+
+    &::backdrop {
+      background-color: oklch(0% 0 0 / 0.2);
+    }
+  }
+}
+
+@utility dialog-modal {
+  @layer components.l1.l2 {
+    &:is([open], :popover-open, :open) {
+      pointer-events: auto;
+
+      :root:has(&) {
+        & > * {
+          pointer-events: none;
+        }
+      }
+    }
+  }
+}
+
+@utility dialog-animated {
+  @layer components.l1.l2 {
+    &:is([open], :popover-open, :open) {
+      transition:
+        scale 1550ms var(--ease-spring-heavy),
+        translate 1550ms var(--ease-spring-heavy),
+        opacity 1550ms ease;
+
+      &::backdrop {
+        @apply starting:opacity-0;
+        transition: opacity 300ms var(--ease-out);
+      }
+    }
+
+    @supports (transition-behavior: allow-discrete) and (selector(:popover-open)) and (overlay: auto) {
+      &:not(:is([open], :popover-open, :open)) {
+        transition: 650ms var(--ease-overshoot-in) allow-discrete;
+        transition-property: scale, opacity, translate, display, overlay;
+        &::backdrop {
+          @apply opacity-0;
+          transition: opacity 650ms var(--ease-in);
+        }
+      }
+    }
+  }
+}
+
+@utility dialog-top {
+  @layer components.l1.l2 {
+    --dialog-origin: top center;
+    --dialog-top: var(--dialog-offset, 4rem);
+    --dialog-left: 0rem;
+    --dialog-right: 0rem;
+    --dialog-w: fit-content;
+    @apply mx-auto;
+
+    &:is(.dialog-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply starting:-translate-y-2 starting:opacity-0;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply -translate-y-2 opacity-0;
+      }
+    }
+  }
+}
+
+@utility dialog-center {
+  @layer components.l1.l2 {
+    --dialog-origin: top center;
+    --dialog-w: fit-content;
+    --dialog-h: fit-content;
+    --dialog-top: 0rem;
+    --dialog-right: 0rem;
+    --dialog-bottom: 0rem;
+    --dialog-left: 0rem;
+    @apply mx-auto my-auto;
+
+    &:is(.dialog-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply starting:-translate-y-2 starting:opacity-0;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply -translate-y-2 opacity-0;
+      }
+    }
+  }
+}
+
+@utility dialog-bottom {
+  @layer components.l1.l2 {
+    --dialog-origin: bottom center;
+    --dialog-w: fit-content;
+    --dialog-bottom: var(--dialog-offset, 4rem);
+    --dialog-left: 0rem;
+    --dialog-right: 0rem;
+    @apply mx-auto;
+
+    &:is(.dialog-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply starting:translate-y-2 starting:opacity-0;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply translate-y-2 opacity-0;
+      }
+    }
+  }
+}
+
+@utility dialog-cover {
+  @layer components.l1 {
+    --dialog-origin: center;
+    --dialog-top: var(--dialog-offset, 2.5rem);
+    --dialog-right: var(--dialog-offset, 2.5rem);
+    --dialog-bottom: var(--dialog-offset, 2.5rem);
+    --dialog-left: var(--dialog-offset, 2.5rem);
+
+    &:is(.dialog-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply starting:scale-95 starting:opacity-0;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply scale-95 opacity-0;
+      }
+    }
+  }
+}
+
+@utility dialog-full {
+  @layer components.l1 {
+    --dialog-origin: center;
+    --dialog-top: var(--dialog-offset, 0rem);
+    --dialog-right: var(--dialog-offset, 0rem);
+    --dialog-bottom: var(--dialog-offset, 0rem);
+    --dialog-left: var(--dialog-offset, 0rem);
+
+    &:is(.dialog-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply starting:scale-95 starting:opacity-0;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply scale-95 opacity-0;
+      }
+    }
+  }
+}

@@ -1,0 +1,62 @@
+@utility validator {
+  @layer components.l1.l2.l3 {
+    &:user-valid,
+    &:has(:user-valid) {
+      &,
+      &:focus,
+      &:checked,
+      &[aria-checked="true"],
+      &:focus-within {
+        --input-color: var(--color-success);
+      }
+    }
+
+    &:user-invalid,
+    &:has(:user-invalid),
+    &[aria-invalid="true"],
+    &:has([aria-invalid="true"]) {
+      &,
+      &:focus,
+      &:checked,
+      &[aria-checked="true"],
+      &:focus-within {
+        --input-color: var(--color-error);
+      }
+
+      & + .validator-hint {
+        @apply text-error;
+        content-visibility: visible;
+        grid-template-rows: 1fr;
+
+        @supports not (content-visibility: visible) {
+          visibility: visible;
+        }
+      }
+    }
+  }
+}
+
+@utility validator-hint {
+  @layer components.l1.l2.l3 {
+    @apply text-xs;
+    display: grid;
+    grid-template-rows: 0fr;
+    content-visibility: hidden;
+    transition:
+      grid-template-rows 400ms cubic-bezier(0.4, 0, 0.2, 1),
+      content-visibility 400ms cubic-bezier(0.4, 0, 0.2, 1) allow-discrete;
+
+    & > * {
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+
+    @supports not (content-visibility: hidden) {
+      visibility: hidden;
+    }
+  }
+}

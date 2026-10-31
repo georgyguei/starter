@@ -1,0 +1,371 @@
+/* --- progress.css ---
+   Progress indicators: native <progress> bar + pure-CSS radial rings.
+   Fill/track follow --progress-color (progress-color-*, default base-content);
+   the color property (text-*) styles only the label.
+   Value is driven by --value (0–100): defaults to attr(value number, 0). */
+
+@property --radialprogress {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 0%;
+}
+
+/* ============ Linear ============ */
+
+@utility progress {
+  @layer components.l1.l2.l3 {
+   
+    &:before {
+      @apply absolute content-[""] inset-y-0 inset-s-0;
+      width: calc(clamp(0, var(--value), 100) * 1%);
+      background-color: var(--progress-color);
+      transition: width var(--progress-duration) linear;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+
+    &[aria-label]::after {
+      @apply mix-blend-difference pointer-events-none content-[attr(aria-label)] absolute inset-0 flex items-center justify-center overflow-hidden whitespace-nowrap;
+      font-size: clamp(0.5rem, calc(var(--size) * 0.25), 1.25rem);
+    }
+
+    @supports (-webkit-appearance: none) {
+      &::-webkit-progress-bar {
+        @apply rounded-md bg-transparent;
+      }
+
+      &::-webkit-progress-value {
+        background: transparent;
+      }
+    }
+
+    @supports (-moz-appearance: none) {
+      &::-moz-progress-bar {
+        background: transparent;
+      }
+    }
+
+    &:indeterminate {
+      @apply bg-size-[200%] [background-position-x:15%];
+      background-image: repeating-linear-gradient(90deg, var(--progress-color) -1%, var(--progress-color) 10%, #0000 10%, #0000 90%);
+
+      @media (prefers-reduced-motion: no-preference) {
+        @apply animate-progress;
+      }
+    }
+
+    @apply relative block w-full appearance-none overflow-hidden rounded-md text-base-content h-(--size);
+    --value: attr(value number, 10);
+    --progress-color: var(--color-base-content);
+    --progress-track-color: color-mix(in oklab, var(--progress-color) 8%, transparent);
+    --progress-duration: 0.3s;
+    --size: 8px;
+    background-color: var(--progress-track-color);
+
+  }
+}
+
+/* ============ Radial ============ */
+
+@utility progress-radial {
+  @layer components.l1.l2.l3 {
+    @apply relative box-content inline-grid appearance-none place-content-center rounded-full align-middle;
+    --value: attr(value number, 0);
+    --size: 5rem;
+    --thickness: calc(var(--size) / 10);
+    --radialprogress: calc(clamp(0, var(--value), 100) * 1%);
+    --progress-color: var(--color-base-content);
+    --progress-track-color: color-mix(in oklab, var(--progress-color) 8%, transparent);
+    --progress-duration: 0.3s;
+    width: var(--size);
+    height: var(--size);
+    background-color: transparent;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: --radialprogress var(--progress-duration) linear;
+    }
+
+    /* Native value box neutralized — we draw the arc ourselves */
+    @supports (-webkit-appearance: none) {
+      &::-webkit-progress-bar,
+      &::-webkit-progress-value {
+        background: transparent;
+      }
+    }
+
+    @supports (-moz-appearance: none) {
+      &::-moz-progress-bar {
+        background: transparent;
+      }
+    }
+
+    /* Ring track + value arc */
+    &:before {
+      @apply absolute inset-0 rounded-full;
+      content: "";
+      background:
+        radial-gradient(farthest-side, var(--progress-color) 98%, #0000) top / var(--thickness) var(--thickness) no-repeat,
+        conic-gradient(var(--progress-color) var(--radialprogress), var(--progress-track-color) var(--radialprogress));
+      -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - var(--thickness)), #000 calc(100% + 0.5px - var(--thickness)));
+      mask: radial-gradient(farthest-side, #0000 calc(100% - var(--thickness)), #000 calc(100% + 0.5px - var(--thickness)));
+    }
+
+    /* Value dot (unlabeled rings only — aria-label shows text instead) */
+    &:not([aria-label])::after {
+      @apply absolute rounded-full;
+      content: "";
+      inset: calc(50% - var(--thickness) / 2);
+      background-color: var(--progress-color);
+      transform: rotate(calc(clamp(0, var(--value), 100) * 3.6deg - 90deg)) translate(calc(var(--size) / 2 - 50%));
+
+      @media (prefers-reduced-motion: no-preference) {
+        transition: transform var(--progress-duration) linear;
+      }
+    }
+
+    /* Label overlay (from aria-label) — replaces the dot, clamped to the ring hole */
+    &[aria-label]::after {
+      @apply pointer-events-none absolute flex items-center justify-center overflow-hidden px-1 whitespace-nowrap;
+      content: attr(aria-label);
+      inset: var(--thickness);
+      font-size: clamp(0.5rem, calc(var(--size) * 0.25), 1.25rem);
+    }
+
+    /* Busy → spinner (mask inherited from @apply loading's --mask-image) */
+    &:indeterminate {
+      --mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' stroke='black' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform-origin='center'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='none' stroke-width='2.2' stroke-linecap='round'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='2s' repeatCount='indefinite'/%3E%3Canimate attributeName='stroke-dasharray' values='0,150;42,150;42,150' keyTimes='0;0.475;1' dur='1.5s' repeatCount='indefinite'/%3E%3Canimate attributeName='stroke-dashoffset' values='0;-16;-59' keyTimes='0;0.475;1' dur='1.5s' repeatCount='indefinite'/%3E%3C/circle%3E%3C/g%3E%3C/svg%3E");
+      --loading-size: var(--size);
+      @apply pointer-events-auto aspect-square shrink-0;
+
+      &:before {
+        @apply absolute rounded-full;
+        content: "";
+        inset: 0;
+        background: var(--progress-color);
+        mask-image: var(--mask-image);
+        mask-size: 100%;
+        mask-repeat: no-repeat;
+        mask-position: center;
+      }
+
+      &:after {
+        @apply hidden;
+      }
+    }
+  }
+}
+
+@utility progress-radial-filled {
+  @layer components.l1.l2.l3 {
+    @apply relative isolate box-content inline-grid appearance-none place-content-center rounded-full align-middle;
+    --value: attr(value number, 0);
+    --size: 5rem;
+    --thickness: calc(var(--size) / 10);
+    --radialprogress: calc(clamp(0, var(--value), 100) * 1%);
+    --progress-color: var(--color-base-content);
+    --progress-track-color: color-mix(in oklab, var(--progress-color) 8%, transparent);
+    --progress-duration: 0.3s;
+    width: var(--size);
+    height: var(--size);
+    background-color: transparent;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: --radialprogress var(--progress-duration) linear;
+    }
+
+    /* Native value box neutralized — we draw the pie ourselves */
+    @supports (-webkit-appearance: none) {
+      &::-webkit-progress-bar,
+      &::-webkit-progress-value {
+        background: transparent;
+      }
+    }
+
+    @supports (-moz-appearance: none) {
+      &::-moz-progress-bar {
+        background: transparent;
+      }
+    }
+
+    /* Filled pie (z-index: -1 keeps labels painted on top) */
+    &:before {
+      @apply absolute inset-0 rounded-full;
+      content: "";
+      z-index: -1;
+      background: conic-gradient(var(--progress-color) var(--radialprogress), var(--progress-track-color) var(--radialprogress));
+    }
+
+    /* Label overlay (from aria-label) — always above the pie, inherits color */
+    &[aria-label]::after {
+      @apply pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden px-2 whitespace-nowrap;
+      content: attr(aria-label);
+      font-size: clamp(0.5rem, calc(var(--size) * 0.25), 1.25rem);
+    }
+
+    &:indeterminate {
+      --loading-size: var(--size);
+      @apply loading pointer-events-auto;
+
+      &:before {
+        @apply absolute rounded-full;
+        content: "";
+        inset: 0;
+        z-index: -1;
+        background: var(--progress-color);
+        mask-image: var(--mask-image);
+        mask-size: 100%;
+        mask-repeat: no-repeat;
+        mask-position: center;
+      }
+
+      &:after {
+        @apply hidden;
+      }
+    }
+  }
+}
+
+/* ============ Modifiers ============ */
+
+@utility progress-xs {
+  @layer components.l1.l2.l3 {
+    --size: 1.5rem;
+  }
+}
+
+@utility progress-sm {
+  @layer components.l1.l2.l3 {
+    --size: 2rem;
+  }
+}
+
+@utility progress-md {
+  @layer components.l1.l2.l3 {
+    --size: 2.5rem;
+  }
+}
+
+@utility progress-lg {
+  @layer components.l1.l2.l3 {
+    --size: 3rem;
+  }
+}
+
+@utility progress-xl {
+  @layer components.l1.l2.l3 {
+    --size: 4rem;
+  }
+}
+
+@utility progress-size-* {
+  @layer components.l1.l2.l3 {
+    --size: calc(
+      var(--spacing) *
+        --value(
+          "0",
+          "0.5",
+          "1",
+          "1.5",
+          "2",
+          "2.5",
+          "3",
+          "4",
+          "5",
+          "6",
+          "8",
+          "10",
+          "12",
+          "16",
+          "20",
+          "24",
+          "32",
+          "40",
+          "48",
+          "56",
+          "64",
+          "72",
+          "80",
+          "96",
+          number
+        )
+    );
+    --size: --value([*]);
+  }
+}
+
+@utility progress-thickness-* {
+  @layer components.l1.l2.l3 {
+    --thickness: calc(
+      var(--spacing) *
+        --value(
+          "0",
+          "0.5",
+          "1",
+          "1.5",
+          "2",
+          "2.5",
+          "3",
+          "4",
+          "5",
+          "6",
+          "8",
+          "10",
+          "12",
+          "16",
+          "20",
+          "24",
+          "32",
+          "40",
+          "48",
+          "56",
+          "64",
+          "72",
+          "80",
+          "96",
+          number
+        )
+    );
+    --thickness: --value([*]);
+  }
+}
+
+@utility progress-* {
+  --progress-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number) %
+  );
+}
+
+@utility progress-* {
+  --progress-color: --value(--color-*, [*]);
+}
+
+@utility progress-track-* {
+  --progress-track-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number) %
+  );
+}
+
+@utility progress-track-* {
+  --progress-track-color: --value(--color-*, [*]);
+}
+
+@utility progress-duration-* {
+  @layer components.l1.l2.l3 {
+    --progress-duration: calc(--value("75", "100", "150", "200", "300", "500", "700", "1000", integer) * 1ms);
+    --progress-duration: --value([*]);
+  }
+}
+
+@theme inline {
+  --animate-progress: progress 5s ease-in-out infinite;
+
+  @keyframes progress {
+    50% {
+      background-position-x: -115%;
+    }
+  }
+}

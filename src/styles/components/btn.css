@@ -1,0 +1,257 @@
+@utility btn-* {
+  --btn-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number)%
+  );
+}
+
+@utility btn-* {
+  --btn-color: --value(--color-*, [*]);
+}
+
+@utility btn {
+  @layer components.l1.l2.l3 {
+    --btn-rounded: var(--radius-field, 0.25rem);
+    --btn-fs: 0.875rem;
+    --btn-p: 1rem;
+    --btn-size: calc(var(--spacing, 0.25rem) * 10);
+    --btn-bg: var(--btn-color, var(--color-base-200));
+    --btn-fg: var(--color-contrast, var(--color-base-content));
+    --btn-border-color: color-mix(in oklab, var(--btn-bg), #000 calc(var(--depth, 0) * 5%));
+    --btn-noise: var(--noise, 0);
+    --btn-fx-noise: var(--fx-noise, none);
+    --btn-shadow:
+      0 3px 2px -2px color-mix(in oklab, var(--btn-bg) calc(var(--depth, 0) * 30%), #0000),
+      0 4px 3px -2px color-mix(in oklab, var(--btn-bg) calc(var(--depth, 0) * 30%), #0000);
+
+    @apply relative inline-flex h-(--btn-size) shrink-0 cursor-pointer touch-manipulation flex-nowrap items-center justify-center gap-1.5 rounded-(--btn-rounded) border border-(--btn-border-color) [background-color:var(--btn-bg)] [background-image:none,var(--btn-fx-noise)] bg-size-[auto,calc(var(--btn-noise)*100%)] px-(--btn-p) text-center align-middle [font-size:var(--btn-fs)] font-bold text-(--btn-fg) select-none color-contrast-(--btn-color);
+
+    text-shadow: 0 0.5px oklch(100% 0 0 / calc(var(--depth, 0) * 0.15));
+    box-shadow:
+      0 0.5px 0 0.5px oklch(100% 0 0 / calc(var(--depth, 0) * 6%)) inset,
+      var(--btn-shadow);
+
+    transition: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: color, background-color, border-color, box-shadow;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+
+    &:not(.btn-active, :disabled, [disabled], [aria-disabled="true"], label:has(input:disabled)) {
+      &:hover {
+        --btn-bg: color-mix(in oklab, var(--btn-color, var(--color-base-200)), #000 7%);
+      }
+
+      &:active {
+        --btn-bg: color-mix(in oklab, var(--btn-color, var(--color-base-200)), #000 5%);
+        --btn-border-color: color-mix(in oklab, var(--btn-color, var(--color-base-200)), #000 7%);
+        --btn-shadow: 0 0 0 0 oklch(0% 0 0 / 0), 0 0 0 0 oklch(0% 0 0 / 0);
+        @apply translate-y-px;
+      }
+    }
+
+    &:focus-visible,
+    &:has(:focus-visible) {
+      @apply isolate outline-2 outline-offset-2 outline-(--btn-color,currentcolor);
+    }
+
+    &:is(input[type="checkbox"], input[type="radio"]) {
+      @apply appearance-none;
+
+      &[aria-label]:after {
+        @apply content-[attr(aria-label)];
+      }
+    }
+
+    &:is(label) {
+      input {
+        @apply absolute inset-0 cursor-[inherit] appearance-none border-0 p-0 opacity-0;
+      }
+    }
+
+    &:where(input:checked, label:has(input:checked)) {
+      --btn-color: var(--color-primary);
+      --btn-fg: var(--color-primary-content);
+      @apply isolate;
+    }
+  }
+
+  @layer components.l1 {
+    &:is(:disabled, [disabled], [aria-disabled="true"], label:has(input:disabled)) {
+      --btn-border-color: #0000;
+      --btn-noise: 0;
+      --btn-fx-noise: none;
+      --btn-shadow: "";
+      @apply cursor-not-allowed opacity-60;
+    }
+  }
+}
+
+@utility btn-active {
+  @layer components.l1 {
+    --btn-bg: color-mix(in oklab, var(--btn-color, var(--color-base-200)), #000 7%);
+    --btn-shadow: 0 0 0 0 oklch(0% 0 0 / 0), 0 0 0 0 oklch(0% 0 0 / 0);
+    @apply isolate;
+  }
+}
+
+@utility btn-plain {
+  @layer components.l1.l2 {
+    --btn-shadow: "";
+    --btn-bg: #0000;
+    --btn-border-color: #0000;
+    --btn-noise: 0;
+    --btn-fx-noise: none;
+    --btn-fg: var(--btn-color);
+  }
+
+  @layer components.l1 {
+    &:is(:disabled, [disabled], [aria-disabled="true"], label:has(input:disabled)) {
+      --btn-fg: color-mix(in oklch, var(--color-base-content) 20%, #0000);
+    }
+  }
+}
+
+@utility btn-link {
+  @layer components.l1.l2 {
+    --btn-border-color: #0000;
+    --btn-bg: #0000;
+    --btn-noise: 0;
+    --btn-fx-noise: none;
+    --btn-fg: var(--btn-color);
+    --btn-shadow: "";
+    --btn-p: 0;
+    --btn-size: auto;
+
+    &:not(:is(:disabled, [disabled], [aria-disabled="true"], label:has(input:disabled))) {
+      @apply decoration-current/20 underline-offset-3;
+
+      &:hover {
+        --btn-fg: color-mix(in oklab, currentColor, #000 7%);
+        @apply underline;
+      }
+    }
+  }
+
+  @layer components.l1 {
+    &:is(:disabled, [disabled], [aria-disabled="true"], label:has(input:disabled)) {
+      --btn-fg: color-mix(in oklch, var(--color-base-content) 20%, #0000);
+    }
+  }
+}
+
+@utility btn-ghost {
+  @layer components.l1.l2 {
+    &:not(.btn-active, :hover, :active:focus, :focus-visible, input:checked, :disabled, [disabled], [aria-disabled="true"], label:has(input:disabled)) {
+      --btn-shadow: "";
+      --btn-bg: #0000;
+      --btn-border-color: #0000;
+      --btn-noise: 0;
+      --btn-fx-noise: none;
+      --btn-fg: var(--btn-color, var(--color-base-content));
+    }
+  }
+
+  @layer components.l1 {
+    &:is(:disabled, [disabled], [aria-disabled="true"], label:has(input:disabled)) {
+      --btn-bg: #0000;
+      --btn-fg: color-mix(in oklch, var(--color-base-content) 20%, #0000);
+    }
+  }
+}
+
+@utility btn-outline {
+  @layer components.l1.l2 {
+    &:not(.btn-active, :hover, :active:focus, :focus-visible, input:checked, :disabled, [disabled], [aria-disabled="true"], label:has(input:disabled)) {
+      --btn-shadow: "";
+      --btn-bg: #0000;
+      --btn-fg: var(--btn-color, var(--color-base-content));
+      --btn-border-color: currentColor;
+      --btn-noise: 0;
+      --btn-fx-noise: none;
+    }
+  }
+
+  @layer components.l1 {
+    &:is(:disabled, [disabled], [aria-disabled="true"], label:has(input:disabled)) {
+      --btn-fg: color-mix(in oklch, var(--color-base-content) 20%, #0000);
+      --btn-bg: color-mix(in oklch, var(--color-base-content) 10%, #0000);
+    }
+  }
+}
+
+@utility btn-soft {
+  @layer components.l1.l2 {
+    &:not(.btn-active, :hover, :active:focus, :focus-visible, input:checked, :disabled, [disabled], [aria-disabled="true"], label:has(input:disabled)) {
+      --btn-shadow: "";
+      --btn-fg: var(--btn-color, var(--color-base-content));
+      --btn-bg: color-mix(in oklab, currentColor 8%, var(--color-base-100));
+      --btn-border-color: color-mix(in oklab, currentColor 10%, var(--color-base-100));
+      --btn-noise: 0;
+      --btn-fx-noise: none;
+    }
+  }
+
+  @layer components.l1 {
+    &:is(:disabled, [disabled], [aria-disabled="true"], label:has(input:disabled)) {
+      --btn-fg: color-mix(in oklch, var(--color-base-content) 20%, #0000);
+      --btn-bg: color-mix(in oklch, var(--color-base-content) 10%, #0000);
+    }
+  }
+}
+
+@utility btn-square {
+  @layer components.l1.l2 {
+    --btn-p: 0rem;
+    @apply size-(--btn-size);
+  }
+}
+
+@utility btn-circle {
+  @layer components.l1.l2 {
+    --btn-p: 0rem;
+    --btn-rounded: calc(infinity * 1px);
+    @apply size-(--btn-size);
+  }
+}
+
+@utility btn-xs {
+  @layer components.l1.l2.l3 {
+    --btn-fs: 0.6875rem;
+    --btn-p: 0.5rem;
+    --btn-size: calc(var(--spacing, 0.25rem) * 6);
+  }
+}
+
+@utility btn-sm {
+  @layer components.l1.l2.l3 {
+    --btn-fs: 0.75rem;
+    --btn-p: 0.75rem;
+    --btn-size: calc(var(--spacing, 0.25rem) * 8);
+  }
+}
+
+@utility btn-md {
+  @layer components.l1.l2.l3 {
+    --btn-fs: 0.875rem;
+    --btn-p: 1rem;
+    --btn-size: calc(var(--spacing, 0.25rem) * 10);
+  }
+}
+
+@utility btn-lg {
+  @layer components.l1.l2.l3 {
+    --btn-fs: 1.125rem;
+    --btn-p: 1.25rem;
+    --btn-size: calc(var(--spacing, 0.25rem) * 12);
+  }
+}
+
+@utility btn-xl {
+  @layer components.l1.l2.l3 {
+    --btn-fs: 1.375rem;
+    --btn-p: 1.5rem;
+    --btn-size: calc(var(--spacing, 0.25rem) * 14);
+  }
+}

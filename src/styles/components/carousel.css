@@ -1,0 +1,217 @@
+/* --- carousel.css --- */
+@property --carousel-anchor {
+  syntax: "<custom-ident>";
+  inherits: true;
+  initial-value: --carousel-anchor;
+}
+
+@utility carousel {
+  @layer components.l1.l2.l3 {
+    --carousel-scroll-snap-type: x mandatory;
+
+    @apply inline-flex overflow-x-scroll;
+    anchor-name: var(--carousel-anchor);
+    anchor-scope: var(--carousel-anchor);
+    scroll-snap-type: var(--carousel-scroll-snap-type);
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+
+    @media (prefers-reduced-motion: reduce) {
+      scroll-behavior: auto;
+    }
+
+    &::-webkit-scrollbar {
+      @apply hidden;
+    }
+  }
+}
+
+@utility carousel-vertical {
+  @layer components.l1.l2 {
+    --carousel-scroll-snap-type: y mandatory;
+    @apply flex-col overflow-y-scroll;
+  }
+}
+
+@utility carousel-horizontal {
+  @layer components.l1.l2 {
+    --carousel-scroll-snap-type: x mandatory;
+    @apply flex-row overflow-x-scroll;
+  }
+}
+
+@utility carousel-item {
+  @layer components.l1.l2.l3 {
+    --carousel-scroll-snap-align: start;
+    @apply box-content flex flex-none;
+    scroll-snap-align: var(--carousel-scroll-snap-align);
+  }
+}
+
+@utility carousel-start {
+  @layer components.l1.l2 {
+    .carousel-item {
+      --carousel-scroll-snap-align: start;
+    }
+  }
+}
+
+@utility carousel-center {
+  @layer components.l1.l2 {
+    .carousel-item {
+      --carousel-scroll-snap-align: center;
+    }
+  }
+}
+
+@utility carousel-end {
+  @layer components.l1.l2 {
+    .carousel-item {
+      --carousel-scroll-snap-align: end;
+    }
+  }
+}
+
+/* ── CSS carousel features (::scroll-button / ::scroll-marker) ──
+   Chrome 135+. Browser-generated buttons and markers — no JavaScript.
+   https://developer.mozilla.org/docs/Web/CSS/Guides/Overflow/Creating_carousels */
+
+/* Full-width page item — use with carousel-center (MDN single-page pattern). */
+@utility carousel-page {
+  @layer components.l1.l2 {
+    flex: 0 0 100%;
+  }
+}
+
+/* Browser-generated previous/next buttons, anchor-positioned on the carousel.
+   Buttons are :disabled automatically at the start/end of the scroll range. */
+@utility carousel-button {
+  @layer components.l1.l2.l3 {
+    @supports selector(::scroll-button(*)) {
+      &::scroll-button(*) {
+        @apply absolute [position-area:center_span-all];
+        position-anchor: var(--carousel-anchor);
+        &:active {
+          @apply translate-y-px;
+        }
+        &:disabled {
+          @apply [translate:unset] cursor-not-allowed opacity-20;
+        }
+      }
+      &::scroll-button(left) {
+        @apply left-[anchor(left)] content-["◄"];
+      }
+      &::scroll-button(right) {
+        @apply right-[anchor(right)] content-["►"];
+      }
+    }
+  }
+}
+
+/* Scroll markers generated from the carousel's children. Each child's marker
+   label comes from its data-accName attribute. :target-current highlights the
+   active marker; the marker group is a tablist (Tab → arrow keys navigate). */
+@utility carousel-markers {
+  @layer components.l1.l2.l3 {
+    @supports selector(::scroll-marker-group) and selector(::scroll-marker) and (scroll-marker-group: after) {
+      scroll-marker-group: after;
+
+      &::scroll-marker-group {
+        @apply absolute top-[anchor(bottom)] flex gap-1 [justify-self:anchor-center];
+        position-anchor: var(--carousel-anchor);
+      }
+
+      & > *::scroll-marker {
+        @apply block h-2.5 w-2.5 rounded-full opacity-50 content-[attr(data-accName)];
+        background-color: currentColor;
+      }
+
+      & > *::scroll-marker:target-current {
+        @apply opacity-100;
+      }
+    }
+  }
+}
+
+/* Responsive multi-item carousel — MODIFIER of the base `carousel` utility:
+   switches from flex to CSS multi-column pages whose snap targets are the
+   generated ::column fragments. Usage:
+     <ul class="carousel carousel-columns carousel-column-markers">
+   The ::column rules live in /static/styles/carousel-columns.css (Lightning
+   CSS doesn't parse the ::column pseudo-element yet — see layout.tsx link). */
+@utility carousel-columns {
+  @layer components.l1.l2.l3 {
+    @apply block columns-1 text-center;
+  }
+}
+
+@utility carousel-column-item {
+  @layer components.l1.l2 {
+    @apply mx-2 inline-block h-full w-48 text-left;
+  }
+}
+
+/* One marker per generated column. NOTE: content: "" gives the markers an
+   empty accessible name (WCAG 4.1.2 violation — no element to draw a label
+   from in this pattern; MDN documents this limitation).
+   The ::column rules live in /static/styles/carousel-columns.css. */
+@utility carousel-column-markers {
+  @layer components.l1.l2.l3 {
+    @supports selector(::scroll-marker-group) and selector(::scroll-marker) and (scroll-marker-group: after) {
+      scroll-marker-group: after;
+
+      &::scroll-marker-group {
+        position-anchor: var(--carousel-anchor);
+        @apply absolute flex justify-center gap-3 [justify-self:anchor-center];
+        top: calc(anchor(bottom) - 32px);
+      }
+    }
+  }
+}
+
+@custom-variant carousel-button {
+  @supports selector(::scroll-button(*)) {
+    &::scroll-button(*){
+      @slot;
+    }
+  }
+}
+
+@custom-variant carousel-button-left {
+  @supports selector(::scroll-button(left)) {
+    &::scroll-button(left){
+      @slot;
+    }
+  }
+}
+
+@custom-variant carousel-button-right {
+  @supports selector(::scroll-button(right)) {
+    &::scroll-button(right){
+      @slot;
+    }
+  }
+}
+
+@custom-variant carousel-scroll-markers {
+  @supports selector(::scroll-marker-group) {
+    &::scroll-marker-group {
+      @slot;
+    }
+  }
+}
+
+@custom-variant carousel-scroll-markers {
+  @supports selector(::scroll-marker-group) {
+    &::scroll-marker-group {
+      @slot;
+    }
+  }
+}
+@custom-variant carousel-scroll-markers {
+  @supports selector(::scroll-marker) {
+    & > *::scroll-marker:target-current {
+      @slot;
+    }
+  }
+}

@@ -1,0 +1,30 @@
+/* ::column scroll snapping and per-column scroll markers for the carousel
+   component. Served as a static file because Lightning CSS doesn't recognize
+   the ::column pseudo-element yet (Baseline 2026) — same workaround as
+   tooltip-anchored.css. Chrome 135+. */
+
+.carousel-columns::column {
+  scroll-snap-align: center;
+}
+
+.carousel-column-markers::column::scroll-marker {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.carousel-column-markers::column::scroll-marker:target-before {
+  border-color: color-mix(in oklch, currentColor 40%, transparent);
+}
+
+.carousel-column-markers::column::scroll-marker:target-current {
+  background-color: currentColor;
+  transition: background-color 0.7s;
+}
+
+.carousel-column-markers::column::scroll-marker:target-after {
+  border-color: currentColor;
+}

@@ -1,0 +1,35 @@
+@utility float-top-start {
+  @apply absolute inset-0 -top-full -left-full self-center justify-self-center;
+}
+
+@utility float-top-center {
+  @apply absolute inset-0 -top-full self-center justify-self-center;
+}
+
+@utility float-top-end {
+  @apply absolute inset-0 -top-full -right-full self-center justify-self-center;
+}
+
+@utility float-middle-start {
+  @apply absolute inset-0 -left-full self-center justify-self-center;
+}
+
+@utility float-middle-center {
+  @apply absolute inset-0 self-center justify-self-center;
+}
+
+@utility float-middle-end {
+  @apply absolute inset-0 -right-full self-center justify-self-center;
+}
+
+@utility float-bottom-start {
+  @apply absolute inset-0 -bottom-full -left-full self-center justify-self-center;
+}
+
+@utility float-bottom-center {
+  @apply absolute inset-0 -bottom-full self-center justify-self-center;
+}
+
+@utility float-bottom-end {
+  @apply absolute inset-0 -right-full -bottom-full self-center justify-self-center;
+}

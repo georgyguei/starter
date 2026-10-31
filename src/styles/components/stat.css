@@ -1,0 +1,24 @@
+/* --- stat.css --- */
+@utility stat {
+  @layer components.l1.l2.l3 {
+    @apply relative flex w-fit flex-col gap-1 rounded-md px-6 py-4;
+  }
+}
+
+@utility stat-title {
+  @layer components.l1.l2.l3 {
+    @apply inline-flex items-center gap-1.5 text-xs text-base-content/60;
+  }
+}
+
+@utility stat-value {
+  @layer components.l1.l2.l3 {
+    @apply align-baseline text-2xl font-extrabold tracking-tight proportional-nums;
+  }
+}
+
+@utility stat-desc {
+  @layer components.l1.l2.l3 {
+    @apply text-xs text-base-content/60;
+  }
+}

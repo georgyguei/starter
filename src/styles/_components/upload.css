@@ -1,0 +1,230 @@
+/* --- upload.css --- */
+
+@utility upload-* {
+  --upload-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number)%
+  );
+}
+
+@utility upload-* {
+  --upload-color: --value(--color-*, [*]);
+}
+
+@utility upload {
+  @layer components.l1.l2.l3 {
+    --upload-color: var(--upload-color, var(--color-base-content));
+    --upload-bg: color-mix(in oklab, var(--upload-color) 5%, oklch(0% 0 0 / 0));
+    --upload-border-color: color-mix(in oklab, var(--upload-color) 25%, oklch(0% 0 0 / 0));
+    --upload-radius: var(--radius-box, 0.5rem);
+
+    @apply relative flex touch-manipulation flex-col gap-3 rounded-(--upload-radius);
+
+    color: var(--upload-color);
+  }
+}
+
+/* --- Upload dropzone variant --- */
+@utility upload-dropzone {
+  @layer components.l1.l2.l3 {
+    --upload-border-style: dashed;
+    --upload-border-width: 2px;
+    --upload-padding: 2rem;
+
+    @apply items-center justify-center p-(--upload-padding) text-center;
+
+    background-color: var(--upload-bg);
+    border: var(--upload-border-width) var(--upload-border-style) var(--upload-border-color);
+
+    transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: background-color, border-color, color, box-shadow;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+
+    /* --- Drag-active state --- */
+    &:is([data-dragover], .upload-dragover, [data-state="dragover"]) {
+      --upload-bg: color-mix(in oklab, var(--upload-color) 12%, oklch(0% 0 0 / 0));
+      --upload-border-color: var(--upload-color);
+      --upload-border-style: solid;
+    }
+
+    /* --- Disabled state --- */
+    &:is(:disabled, [disabled], [aria-disabled="true"]) {
+      @apply cursor-not-allowed opacity-50;
+      --upload-border-style: dashed;
+    }
+
+    /* --- Focus visible --- */
+    &:focus-visible,
+    &:has(:focus-visible) {
+      @apply isolate outline-2 outline-offset-2 outline-(--upload-color,currentcolor);
+    }
+
+    /* --- Hidden native file input --- */
+    &:has(input[type="file"]) {
+      input[type="file"] {
+        @apply absolute inset-0 h-full w-full cursor-pointer opacity-0;
+      }
+    }
+  }
+}
+
+/* --- Upload icon --- */
+@utility upload-icon {
+  @layer components.l1.l2.l3 {
+    @apply flex size-12 items-center justify-center rounded-full;
+    background-color: color-mix(in oklab, var(--upload-color) 10%, oklch(0% 0 0 / 0));
+    color: var(--upload-color);
+
+    svg {
+      @apply size-6;
+    }
+  }
+}
+
+/* --- Upload label / text --- */
+@utility upload-label {
+  @layer components.l1.l2.l3 {
+    @apply text-sm;
+    color: var(--upload-color);
+  }
+}
+
+@utility upload-hint {
+  @layer components.l1.l2.l3 {
+    @apply text-xs;
+    color: color-mix(in oklab, var(--upload-color) 60%, oklch(0% 0 0 / 0));
+  }
+}
+
+/* --- Upload file list --- */
+@utility upload-file-list {
+  @layer components.l1.l2.l3 {
+    @apply flex max-h-48 w-full flex-col gap-1 overflow-y-auto;
+  }
+}
+
+@utility upload-file-item {
+  @layer components.l1.l2.l3 {
+    @apply flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm;
+    background-color: color-mix(in oklab, var(--upload-color) 8%, oklch(0% 0 0 / 0));
+    border: 1px solid color-mix(in oklab, var(--upload-color) 15%, oklch(0% 0 0 / 0));
+
+    /* --- Error state --- */
+    &:is([data-state="error"], .upload-file-error) {
+      --upload-color: var(--color-error);
+      background-color: color-mix(in oklab, var(--color-error) 8%, oklch(0% 0 0 / 0));
+      border-color: color-mix(in oklab, var(--color-error) 25%, oklch(0% 0 0 / 0));
+    }
+
+    /* --- Success state --- */
+    &:is([data-state="success"], .upload-file-success) {
+      --upload-color: var(--color-success);
+      background-color: color-mix(in oklab, var(--color-success) 8%, oklch(0% 0 0 / 0));
+      border-color: color-mix(in oklab, var(--color-success) 25%, oklch(0% 0 0 / 0));
+    }
+  }
+}
+
+/* --- Upload file name --- */
+@utility upload-file-name {
+  @layer components.l1.l2.l3 {
+    @apply flex-1 truncate text-sm;
+    color: var(--upload-color);
+  }
+}
+
+@utility upload-file-size {
+  @layer components.l1.l2.l3 {
+    @apply shrink-0 text-xs tabular-nums;
+    color: color-mix(in oklab, var(--upload-color) 60%, oklch(0% 0 0 / 0));
+  }
+}
+
+/* --- Upload remove button --- */
+@utility upload-file-remove {
+  @layer components.l1.l2.l3 {
+    @apply inline-flex size-5 shrink-0 cursor-pointer items-center justify-center rounded-full border-none bg-transparent p-0;
+    color: color-mix(in oklab, var(--upload-color) 50%, oklch(0% 0 0 / 0));
+
+    transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: color, background-color;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+
+    &:hover {
+      color: var(--upload-color);
+      background-color: color-mix(in oklab, var(--upload-color) 12%, oklch(0% 0 0 / 0));
+    }
+
+    svg {
+      @apply size-3.5;
+    }
+  }
+}
+
+/* --- Upload progress bar --- */
+@utility upload-progress {
+  @layer components.l1.l2.l3 {
+    @apply h-1 w-full overflow-hidden rounded-full;
+    background-color: color-mix(in oklab, var(--upload-color) 15%, oklch(0% 0 0 / 0));
+  }
+}
+
+@utility upload-progress-bar {
+  @layer components.l1.l2.l3 {
+    @apply h-full rounded-full;
+    background-color: var(--upload-color);
+    width: var(--upload-progress, 0%);
+
+    transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+
+    &[data-state="error"] {
+      background-color: var(--color-error);
+    }
+
+    &[data-state="complete"] {
+      background-color: var(--color-success);
+    }
+  }
+}
+
+/* --- Upload preview / thumbnail --- */
+@utility upload-preview {
+  @layer components.l1.l2.l3 {
+    @apply relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-md;
+    background-color: color-mix(in oklab, var(--upload-color) 10%, oklch(0% 0 0 / 0));
+    border: 1px solid color-mix(in oklab, var(--upload-color) 15%, oklch(0% 0 0 / 0));
+
+    img {
+      @apply h-full w-full object-cover;
+    }
+  }
+}
+
+/* --- Upload accept / reject states for validation --- */
+@utility upload-accept {
+  @layer components.l1.l2.l3 {
+    --upload-bg: color-mix(in oklab, var(--color-success) 10%, oklch(0% 0 0 / 0));
+    --upload-border-color: var(--color-success);
+    --upload-border-style: solid;
+    --upload-color: var(--color-success);
+  }
+}
+
+@utility upload-reject {
+  @layer components.l1.l2.l3 {
+    --upload-bg: color-mix(in oklab, var(--color-error) 10%, oklch(0% 0 0 / 0));
+    --upload-border-color: var(--color-error);
+    --upload-border-style: solid;
+    --upload-color: var(--color-error);
+  }
+}

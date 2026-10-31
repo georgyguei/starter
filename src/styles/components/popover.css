@@ -1,0 +1,385 @@
+@utility popover-* {
+  --popover-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number)%
+  );
+}
+
+@utility popover-* {
+  --popover-color: --value(--color-*, [*]);
+}
+
+@utility popover-offset-* {
+  @layer components.l1.l2 {
+    --popper-offset: calc(
+      var(--spacing) *
+        --value(
+          "0",
+          "0.5",
+          "1",
+          "1.5",
+          "2",
+          "2.5",
+          "3",
+          "4",
+          "5",
+          "6",
+          "8",
+          "10",
+          "12",
+          "16",
+          "20",
+          "24",
+          "32",
+          "40",
+          "48",
+          "56",
+          "64",
+          "72",
+          "80",
+          "96",
+          number
+        )
+    );
+    --popper-offset: --value([*]);
+  }
+}
+
+@utility -popover-offset-* {
+  @layer components.l1.l2 {
+    --popper-offset: calc(
+      var(--spacing) *
+        --value(
+          "0",
+          "0.5",
+          "1",
+          "1.5",
+          "2",
+          "2.5",
+          "3",
+          "4",
+          "5",
+          "6",
+          "8",
+          "10",
+          "12",
+          "16",
+          "20",
+          "24",
+          "32",
+          "40",
+          "48",
+          "56",
+          "64",
+          "72",
+          "80",
+          "96",
+          number
+        ) *
+        -1
+    );
+    --popper-offset: --value([*]);
+  }
+}
+
+@utility popover {
+  @layer components.l1.l2.l3 {
+    --popover-bg: var(--popover-color, oklch(0% _0_0/0));
+    --popover-fg: var(--color-contrast, currentColor);
+    --popover-anchor-width: anchor-size(width);
+    --popover-anchor-height: anchor-size(height);
+    --popper-offset: 0.25rem;
+
+    @apply @container-[anchored] fixed inset-auto m-0 max-h-none max-w-none origin-(--popover-origin) scrollbar-gutter-auto overflow-visible overscroll-contain [background-color:var(--popover-bg)] p-0 text-(--popover-fg) color-contrast-(--popover-color);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+  }
+}
+
+@utility popover-modal {
+  @layer components.l1.l2 {
+    &:is([open], :popover-open, :open) {
+      pointer-events: auto;
+
+      :root:has(&) {
+        & > * {
+          pointer-events: none;
+        }
+      }
+    }
+  }
+}
+
+@utility popover-arrow {
+  @layer components.l1.l2.l3 {
+    --popper-tail-height: 0.25rem;
+
+    &::after {
+      --popover-tail-width: 0.625rem;
+      --popover-mask: url("data:image/svg+xml,%3Csvg width='10' height='3.5' viewBox='0 0 8 4' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.500009 1C3.5 1 3.00001 4 5.00001 4C7 4 6.5 1 9.5 1C10 1 10 0.499897 10 0H0C-1.99338e-08 0.5 0 1 0.500009 1Z' fill='black'/%3E%3C/svg%3E%0A");
+
+      @apply pointer-events-none fixed z-1 h-(--popper-tail-height) w-(--popover-tail-width) origin-center rotate-(--popper-tail-deg) [background-color:var(--popover-color)] mask-(--popover-mask) mask-position-[-1px_0] mask-no-repeat content-[""] [position-anchor:inherit];
+
+      top: var(--popper-arrow-top, auto);
+      bottom: var(--popper-arrow-bottom, auto);
+      left: var(--popper-arrow-left, auto);
+      right: var(--popper-arrow-right, auto);
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none !important;
+      }
+    }
+  }
+
+  @layer components.l1.l2 {
+    &:is([open], :popover-open, :open) {
+      &::after {
+        @apply opacity-100 [transition-delay:var(--popover-duration,0ms)] starting:opacity-0;
+      }
+    }
+  }
+}
+
+@utility popover-animated {
+  @layer components.l1.l2 {
+    &:is([open], :popover-open, :open) {
+      transition:
+        scale 1550ms var(--ease-spring-heavy),
+        opacity 1550ms ease;
+
+      @apply starting:scale-75 starting:opacity-0;
+
+      &::after {
+        @apply [transition:opacity_0ms_var(--popover-duration,1550ms)] starting:opacity-0;
+      }
+    }
+
+    &:not([open], :popover-open, :open) {
+      @apply scale-75 opacity-0;
+      transition: 650ms var(--ease-overshoot-in) allow-discrete;
+      transition-property: scale, opacity, display, overlay;
+
+      &::after {
+        @apply opacity-0 [transition:opacity_0ms_var(--popover-duration,650ms)];
+      }
+    }
+  }
+}
+
+/* Top variants */
+
+@utility popover-top {
+  @layer components.l1.l2 {
+    --popover-origin: bottom;
+    position-area: top span-all;
+    margin-bottom: calc(var(--popper-offset) + var(--popper-tail-height, 1.5px) - 1.5px);
+    position-try-fallbacks: --popper-flip-to-bottom;
+
+    &::after {
+      justify-self: anchor-center;
+      --popper-tail-deg: 0deg;
+      --popper-arrow-bottom: calc(anchor(top) + var(--popper-offset) - 0.5px);
+    }
+  }
+}
+
+@utility popover-top-start {
+  @layer components.l1.l2 {
+    --popover-origin: 0 100%;
+    position-area: top span-right;
+    margin-bottom: calc(var(--popper-offset) + var(--popper-tail-height, 1.5px) - 1.5px);
+    position-try-fallbacks: --popper-flip-to-bottom-start;
+
+    &::after {
+      justify-self: anchor-center;
+      --popper-tail-deg: 0deg;
+      --popper-arrow-bottom: calc(anchor(top) + var(--popper-offset) - 0.5px);
+    }
+  }
+}
+
+@utility popover-top-end {
+  @layer components.l1.l2 {
+    --popover-origin: 100% 100%;
+    position-area: top span-left;
+    margin-bottom: calc(var(--popper-offset) + var(--popper-tail-height, 1.5px) - 1.5px);
+    position-try-fallbacks: --popper-flip-to-bottom-end;
+
+    &::after {
+      justify-self: anchor-center;
+      --popper-tail-deg: 0deg;
+      --popper-arrow-bottom: calc(anchor(top) + var(--popper-offset) - 0.5px);
+    }
+  }
+}
+
+/* Bottom variants */
+
+@utility popover-bottom {
+  @layer components.l1.l2 {
+    --popover-origin: top;
+    position-area: bottom span-all;
+    margin-top: calc(var(--popper-offset) + var(--popper-tail-height, 1.5px) - 1.5px);
+    position-try-fallbacks: --popper-flip-to-top;
+
+    &::after {
+      justify-self: anchor-center;
+      --popper-tail-deg: 180deg;
+      --popper-arrow-top: calc(anchor(bottom) + var(--popper-offset) - 0.5px);
+    }
+  }
+}
+
+@utility popover-bottom-start {
+  @layer components.l1.l2 {
+    --popover-origin: 0 0;
+    position-area: bottom span-right;
+    margin-top: calc(var(--popper-offset) + var(--popper-tail-height, 1.5px) - 1.5px);
+    position-try-fallbacks: --popper-flip-to-top-start;
+
+    &::after {
+      justify-self: anchor-center;
+      --popper-tail-deg: 180deg;
+      --popper-arrow-top: calc(anchor(bottom) + var(--popper-offset) - 0.5px);
+    }
+  }
+}
+
+@utility popover-bottom-end {
+  @layer components.l1.l2 {
+    --popover-origin: 100% 0;
+    position-area: bottom span-left;
+    margin-top: calc(var(--popper-offset) + var(--popper-tail-height, 1.5px) - 1.5px);
+    position-try-fallbacks: --popper-flip-to-top-end;
+
+    &::after {
+      justify-self: anchor-center;
+      --popper-tail-deg: 180deg;
+      --popper-arrow-top: calc(anchor(bottom) + var(--popper-offset) - 0.5px);
+    }
+  }
+}
+
+/* Left variants */
+
+@utility popover-left {
+  @layer components.l1.l2 {
+    --popover-origin: 100%;
+    position-area: span-all left;
+    margin-right: calc(var(--popper-offset) + var(--popper-tail-height, 1.5px) - 1.5px);
+    position-try-fallbacks: --popper-flip-to-right;
+
+    &::after {
+      align-self: anchor-center;
+      --popper-tail-deg: 270deg;
+      --popper-arrow-right: calc(anchor(left) + var(--popper-offset) - 3.5px);
+    }
+  }
+}
+
+@utility popover-left-start {
+  @layer components.l1.l2 {
+    --popover-origin: 100% 0;
+    position-area: span-bottom left;
+    margin-right: calc(var(--popper-offset) + var(--popper-tail-height, 1.5px) - 1.5px);
+    position-try-fallbacks: --popper-flip-to-right-start;
+
+    &::after {
+      align-self: anchor-center;
+      --popper-tail-deg: 270deg;
+      --popper-arrow-right: calc(anchor(left) + var(--popper-offset) - 3.5px);
+    }
+  }
+}
+
+@utility popover-left-end {
+  @layer components.l1.l2 {
+    --popover-origin: 100% 100%;
+    position-area: span-top left;
+    margin-right: calc(var(--popper-offset) + var(--popper-tail-height, 1.5px) - 1.5px);
+    position-try-fallbacks: --popper-flip-to-right-end;
+
+    &::after {
+      align-self: anchor-center;
+      --popper-tail-deg: 270deg;
+      --popper-arrow-right: calc(anchor(left) + var(--popper-offset) - 3.5px);
+    }
+  }
+}
+
+/* Right variants */
+
+@utility popover-right {
+  @layer components.l1.l2 {
+    --popover-origin: 0;
+    position-area: span-all right;
+    margin-left: calc(var(--popper-offset) + var(--popper-tail-height, 1.5px) - 1.5px);
+    position-try-fallbacks: --popper-flip-to-left;
+
+    &::after {
+      --popper-tail-deg: 90deg;
+      --popper-arrow-left: calc(anchor(right) + var(--popper-offset) - 3.5px);
+      align-self: anchor-center;
+    }
+  }
+}
+
+@utility popover-right-start {
+  @layer components.l1.l2 {
+    --popover-origin: 0 0;
+    position-area: span-bottom right;
+    margin-left: calc(var(--popper-offset) + var(--popper-tail-height, 1.5px) - 1.5px);
+    position-try-fallbacks: --popper-flip-to-left-start;
+
+    &::after {
+      --popper-tail-deg: 90deg;
+      --popper-arrow-left: calc(anchor(right) + var(--popper-offset) - 3.5px);
+      align-self: anchor-center;
+    }
+  }
+}
+
+@utility popover-right-end {
+  @layer components.l1.l2 {
+    --popover-origin: 0 100%;
+    position-area: span-top right;
+    margin-left: calc(var(--popper-offset) + var(--popper-tail-height, 1.5px) - 1.5px);
+    position-try-fallbacks: --popper-flip-to-left-end;
+
+    &::after {
+      --popper-tail-deg: 90deg;
+      --popper-arrow-left: calc(anchor(right) + var(--popper-offset) - 3.5px);
+      align-self: anchor-center;
+    }
+  }
+}
+
+/* Anchored container queries and position-try fallbacks are served as static CSS (public/static/styles/popper-anchored.css)
+   because Lightning CSS doesn't support the anchored() function yet (Baseline 2026). */
+
+/* Interest timing — applies to the INTEREST INVOKER element (button/a/area).
+   `interest-delay-<ms>` sets both start and end; the longhands target one side.
+   Arbitrary values support the full two-time shorthand: interest-delay-[0.4s_0.2s]. */
+
+@utility interest-delay-* {
+  @layer components.l1.l2 {
+    interest-delay: calc(--value("75", "100", "150", "200", "300", "500", "700", "1000", integer) ms);
+    interest-delay: --value([*]);
+  }
+}
+
+@utility interest-delay-start-* {
+  @layer components.l1.l2 {
+    interest-delay-start: calc(--value("75", "100", "150", "200", "300", "500", "700", "1000", integer) ms);
+    interest-delay-start: --value([*]);
+  }
+}
+
+@utility interest-delay-end-* {
+  @layer components.l1.l2 {
+    interest-delay-end: calc(--value("75", "100", "150", "200", "300", "500", "700", "1000", integer) ms);
+    interest-delay-end: --value([*]);
+  }
+}

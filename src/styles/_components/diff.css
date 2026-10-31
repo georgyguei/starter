@@ -1,0 +1,170 @@
+.diff {
+  @layer components.l1.l2.l3 {
+    --diff-handle-size-inline: 1.2rem;
+    --diff-handle-size-block: 1.8rem;
+    --diff-resizer-min: 1rem;
+    --diff-resizer-max: calc(100cqi - 1rem);
+    --diff-focus-start: 95cqi;
+    --diff-focus-end: 5cqi;
+
+    @apply relative grid w-full overflow-hidden select-none;
+    grid-template-rows: 1fr 1.8rem 1fr;
+    direction: ltr;
+    container-type: inline-size;
+    grid-template-columns: auto 1fr;
+
+    &:focus-within {
+      @apply outline-2 outline-offset-1 outline-base-content;
+    }
+
+    &:focus-visible,
+    &:has(.diff-item-1:focus-visible) {
+      @apply outline-2 outline-offset-1 outline-base-content;
+    }
+
+    &:focus-visible {
+      @apply outline-2 outline-offset-1 outline-base-content;
+      .diff-resizer {
+        min-width: var(--diff-focus-start);
+        max-width: var(--diff-focus-start);
+      }
+    }
+
+    &:has(.diff-item-1:focus-visible) {
+      @apply outline-2 outline-offset-1;
+      .diff-resizer {
+        min-width: var(--diff-focus-end);
+        max-width: var(--diff-focus-end);
+      }
+    }
+
+    /* Fallback where :has is unavailable: focus-within still nudges splitter position. */
+    &:focus-within {
+      .diff-resizer {
+        min-width: var(--diff-focus-start);
+        max-width: var(--diff-focus-start);
+      }
+    }
+
+    @supports (-webkit-overflow-scrolling: touch) and (overflow: -webkit-paged-x) {
+      &:focus {
+        .diff-resizer {
+          min-width: var(--diff-focus-end);
+          max-width: var(--diff-focus-end);
+        }
+      }
+      &:has(.diff-item-1:focus) {
+        .diff-resizer {
+          min-width: var(--diff-focus-start);
+          max-width: var(--diff-focus-start);
+        }
+      }
+    }
+  }
+}
+
+.diff-resizer {
+  @layer components.l1.l2.l3 {
+    @apply relative isolate z-2 col-start-1 row-start-2 h-3 w-[50cqi] resize-x overflow-hidden opacity-0;
+    min-width: var(--diff-resizer-min);
+    max-width: var(--diff-resizer-max);
+    transform: scaleY(5) translate(0.32rem, 50%);
+    cursor: ew-resize;
+    transform-origin: 100% 100%;
+    clip-path: inset(calc(100% - 0.75rem) 0 0 calc(100% - 0.75rem));
+    transition:
+      min-width 0.3s ease-out,
+      max-width 0.3s ease-out;
+
+    &:active {
+      cursor: col-resize;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+}
+
+.diff-item-2 {
+  @layer components.l1.l2.l3 {
+    @apply relative col-start-1 row-span-3 row-start-1;
+    &:after {
+      @apply pointer-events-none absolute top-1/2 right-px bottom-0 z-2 rounded-full bg-base-100/98;
+      width: var(--diff-handle-size-inline);
+      height: var(--diff-handle-size-block);
+      content: "";
+      border: 0.5px solid #0000001f;
+      outline: 1px solid color-mix(in oklab, var(--color-base-content) 10%, #0000);
+      outline-offset: -3px;
+      /* disable blur and shadow because of performance */
+      /* backdrop-filter: blur(8px); */
+      /* box-shadow: 0 1px 2px 0 oklch(0% 0 0 / 0.1); */
+      translate: 50% -50%;
+    }
+    > * {
+      @apply pointer-events-none absolute top-0 bottom-0 left-0 h-full w-[100cqi] max-w-none object-cover object-center;
+    }
+    @supports (-webkit-overflow-scrolling: touch) and (overflow: -webkit-paged-x) {
+      &:after {
+        --tw-content: none;
+        content: var(--tw-content);
+      }
+    }
+  }
+}
+
+.diff-item-1 {
+  @layer components.l1.l2.l3 {
+    @apply relative z-1 col-start-1 row-span-3 row-start-1 overflow-hidden;
+    border-right: 2px solid var(--color-base-100);
+    &:focus-visible {
+      @apply outline-none;
+    }
+    > * {
+      @apply pointer-events-none absolute top-0 bottom-0 left-0 h-full w-[100cqi] max-w-none object-cover object-center;
+    }
+  }
+}
+
+.diff-vertical {
+  @layer components.l1.l2.l3 {
+    container-type: size;
+    grid-template-columns: 1fr 1.8rem 1fr;
+    grid-template-rows: auto 1fr;
+
+    .diff-resizer {
+      @apply col-start-2 row-start-1 h-[50cqb] w-3 resize-y;
+      min-height: var(--diff-resizer-min);
+      max-height: calc(100cqb - 1rem);
+      min-width: auto;
+      max-width: none;
+      transform: scaleX(5) translate(50%, 0.32rem);
+      transform-origin: 100% 0;
+      cursor: ns-resize;
+      clip-path: inset(calc(100% - 0.75rem) calc(100% - 0.75rem) 0 0);
+      transition:
+        min-height 0.3s ease-out,
+        max-height 0.3s ease-out;
+
+      &:active {
+        cursor: row-resize;
+      }
+    }
+
+    .diff-item-1 {
+      @apply col-span-3 col-start-1 row-span-2 row-start-1;
+      border-right: 0;
+      border-bottom: 2px solid var(--color-base-100);
+    }
+
+    .diff-item-2 {
+      @apply col-span-3 col-start-1 row-span-2 row-start-1;
+
+      &:after {
+        @apply top-auto right-auto bottom-px left-1/2;
+        translate: -50% 50%;
+      }
+    }
+  }
+}

@@ -1,0 +1,680 @@
+/* --- avatar.css --- */
+@utility avatar {
+  @layer components.l1.l2.l3 {
+    @apply relative inline-flex align-middle;
+
+    & > div {
+      @apply block aspect-square overflow-hidden rounded-[inherit];
+    }
+
+    img {
+      @apply h-full w-full rounded-[inherit] object-cover;
+    }
+  }
+}
+
+@utility avatar-group {
+  @layer components.l1.l2.l3 {
+    @apply flex -space-x-2 overflow-hidden;
+
+    .avatar {
+      @apply relative box-content;
+      box-shadow: 0 0 0 2px var(--color-bg);
+    }
+  }
+}
+
+@utility avatar-placeholder {
+  @layer components.l1.l2.l3 {
+    & > div {
+      @apply flex items-center justify-center;
+    }
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* STATUS INDICATORS (The "Dot")                                              */
+/* -------------------------------------------------------------------------- */
+
+@utility avatar-indicator {
+  @layer components.l1.l2.l3 {
+    inset: auto 15% 15% auto;
+    translate: 50% 50%;
+    @apply absolute box-content block whitespace-nowrap;
+  }
+}
+
+/* --- badge.css --- */
+/* -------------------------------------------------------------------------- */
+/* 1. DYNAMIC COLOR EXTRACTION (Preserved & Cleaned)                          */
+/* -------------------------------------------------------------------------- */
+@utility badge-* {
+  --badge-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number)%
+  );
+}
+
+@utility badge-* {
+  --badge-color: --value(--color-*, [*]);
+}
+
+/* -------------------------------------------------------------------------- */
+/* 2. BASE BADGE COMPONENT                                                    */
+/* -------------------------------------------------------------------------- */
+@utility badge {
+  @layer components.l1.l2.l3 {
+    /* DEFAULTS */
+    --badge-size: calc(var(--spacing) * 6) /* 1.5rem = 24px */;
+    --badge-fs: 0.875rem;
+    --badge-bg: var(--badge-color, var(--color-base-200));
+    --badge-fg: var(--color-contrast, var(--color-base-content));
+    --badge-border: #0000;
+    --badge-border-width: var(--border, 1px);
+    --badge-p: 0.6em;
+    @apply h-2 color-contrast-(--badge-color);
+
+    /* 1. Layout & Physics */
+    @apply inline-flex items-center justify-center align-middle;
+    @apply rounded-full font-semibold;
+
+    /* 2. Sizing Constraints (The "Perfect Circle" Fix) */
+    height: var(--badge-size);
+    min-width: var(--badge-size); /* Critical: prevents squashed ovals */
+
+    /* 3. Typography (The "Jitter" Fix) */
+    font-size: var(--badge-fs);
+    line-height: 1; /* Ensures vertical centering */
+    font-variant-numeric: tabular-nums;
+
+    /* 4. Spacing */
+    padding-inline: var(--badge-p);
+
+    /* 5. Visuals (Solid Variant is Default) */
+    background-color: var(--badge-bg);
+    color: var(--badge-fg);
+    border: var(--badge-border-width) solid var(--badge-border);
+
+    /* 6. Texture (Optional Noise) */
+    --badge-noise: var(--fx-noise, none);
+    background-size: auto, calc(var(--noise, 0) * 100%);
+    background-image: var(--badge-noise);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 3. SIZES                                                                   */
+/* -------------------------------------------------------------------------- */
+
+@utility badge-xs {
+  @layer components.l1.l2 {
+    --badge-size: calc(var(--spacing, 0.25rem) * 4); /* 16px */
+    --badge-fs: 0.625rem; /* 10px */
+    --badge-p: 0.4em;
+  }
+}
+
+@utility badge-sm {
+  @layer components.l1.l2 {
+    --badge-size: calc(var(--spacing, 0.25rem) * 5); /* 20px */
+    --badge-fs: 0.75rem; /* 12px */
+    --badge-p: 0.5em;
+  }
+}
+
+@utility badge-md {
+  @layer components.l1.l2 {
+    --badge-size: calc(var(--spacing, 0.25rem) * 6); /* 24px */
+    --badge-fs: 0.875rem; /* 14px */
+    --badge-p: 0.6em;
+  }
+}
+
+@utility badge-lg {
+  @layer components.l1.l2 {
+    --badge-size: calc(var(--spacing, 0.25rem) * 7); /* 28px */
+    --badge-fs: 1rem; /* 16px */
+    --badge-p: 0.7em;
+  }
+}
+
+@utility badge-xl {
+  @layer components.l1.l2 {
+    --badge-size: calc(var(--spacing, 0.25rem) * 8); /* 32px */
+    --badge-fs: 1.125rem; /* 18px */
+    --badge-p: 0.8em;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 4. VISUAL VARIANTS                                                         */
+/* -------------------------------------------------------------------------- */
+
+@utility badge-outline {
+  @layer components.l1.l2 {
+    --badge-bg: #0000;
+    --badge-fg: var(--badge-color, var(--color-base-content));
+    --badge-border: currentColor;
+    --badge-noise: none;
+  }
+}
+
+@utility badge-soft {
+  @layer components.l1.l2 {
+    /* Logic: Tint the background with 15% of the color, keep text dark */
+    --badge-bg: color-mix(in oklab, var(--badge-color, var(--color-base-content)) 8%, var(--color-base-100));
+    --badge-fg: var(--badge-color, var(--color-base-content));
+    --badge-border: color-mix(in oklab, currentColor 10%, var(--color-base-100));
+    --badge-noise: none;
+  }
+}
+
+/* --- card.css --- */
+@utility card {
+  @layer components.l1.l2.l3 {
+    @apply relative flex w-fit flex-col overflow-hidden rounded-md;
+
+    figure {
+      @apply flex items-center justify-center;
+    }
+  }
+}
+
+@utility card-body {
+  @layer components.l1.l2.l3 {
+    @apply flex flex-auto flex-col gap-2 p-(--card-p);
+    padding: var(--card-p, 1.5rem);
+    font-size: var(--card-fs, 0.875rem);
+    line-height: var(--tw-leading, 1.25rem);
+
+    :where(p) {
+      @apply grow;
+    }
+  }
+}
+
+@utility card-overlay {
+  @layer components.l1.l2.l3 {
+    @apply absolute inset-0;
+  }
+}
+
+@utility card-title {
+  @layer components.l1.l2.l3 {
+    @apply font-bold;
+    font-size: var(--cardtitle-fs, 1.125rem);
+    line-height: var(--tw-leading, 1.75rem);
+  }
+}
+
+@utility card-action {
+  @layer components.l1.l2.l3 {
+    @apply flex flex-wrap items-start gap-2 text-xl;
+  }
+}
+
+@utility card-xs {
+  @layer components.l1.l2 {
+    .card-body {
+      --card-p: 0.5rem;
+      --card-fs: 0.6875rem;
+      --tw-leading: 0.75rem;
+    }
+
+    .card-title {
+      --cardtitle-fs: 0.875rem;
+      --tw-leading: 1.25rem;
+    }
+  }
+}
+
+@utility card-sm {
+  @layer components.l1.l2 {
+    .card-body {
+      --card-p: 1rem;
+      --card-fs: 0.75rem;
+      --tw-leading: 1rem;
+    }
+
+    .card-title {
+      --cardtitle-fs: 1rem;
+      --tw-leading: 1.5rem;
+    }
+  }
+}
+
+@utility card-md {
+  @layer components.l1.l2 {
+    .card-body {
+      --card-p: 1.5rem;
+      --card-fs: 0.875rem;
+      --tw-leading: 1.25rem;
+    }
+
+    .card-title {
+      --cardtitle-fs: 1.125rem;
+      --tw-leading: 1.75rem;
+    }
+  }
+}
+
+@utility card-lg {
+  @layer components.l1.l2 {
+    .card-body {
+      --card-p: 2rem;
+      --card-fs: 1rem;
+      --tw-leading: 1.5rem;
+    }
+
+    .card-title {
+      --cardtitle-fs: 1.25rem;
+      --tw-leading: 1.875rem;
+    }
+  }
+}
+
+@utility card-xl {
+  @layer components.l1.l2 {
+    .card-body {
+      --card-p: 2.5rem;
+      --card-fs: 1.125rem;
+      --tw-leading: 1.75rem;
+    }
+
+    .card-title {
+      --cardtitle-fs: 1.375rem;
+      --tw-leading: 1.875rem;
+    }
+  }
+}
+
+/* --- carousel.css --- */
+@utility carousel {
+  @layer components.l1.l2.l3 {
+    --carousel-scroll-snap-type: x mandatory;
+
+    @apply inline-flex overflow-x-scroll;
+    scroll-snap-type: var(--carousel-scroll-snap-type);
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+
+    @media (prefers-reduced-motion: reduce) {
+      scroll-behavior: auto;
+    }
+
+    &::-webkit-scrollbar {
+      @apply hidden;
+    }
+  }
+}
+
+@utility carousel-vertical {
+  @layer components.l1.l2 {
+    --carousel-scroll-snap-type: y mandatory;
+    @apply flex-col overflow-y-scroll;
+  }
+}
+
+@utility carousel-horizontal {
+  @layer components.l1.l2 {
+    --carousel-scroll-snap-type: x mandatory;
+    @apply flex-row overflow-x-scroll;
+  }
+}
+
+@utility carousel-item {
+  @layer components.l1.l2.l3 {
+    --carousel-scroll-snap-align: start;
+    @apply box-content flex flex-none;
+    scroll-snap-align: var(--carousel-scroll-snap-align);
+  }
+}
+
+@utility carousel-start {
+  @layer components.l1.l2 {
+    .carousel-item {
+      --carousel-scroll-snap-align: start;
+    }
+  }
+}
+
+@utility carousel-center {
+  @layer components.l1.l2 {
+    .carousel-item {
+      --carousel-scroll-snap-align: center;
+    }
+  }
+}
+
+@utility carousel-end {
+  @layer components.l1.l2 {
+    .carousel-item {
+      --carousel-scroll-snap-align: end;
+    }
+  }
+}
+
+/* --- collapse.css --- */
+@utility collapse {
+  &:not(td, tr, colgroup) {
+    visibility: revert-layer;
+  }
+
+  @layer components.l1.l2.l3 {
+    --duration: 400ms;
+    @apply relative isolate grid w-full grid-cols-1 grid-rows-[max-content_0fr] overflow-hidden;
+    transition: var(--duration) cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: grid-template-rows;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+
+    > input:is([type="checkbox"], [type="radio"]) {
+      @apply z-1 col-start-1 row-start-1 min-h-lh w-full appearance-none opacity-0;
+      transition: background-color 200ms ease-out;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none !important;
+      }
+    }
+
+    &:focus-visible,
+    &:has(> input:is([type="checkbox"], [type="radio"]):focus-visible),
+    &:has(summary:focus-visible) {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+
+    &:is([open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close)),
+    &:not(.collapse-close):has(> input:is([type="checkbox"], [type="radio"]):checked) {
+      grid-template-rows: max-content 1fr;
+    }
+
+    &:is([open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close)) > .collapse-content,
+    &:not(.collapse-close) > :where(input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-content) {
+      @apply min-h-fit [content-visibility:visible];
+
+      @supports not (content-visibility: visible) {
+        visibility: visible;
+      }
+    }
+
+    &:not(.collapse-close) {
+      > input[type="checkbox"],
+      > input[type="radio"]:not(:checked),
+      > .collapse-title {
+        cursor: pointer;
+      }
+    }
+
+    &[tabindex]:focus:not(.collapse-close, .collapse[open]),
+    &[tabindex]:focus-within:not(.collapse-close, .collapse[open]) {
+      > .collapse-title {
+        cursor: unset;
+      }
+    }
+
+    &:is([open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close)) > :where(.collapse-content),
+    &:not(.collapse-close) > :where(input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-content) {
+      padding-bottom: 1rem;
+      /* !important to override padding removal when closed */
+    }
+  }
+
+  @layer components.l1.l2 {
+    &:is([open]) {
+      &.collapse-arrow {
+        > .collapse-title:after {
+          @apply [translate:0_-50%] rotate-225;
+        }
+      }
+    }
+
+    &.collapse-open {
+      &.collapse-arrow {
+        > .collapse-title:after {
+          @apply [translate:0_-50%] rotate-225;
+        }
+      }
+    }
+
+    &[tabindex].collapse-arrow:focus:not(.collapse-close),
+    &.collapse-arrow[tabindex]:focus-within:not(.collapse-close) {
+      > .collapse-title:after {
+        @apply rotate-225;
+      }
+    }
+
+    &.collapse-arrow:not(.collapse-close) {
+      > input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-title:after {
+        translate: 0 -50%;
+      }
+    }
+
+    &[open] {
+      &.collapse-plus {
+        > .collapse-title:after {
+          @apply content-["−"];
+        }
+      }
+    }
+
+    &.collapse-open {
+      &.collapse-plus {
+        > .collapse-title:after {
+          @apply content-["−"];
+        }
+      }
+    }
+
+    &[tabindex].collapse-plus:focus:not(.collapse-close) {
+      > .collapse-title:after {
+        @apply content-["−"];
+      }
+    }
+
+    &.collapse-plus:not(.collapse-close) {
+      > input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-title:after {
+        @apply content-["−"];
+      }
+    }
+  }
+
+  @layer components.l1.l2.l3 {
+    &:is(details) {
+      width: 100%;
+
+      &::details-content {
+        @apply h-0 [interpolate-size:allow-keywords];
+        transition: all var(--duration) ease-out allow-discrete;
+
+        @media (prefers-reduced-motion: reduce) {
+          transition: none !important;
+        }
+      }
+
+      &:where([open])::details-content {
+        height: auto;
+      }
+
+      & summary {
+        @apply relative block [outline:none];
+
+        &::-webkit-details-marker {
+          display: none;
+        }
+      }
+
+      & > .collapse-content {
+        content-visibility: visible;
+      }
+    }
+  }
+}
+
+@utility collapse-content {
+  @layer components.l1.l2.l3 {
+    @apply col-start-1 row-start-2 min-h-0 cursor-[unset] px-4 [content-visibility:hidden];
+    transition: var(--duration) ease-out allow-discrete;
+    transition-property: content-visibility, visibility, min-height, padding, background-color;
+
+    @supports not (content-visibility: hidden) {
+      visibility: hidden;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+  }
+}
+
+@utility collapse-arrow {
+  @layer components.l1.l2 {
+    & > .collapse-title:after {
+      @apply pointer-events-none absolute end-[1.4rem] top-1/2 block size-2 origin-[75%_75%] [translate:0_-100%] rotate-45 [box-shadow:2px_2px] content-[""];
+      transition: all var(--duration) ease-out;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none !important;
+      }
+    }
+  }
+}
+
+@utility collapse-plus {
+  @layer components.l1.l2 {
+    > .collapse-title:after {
+      @apply pointer-events-none absolute end-[1.4rem] top-[0.9rem] block size-2 content-["+"];
+      transition: all var(--duration) ease-out;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none !important;
+      }
+    }
+  }
+}
+
+@utility collapse-title {
+  @layer components.l1.l2.l3 {
+    @apply relative col-start-1 row-start-1 min-h-lh w-full p-4 pe-3;
+    transition: background-color var(--duration) ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+  }
+}
+
+@utility collapse-open {
+  @layer components.l1.l2 {
+    grid-template-rows: max-content 1fr;
+
+    & > .collapse-content {
+      @apply min-h-fit pb-4 [content-visibility:visible];
+
+      @supports not (content-visibility: visible) {
+        visibility: visible;
+      }
+    }
+  }
+}
+
+/* --- stat.css --- */
+@utility stat {
+  @apply relative flex w-fit flex-col gap-1 rounded-md px-6 py-4;
+}
+
+@utility stat-title {
+  @apply inline-flex items-center gap-1.5 text-xs text-base-content/60;
+}
+
+@utility stat-value {
+  @apply align-baseline text-2xl font-extrabold tracking-tight proportional-nums;
+}
+
+@utility stat-desc {
+  @apply text-xs text-base-content/60;
+  font-size: 0.75rem;
+}
+
+/* --- status.css --- */
+/* -------------------------------------------------------------------------- */
+/* 1. COLOR LOGIC (Preserved)                                                 */
+/* -------------------------------------------------------------------------- */
+@utility status-* {
+  --status-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number)%
+  );
+}
+
+@utility status-* {
+  --status-color: --value(--color-*, [*]);
+}
+
+/* -------------------------------------------------------------------------- */
+/* 2. BASE UTILITY (The Source of Truth)                                      */
+/* -------------------------------------------------------------------------- */
+@utility status {
+  @layer components.l1.l2.l3 {
+    /* DEFAULTS */
+    --status-size: calc(var(--spacing) * 2) /* 0.5rem = 8px */;
+    --status-bg: var(--status-color, --alpha(var(--color-base-content) / 20%));
+    --status-shadow: none;
+
+    /* --- 2. LAYOUT --- */
+    @apply inline-block aspect-square size-(--status-size) rounded-lg align-middle;
+
+    /* --- 5. VISUALS (Applied via Variables) --- */
+    background-color: var(--status-bg);
+    box-shadow: var(--status-shadow);
+    color: var(--status-bg);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 3. STYLE VARIANTS (The "Gloss" is back)                                    */
+/* -------------------------------------------------------------------------- */
+
+@utility status-gloss {
+  @layer components.l1.l2.l3 {
+    background-image: radial-gradient(circle at 35% 30%, oklch(1 0 0 / calc(var(--depth, 1) * 0.5)), #0000);
+    @apply bg-position-[50%] bg-no-repeat;
+    --status-shadow: 0 2px 3px -1px --alpha(currentColor / calc(var(--depth, 1) * 100%));
+  }
+}
+
+@utility status-ring {
+  @layer components.l1.l2.l3 {
+    --status-shadow: 0 0 0 0.09375rem var(--color-bg);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 4. SIZE VARIANTS (Variable Mutation)                                       */
+/* -------------------------------------------------------------------------- */
+
+@utility status-xs {
+  @layer components.l1.l2.l3 {
+    --status-size: calc(var(--spacing) * 2) /* 0.5rem = 8px */;
+  }
+}
+
+@utility status-sm {
+  @layer components.l1.l2.l3 {
+    --status-size: calc(var(--spacing) * 2.5) /* 0.625rem = 10px */;
+  }
+}
+
+@utility status-md {
+  @layer components.l1.l2.l3 {
+    --status-size: calc(var(--spacing) * 3) /* 0.75rem = 12px */;
+  }
+}
+
+@utility status-lg {
+  @layer components.l1.l2.l3 {
+    --status-size: calc(var(--spacing) * 4) /* 1rem = 16px */;
+  }
+}

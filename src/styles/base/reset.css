@@ -1,0 +1,101 @@
+*,
+::after,
+::backdrop,
+::before,
+::file-selector-button {
+  @apply m-0 box-border border-0 border-solid p-0;
+}
+
+:host,
+html {
+  @apply leading-normal [-webkit-tap-highlight-color:#0000];
+  font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+}
+
+body {
+  @apply leading-[inherit];
+}
+
+hr {
+  @apply h-0 border-t text-inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply text-[size:inherit] font-[weight:inherit];
+}
+
+a {
+  @apply text-inherit [-webkit-text-decoration:inherit] [text-decoration:underline];
+}
+
+table {
+  @apply border-collapse border-inherit indent-0;
+}
+
+::file-selector-button,
+button,
+input,
+optgroup,
+select,
+textarea {
+  @apply [font-feature-settings:inherit] tracking-[inherit] text-inherit [background:0_0] [font-variation-settings:inherit] [font:inherit];
+}
+
+input:where(:not([type="button"], [type="reset"], [type="submit"])),
+select,
+textarea {
+  @apply border;
+}
+
+::file-selector-button,
+button,
+input:where([type="button"], [type="reset"], [type="submit"]) {
+  @apply [appearance:button];
+}
+
+:-moz-focusring {
+  @apply [outline:auto];
+}
+
+:-moz-ui-invalid {
+  @apply [box-shadow:none];
+}
+
+::-webkit-search-decoration {
+  @apply [-webkit-appearance:none];
+}
+
+menu,
+ol,
+ul {
+  @apply [list-style:none];
+}
+
+textarea {
+  @apply resize-y;
+}
+
+::placeholder {
+  @apply text-[currentColor]/50 opacity-100;
+}
+
+audio,
+canvas,
+embed,
+iframe,
+img,
+object,
+svg,
+video {
+  @apply block;
+}
+
+img,
+video {
+  @apply h-auto max-w-full;
+}

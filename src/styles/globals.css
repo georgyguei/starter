@@ -1,0 +1,65 @@
+@layer theme, base, components, utilities, enhancements;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "./theme/default.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "./theme/dark.css" layer(base);
+@import "./theme/light.css" layer(base);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "./utilities/default.css";
+@import "./utilities/compositions.css";
+@import "./utilities/sibling-functions.css";
+@import "./utilities/view-timeline.css";
+@import "./utilities/scroll-timeline.css";
+@import "./utilities/view-transitions.css";
+@import "./components/index.css";
+
+@custom-variant light (&:where([data-theme="light"] *));
+@custom-variant dark (&:where([data-theme="dark"] *));
+@custom-variant interest (&:is(:hover, :focus-visible, :has(:focus-visible), [aria-expanded="true"]));
+
+@layer base {
+  :root {
+    --header-height: 64px;
+    --content-height: calc(100dvh - var(--header-height));
+    --depth: 1;
+    --noise: 0;
+    --fx-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.34' numOctaves='4' stitchTiles='stitch'%3E%3C/feTurbulence%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23a)' opacity='0.2'%3E%3C/rect%3E%3C/svg%3E");
+    scrollbar-color: color-mix(in oklch, currentColor 35%, #0000) #0000;
+  }
+
+  @media screen and (min-width: 48rem) {
+    :root {
+      --header-height: 104px;
+    }
+  }
+
+  html {
+    @apply touch-action-manipulation bg-base-100 font-sans font-features-[normal] tab-4 text-base-content [font-variation-settings:normal] text-rendering-optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    body {
+      @apply relative text-md font-medium;
+    }
+  }
+
+  *,
+  *::before,
+  *::after,
+  *::backdrop {
+    @apply box-border border-0 border-solid border-gray-800;
+  }
+
+  * {
+    @apply m-0 p-0 wrap-break-word;
+    word-wrap: break-word;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+}

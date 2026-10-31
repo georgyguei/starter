@@ -1,0 +1,144 @@
+/* --- checkbox.css --- */
+
+@utility checkbox-* {
+  --input-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number)%
+  );
+}
+
+@utility checkbox-* {
+  --input-color: --value(--color-*, [*]);
+}
+
+@utility checkbox {
+  @layer components.l1.l2.l3 {
+    --input-padding: 0.25rem;
+    --input-size: calc(var(--size-selector, 0.25rem) * 6);
+    --input-noise: var(--noise, 0);
+    --input-fx-noise: var(--fx-noise, none);
+    --input-duration: var(--tw-duration, 200ms);
+    --input-border-width: var(--border, 1px);
+
+    @apply relative inline-block size-(--input-size) shrink-0 cursor-pointer appearance-none rounded-lg [background-image:none,var(--input-fx-noise)] bg-size-[auto,calc(var(--input-noise)*100%)] p-(--input-padding) align-middle color-contrast-(--input-color);
+    color: var(--color-contrast, var(--color-base-content));
+    border: var(--input-border-width) solid var(--input-color, color-mix(in oklab, var(--color-base-content) 20%, oklch(0% 0 0 / 0)));
+
+    box-shadow:
+      0 1px oklch(0% 0 0 / calc(var(--depth, 1) * 0.1)) inset,
+      0 0 oklch(0% 0 0 / 0) inset,
+      0 0 oklch(0% 0 0 / 0);
+
+    transition: var(--input-duration) cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: background-color, box-shadow;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+
+    &:before {
+      @apply block h-full w-full rotate-45 bg-current text-md leading-3 opacity-0 content-[""] [clip-path:polygon(20%_100%,20%_80%,50%_80%,50%_80%,70%_80%,70%_100%)];
+      box-shadow: 0px 3px 0 0px oklch(100% 0 0 / calc(var(--depth, 1) * 0.1)) inset;
+      transition:
+        clip-path calc(var(--input-duration) * 1) cubic-bezier(0.4, 0, 0.2, 1),
+        rotate calc(var(--input-duration) * 1) cubic-bezier(0.4, 0, 0.2, 1),
+        opacity calc(var(--input-duration) * 2) cubic-bezier(0.4, 0, 0.2, 1);
+      transition-delay: 100ms;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none !important;
+      }
+    }
+
+    &:focus-visible {
+      @apply outline-2 outline-offset-2 outline-(--input-color,currentColor);
+    }
+
+    &:checked,
+    &[aria-checked="true"] {
+      background-color: var(--input-color, oklch(0% 0 0 / 0));
+      box-shadow:
+        0 0 oklch(0% 0 0 / 0) inset,
+        0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth, 1) * 0.1)) inset,
+        0 1px oklch(0% 0 0 / calc(var(--depth, 1) * 0.1));
+
+      &:before {
+        @apply opacity-100 [clip-path:polygon(20%_100%,20%_80%,50%_80%,50%_0%,70%_0%,70%_100%)];
+      }
+
+      @media (forced-colors: active) {
+        &:before {
+          @apply rotate-0 [background-color:oklch(0%_0_0/0)] [--tw-content:"✔︎"] [clip-path:none];
+        }
+      }
+
+      @media print {
+        &:before {
+          @apply rotate-0 [background-color:oklch(0%_0_0/0)] [--tw-content:"✔︎"] [clip-path:none];
+        }
+      }
+    }
+
+    &:indeterminate {
+      background-color: var(--input-color, color-mix(in oklab, currentColor 20%, oklch(0% 0 0 / 0)));
+
+      &:before {
+        @apply translate-x-0 translate-y-[-35%] rotate-0 opacity-100 [clip-path:polygon(20%_100%,20%_80%,50%_80%,50%_80%,80%_80%,80%_100%)];
+      }
+    }
+
+    &:disabled {
+      @apply cursor-not-allowed opacity-20 checked:opacity-40;
+    }
+  }
+}
+
+@utility checkbox-xs {
+  @layer components.l1.l2 {
+    --input-padding: 0.125rem;
+
+    &:is([type="checkbox"]) {
+      --input-size: calc(var(--size-selector, 0.25rem) * 4);
+    }
+  }
+}
+
+@utility checkbox-sm {
+  @layer components.l1.l2 {
+    --input-padding: 0.1875rem;
+
+    &:is([type="checkbox"]) {
+      --input-size: calc(var(--size-selector, 0.25rem) * 5);
+    }
+  }
+}
+
+@utility checkbox-md {
+  @layer components.l1.l2 {
+    --input-padding: 0.25rem;
+
+    &:is([type="checkbox"]) {
+      --input-size: calc(var(--size-selector, 0.25rem) * 6);
+    }
+  }
+}
+
+@utility checkbox-lg {
+  @layer components.l1.l2 {
+    --input-padding: 0.3125rem;
+
+    &:is([type="checkbox"]) {
+      --input-size: calc(var(--size-selector, 0.25rem) * 7);
+    }
+  }
+}
+
+@utility checkbox-xl {
+  @layer components.l1.l2 {
+    --input-padding: 0.375rem;
+
+    &:is([type="checkbox"]) {
+      --input-size: calc(var(--size-selector, 0.25rem) * 8);
+    }
+  }
+}

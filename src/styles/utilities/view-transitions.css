@@ -1,0 +1,50 @@
+/* --- view-transitions.css ---
+   Utilities for the View Transitions API.
+   https://developer.mozilla.org/en-US/docs/Web/CSS/@view-transition
+
+   The ::view-transition-* pseudo-elements are Baseline 2025 (Chrome/Edge 109+,
+   Firefox 144+, Safari 18+). The @view-transition at-rule (cross-document
+   transitions) is NOT in Firefox — Chrome/Edge 126+, Safari 18.2+ only.
+
+   No pre-built animations and no pseudo-element variants. Chrome only
+   matches UNCOMPOUNDED pseudo rules (a class-prefixed selector never
+   matches named-group pseudo-elements), so to make a transition work you
+   must write the pseudo rules for the exact view-transition-name you
+   assigned with vt-name-*:
+
+   <header class="vt-name-[site-header]">…</header>
+
+   ::view-transition-old(site-header) { animation: 0.4s ease-in both fade-out; }
+   ::view-transition-new(site-header) { animation: 0.4s ease-out both fade-in; }
+
+   Or key the rules by the view-transition-class assigned with vt-class-*
+   to share one animation across many groups:
+
+   ::view-transition-old(.card) { animation: 0.3s ease-in both fade-out; }
+
+   Define @keyframes fade-out / fade-in in your own theme or app CSS. */
+
+/* ── Cross-document opt-in (document-level, not a class) ── */
+
+@view-transition {
+  navigation: auto;
+}
+
+/* ── Snapshot groups & classes ── */
+
+@utility vt-name-* {
+  view-transition-name: --value("none", [*]);
+}
+
+@utility vt-class-* {
+  view-transition-class: --value("none", [*]);
+}
+
+/* ── Fallbacks ── */
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
+}

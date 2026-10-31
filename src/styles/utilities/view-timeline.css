@@ -1,0 +1,132 @@
+@theme default {
+  --animate-view-rise: view-rise;
+  --animate-view-fade: view-fade;
+  --animate-view-zoom: view-zoom;
+  --animate-view-blur: view-blur;
+
+  @keyframes view-rise {
+    0% {
+      opacity: 0;
+      transform: translateY(2rem);
+    }
+    12% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    88% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-2rem);
+    }
+  }
+
+  @keyframes view-fade {
+    0% {
+      opacity: 0;
+    }
+    12% {
+      opacity: 1;
+    }
+    88% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes view-zoom {
+    0% {
+      opacity: 0;
+      transform: scale(0.85);
+    }
+    12% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    88% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.85);
+    }
+  }
+
+  @keyframes view-blur {
+    0% {
+      opacity: 0;
+      filter: blur(8px);
+    }
+    12% {
+      opacity: 1;
+      filter: blur(0);
+    }
+    88% {
+      opacity: 1;
+      filter: blur(0);
+    }
+    100% {
+      opacity: 0;
+      filter: blur(8px);
+    }
+  }
+}
+
+/* ── The utilities ── */
+
+@utility view-reveal-* {
+  /* animation-name: --value("fade", "zoom", "blur")-view; */
+  animation-name: --value(--animate-view-*, [*]);
+  animation-timeline: view(block);
+  animation-duration: auto;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+
+@utility view-reveal {
+  animation-name: var(--animate-view-rise);
+  animation-timeline: view(block);
+  animation-duration: auto;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+
+/* Modifiers — declared AFTER the base utilities so they win the cascade. */
+
+@utility view-axis-* {
+  animation-timeline: view(--value("block", "inline", "x", "y"));
+}
+
+@utility view-inset-* {
+  animation-timeline: view(block --value([*]));
+}
+
+@utility view-range-entry {
+  animation-range: entry 0% entry 100%;
+}
+
+/* ── Fallbacks ── */
+
+/* Browsers without view() (e.g. stable Firefox): show content statically. */
+@supports not (animation-timeline: view()) {
+  .view-reveal,
+  .view-reveal-fade,
+  .view-reveal-zoom,
+  .view-reveal-blur {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view-reveal,
+  .view-reveal-fade,
+  .view-reveal-zoom,
+  .view-reveal-blur {
+    animation: none;
+  }
+}

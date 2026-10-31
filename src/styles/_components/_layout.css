@@ -1,0 +1,912 @@
+/* --- dialog.css --- */
+@utility dialog {
+  @layer components.l1.l2.l3 {
+    --dialog-offset: 4rem /* 64px */;
+    --dialog-pos: var(--dialog-offset) auto auto 50%;
+    --dialog-pos-adjust: -50% 0%;
+    --dialog-origin: top center;
+    @apply fixed m-0 max-h-none max-w-none overflow-visible overscroll-contain p-0;
+    background-color: #0000;
+    inset: var(--dialog-pos, 0);
+    width: var(--dialog-size);
+    height: var(--dialog-size);
+    translate: var(--dialog-pos-adjust, 0);
+    transform-origin: var(--dialog-origin);
+    scrollbar-gutter: auto;
+    transition: allow-discrete var(--duration, 200ms) cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: display, overlay;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &::backdrop {
+      background-color: oklch(0% 0 0 / 0.4);
+    }
+  }
+
+  @layer components.l1.l2 {
+    &:is([open], :popover-open, :open) {
+      :root:has(&) {
+        --root-bg: var(--color-base-100);
+        --page-overflow: hidden;
+        --page-has-backdrop: 1;
+        --page-scroll-bg: linear-gradient(var(--root-bg), var(--root-bg))
+          color-mix(in srgb, var(--root-bg), oklch(0% 0 0) calc(var(--page-has-backdrop, 0) * 40%));
+        background: var(--page-scroll-bg);
+        scrollbar-gutter: stable;
+        animation-name: set-page-has-scroll;
+        animation-fill-mode: forwards;
+        animation-timeline: scroll();
+        transition: background-color 0.3s ease-out;
+
+        @media (prefers-reduced-motion: reduce) {
+          transition: none;
+        }
+      }
+    }
+  }
+}
+
+@utility dialog-modal {
+  &:is([open], :popover-open, :open) {
+    pointer-events: auto;
+
+    :root:has(&) {
+      & > * {
+        pointer-events: none;
+      }
+
+      &:not(span) {
+        overflow: var(--page-overflow);
+      }
+    }
+  }
+}
+
+@utility dialog-animated {
+  @layer components.l1.l2 {
+    &:is([open], :popover-open, :open) {
+      @apply animate-in [--duration:700ms] [animation-duration:var(--duration)] [animation-timing-function:cubic-bezier(0.9,2.5,0.64,1)];
+    }
+
+    &:not(:is([open], :popover-open, :open)) {
+      @apply animate-out [--duration:700ms] [animation-duration:var(--duration)] [animation-timing-function:cubic-bezier(0.36,0,0.1,-1.5)];
+    }
+  }
+}
+
+@utility dialog-offset-* {
+  @layer components.l1.l2 {
+    --dialog-offset: calc(
+      var(--spacing) *
+        --value(
+          "0",
+          "0.5",
+          "1",
+          "1.5",
+          "2",
+          "2.5",
+          "3",
+          "4",
+          "5",
+          "6",
+          "8",
+          "10",
+          "12",
+          "16",
+          "20",
+          "24",
+          "32",
+          "40",
+          "48",
+          "56",
+          "64",
+          "72",
+          "80",
+          "96",
+          number
+        )
+    );
+    --dialog-offset: --value([*]);
+  }
+}
+
+@utility dialog-top {
+  @layer components.l1.l2 {
+    --dialog-offset: 4rem;
+    --dialog-pos: var(--dialog-offset) auto auto 50%;
+    --dialog-pos-adjust: -50% 0%;
+    --dialog-origin: top center;
+
+    &:is(.dialog-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply slide-in-from-top-2 fade-in;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply slide-out-to-top-2 fade-out;
+      }
+    }
+  }
+}
+
+@utility dialog-center {
+  @layer components.l1.l2 {
+    --dialog-offset: 0rem;
+    --dialog-pos: calc(50% + var(--dialog-offset)) auto auto 50%;
+    --dialog-pos-adjust: -50% -50%;
+    --dialog-origin: top center;
+
+    &:is(.dialog-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply slide-in-from-top-2 fade-in;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply slide-out-to-top-2 fade-out;
+      }
+    }
+  }
+}
+
+@utility dialog-bottom {
+  @layer components.l1.l2 {
+    --dialog-offset: 4rem;
+    --dialog-pos: auto auto var(--dialog-offset) 50%;
+    --dialog-pos-adjust: -50% 0%;
+    --dialog-origin: bottom center;
+
+    &:is(.dialog-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply slide-in-from-bottom-2 fade-in;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply slide-out-to-bottom-2 fade-out;
+      }
+    }
+  }
+}
+
+@utility dialog-cover {
+  @layer components.l1 {
+    --dialog-offset: 2.5rem;
+    --dialog-pos: var(--dialog-offset, 0) auto auto var(--dialog-offset, 0);
+    --dialog-pos-adjust: 0;
+    --dialog-size: calc(100% - (2 * var(--dialog-offset, 0rem)));
+    --dialog-origin: center;
+
+    &:is(.dialog-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply zoom-in-95 fade-in;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply zoom-out-95 fade-out;
+      }
+    }
+  }
+}
+
+@utility dialog-full {
+  @layer components.l1 {
+    --dialog-offset: 0rem;
+    --dialog-pos: var(--dialog-offset, 0) auto auto var(--dialog-offset, 0);
+    --dialog-pos-adjust: 0;
+    --dialog-size: calc(100% - (2 * var(--dialog-offset, 0rem)));
+    --dialog-origin: center;
+
+    &:is(.dialog-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply zoom-in-95 fade-in;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply zoom-out-95 fade-out;
+      }
+    }
+  }
+}
+
+@keyframes set-page-has-scroll {
+  0%,
+  100% {
+    --page-has-scroll: 1;
+  }
+}
+
+/* --- divider.css --- */
+@utility divider-* {
+  --divider-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number)%
+  );
+}
+
+@utility divider-* {
+  --divider-color: --value(--color-*, [*]);
+}
+
+@utility divider {
+  @layer components.l1.l2.l3 {
+    @apply flex h-4 flex-row items-center self-stretch whitespace-nowrap;
+    border: none;
+    margin: var(--divider-m, 1rem 0);
+    --divider-color: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+
+    &:before,
+    &:after {
+      @apply h-0.5 w-full grow [background-color:var(--divider-color)] content-[""];
+    }
+
+    @media print {
+      &:before,
+      &:after {
+        border: 0.5px solid;
+      }
+    }
+  }
+}
+
+@utility divider-horizontal {
+  @layer components.l1.l2.l3 {
+    --divider-m: 0 1rem;
+
+    &.divider {
+      @apply h-auto flex-col;
+
+      &:before {
+        @apply h-full w-0.5;
+      }
+
+      &:after {
+        @apply h-full w-0.5;
+      }
+    }
+  }
+}
+
+@utility divider-vertical {
+  @layer components.l1.l2.l3 {
+    --divider-m: 1rem 0;
+
+    &.divider {
+      @apply h-4 flex-row;
+
+      &:before {
+        @apply h-0.5 w-full;
+      }
+
+      &:after {
+        @apply h-0.5 w-full;
+      }
+    }
+  }
+}
+
+@utility divider-start {
+  &:before {
+    @layer components.l1.l2 {
+      @apply hidden;
+    }
+  }
+}
+
+@utility divider-end {
+  &:after {
+    @layer components.l1.l2 {
+      @apply hidden;
+    }
+  }
+}
+
+/* --- drawer.css --- */
+@utility drawer {
+  @layer components.l1.l2.l3 {
+    --drawer-offset: 0rem;
+    --drawer-pos: var(--drawer-offset) 0 auto auto;
+    --drawer-pos-adjust: 0 0;
+    --drawer-origin: 100%;
+    --drawer-h: 100dvh;
+
+    @apply fixed m-0 max-h-none max-w-none overflow-visible overscroll-contain p-0;
+    background-color: #0000;
+    inset: var(--drawer-pos, 0);
+    width: var(--drawer-w);
+    height: var(--drawer-h);
+    translate: var(--drawer-pos-adjust, 0);
+    transform-origin: var(--drawer-origin);
+    scrollbar-gutter: auto;
+    transition: all allow-discrete var(--duration, 200ms) cubic-bezier(0.4, 0, 0.2, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &::backdrop {
+      background-color: oklch(0% 0 0 / 0.4);
+    }
+  }
+
+  @layer components.l1.l2 {
+    &:is([open], :popover-open, :open) {
+      :root:has(&) {
+        --root-bg: var(--color-base-100);
+        --page-overflow: hidden;
+        --page-has-backdrop: 1;
+        --page-scroll-bg: linear-gradient(var(--root-bg), var(--root-bg))
+          color-mix(in srgb, var(--root-bg), oklch(0% 0 0) calc(var(--page-has-backdrop, 0) * 40%));
+        background: var(--page-scroll-bg);
+        scrollbar-gutter: stable;
+        animation-name: set-page-has-scroll;
+        animation-fill-mode: forwards;
+        animation-timeline: scroll();
+        transition: background-color 0.3s ease-out;
+
+        @media (prefers-reduced-motion: reduce) {
+          transition: none;
+        }
+      }
+    }
+  }
+}
+
+@utility drawer-modal {
+  &:is([open], :popover-open, :open) {
+    pointer-events: auto;
+
+    :root:has(&) {
+      & > * {
+        pointer-events: none;
+      }
+
+      &:not(span) {
+        overflow: var(--page-overflow);
+      }
+    }
+  }
+}
+
+@utility drawer-animated {
+  @layer components.l1.l2 {
+    &:is([open], :popover-open, :open) {
+      @apply animate-in [--duration:700ms] [animation-duration:var(--duration)] [animation-timing-function:cubic-bezier(0.9,2.5,0.64,1)];
+    }
+
+    &:not(:is([open], :popover-open, :open)) {
+      @apply animate-out [--duration:700ms] [animation-duration:var(--duration)] [animation-timing-function:cubic-bezier(0.36,0,0.1,-1.5)];
+    }
+  }
+}
+
+@utility drawer-offset-* {
+  @layer components.l1.l2 {
+    --drawer-offset: calc(
+      var(--spacing) *
+        --value(
+          "0",
+          "0.5",
+          "1",
+          "1.5",
+          "2",
+          "2.5",
+          "3",
+          "4",
+          "5",
+          "6",
+          "8",
+          "10",
+          "12",
+          "16",
+          "20",
+          "24",
+          "32",
+          "40",
+          "48",
+          "56",
+          "64",
+          "72",
+          "80",
+          "96",
+          number
+        )
+    );
+    --drawer-offset: --value([*]);
+  }
+}
+
+@utility drawer-top {
+  @layer components.l1.l2 {
+    --drawer-offset: 0rem;
+    --drawer-pos: var(--drawer-offset) auto auto 0;
+    --drawer-pos-adjust: 0 0;
+    --drawer-origin: top center;
+    --drawer-w: 100dvw;
+
+    &:is(.drawer-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply slide-in-from-top-2 fade-in;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply slide-out-to-top-2 fade-out;
+      }
+    }
+  }
+}
+
+@utility drawer-bottom {
+  @layer components.l1.l2 {
+    --drawer-offset: 0rem;
+    --drawer-pos: auto auto var(--drawer-offset) 0;
+    --drawer-pos-adjust: 0 0;
+    --drawer-origin: bottom center;
+    --drawer-w: 100dvw;
+
+    &:is(.drawer-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply slide-in-from-bottom-2 fade-in;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply slide-out-to-bottom-2 fade-out;
+      }
+    }
+  }
+}
+
+@utility drawer-left {
+  @layer components.l1.l2 {
+    --drawer-offset: 0rem;
+    --drawer-pos: var(--drawer-offset) auto auto 0;
+    --drawer-pos-adjust: 0 0;
+    --drawer-origin: 0;
+    --drawer-h: 100dvh;
+
+    &:is(.drawer-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply slide-in-from-left-2 fade-in;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply slide-out-to-left-2 fade-out;
+      }
+    }
+  }
+}
+
+@utility drawer-right {
+  @layer components.l1.l2 {
+    --drawer-offset: 0rem;
+    --drawer-pos: var(--drawer-offset) 0 auto auto;
+    --drawer-pos-adjust: 0 0;
+    --drawer-origin: 100%;
+    --drawer-h: 100dvh;
+
+    &:is(.drawer-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply slide-in-from-right-2 fade-in;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply slide-out-to-right-2 fade-out;
+      }
+    }
+  }
+}
+
+@utility drawer-cover {
+  @layer components.l1 {
+    --drawer-offset: 2.5rem;
+    --drawer-pos: var(--drawer-offset, 0) auto auto var(--drawer-offset, 0);
+    --drawer-pos-adjust: 0;
+    --drawer-w: calc(100% - (2 * var(--drawer-offset, 0rem)));
+    --drawer-h: calc(100% - (2 * var(--drawer-offset, 0rem)));
+    --drawer-origin: center;
+
+    &:is(.drawer-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply zoom-in-95 fade-in;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply zoom-out-95 fade-out;
+      }
+    }
+  }
+}
+
+@utility drawer-full {
+  @layer components.l1 {
+    --drawer-offset: 0rem;
+    --drawer-pos: var(--drawer-offset, 0) auto auto var(--drawer-offset, 0);
+    --drawer-pos-adjust: 0;
+    --drawer-w: calc(100% - (2 * var(--drawer-offset, 0rem)));
+    --drawer-h: calc(100% - (2 * var(--drawer-offset, 0rem)));
+    --drawer-origin: center;
+
+    &:is(.drawer-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply zoom-in-95 fade-in;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply zoom-out-95 fade-out;
+      }
+    }
+  }
+}
+
+@keyframes set-page-has-scroll {
+  0%,
+  100% {
+    --page-has-scroll: 1;
+  }
+}
+
+/* --- float.css --- */
+@utility float-top-left {
+  @apply absolute z-1 whitespace-nowrap;
+  inset: 0 auto auto 0;
+  translate: -50% -50%;
+}
+
+@utility float-top-center {
+  @apply absolute z-1 whitespace-nowrap;
+  inset: 0 auto auto 50%;
+  translate: -50% -50%;
+}
+
+@utility float-top-right {
+  @apply absolute z-1 whitespace-nowrap;
+  inset: 0 0 auto auto;
+  translate: 50% -50%;
+}
+
+@utility float-middle-left {
+  @apply absolute z-1 whitespace-nowrap;
+  inset: 50% auto 50% 0;
+  translate: -50% -50%;
+}
+
+@utility float-middle-center {
+  @apply absolute z-1 whitespace-nowrap;
+  inset: 50% auto auto 50%;
+  translate: -50% -50%;
+}
+
+@utility float-middle-right {
+  @apply absolute z-1 whitespace-nowrap;
+  inset: 50% 0 auto auto;
+  translate: 50% -50%;
+}
+
+@utility float-bottom-left {
+  @apply absolute z-1 whitespace-nowrap;
+  inset: auto auto 0 0;
+  translate: -50% 50%;
+}
+
+@utility float-bottom-center {
+  @apply absolute z-1 whitespace-nowrap;
+  inset: auto auto 0 50%;
+  translate: -50% 50%;
+}
+
+@utility float-bottom-right {
+  @apply absolute z-1 whitespace-nowrap;
+  inset: auto 0 0 auto;
+  translate: 50% 50%;
+}
+
+/* --- join.css --- */
+@utility join {
+  @layer components.l1.l2.l3 {
+    @apply inline-flex items-stretch self-start;
+    --join-ss: 0;
+    --join-se: 0;
+    --join-es: 0;
+    --join-ee: 0;
+
+    :where(.join-item) {
+      border-start-start-radius: var(--join-ss, 0);
+      border-start-end-radius: var(--join-se, 0);
+      border-end-start-radius: var(--join-es, 0);
+      border-end-end-radius: var(--join-ee, 0);
+
+      /* Reset radius variable inheritance */
+      * {
+        --join-ss: var(--radius-field);
+        --join-se: var(--radius-field);
+        --join-es: var(--radius-field);
+        --join-ee: var(--radius-field);
+      }
+    }
+
+    /* FIRST JOIN ITEM 
+       Use nth-child(1 of .join-item) to ignore non-join-item siblings 
+    */
+    > .join-item:where(:nth-child(1 of .join-item)) {
+      --join-ss: var(--radius-field);
+      --join-se: 0;
+      --join-es: var(--radius-field);
+      --join-ee: 0;
+    }
+
+    /* LAST JOIN ITEM */
+    > .join-item:where(:nth-last-child(1 of .join-item)) {
+      --join-ss: 0;
+      --join-se: var(--radius-field);
+      --join-es: 0;
+      --join-ee: var(--radius-field);
+    }
+
+    /* ONLY CHILD (Is both 1st from start AND 1st from end of its class type)
+    */
+    > .join-item:where(:nth-child(1 of .join-item):nth-last-child(1 of .join-item)) {
+      --join-ss: var(--radius-field);
+      --join-se: var(--radius-field);
+      --join-es: var(--radius-field);
+      --join-ee: var(--radius-field);
+    }
+  }
+}
+
+@utility join-item {
+  @layer components.l1.l2.l3 {
+    /* Apply margin to everyone EXCEPT the first join-item. 
+       This ensures borders merge correctly even if a hidden input is the true :first-child 
+    */
+    &:where(:not(:nth-child(1 of .join-item)):not(:disabled, [disabled], [aria-disabled="true"], .btn-disabled)) {
+      margin-inline-start: calc(var(--border, 1px) * -1);
+      margin-block-start: 0;
+    }
+
+    &:where(:is(:disabled, [disabled], [aria-disabled="true"], .btn-disabled)) {
+      border-width: var(--border, 1px) 0 var(--border, 1px) var(--border, 1px);
+    }
+  }
+}
+
+@utility join-vertical {
+  @layer components.l1.l2.l3 {
+    @apply flex-col;
+
+    /* Top Item */
+    > .join-item:nth-child(1 of .join-item) {
+      --join-ss: var(--radius-field);
+      --join-se: var(--radius-field);
+      --join-es: 0;
+      --join-ee: 0;
+    }
+
+    /* Bottom Item */
+    > .join-item:nth-last-child(1 of .join-item) {
+      --join-ss: 0;
+      --join-se: 0;
+      --join-es: var(--radius-field);
+      --join-ee: var(--radius-field);
+    }
+
+    /* Only Item */
+    > .join-item:nth-child(1 of .join-item):nth-last-child(1 of .join-item) {
+      --join-ss: var(--radius-field);
+      --join-se: var(--radius-field);
+      --join-es: var(--radius-field);
+      --join-ee: var(--radius-field);
+    }
+
+    .join-item {
+      /* Apply margin top to everyone except the first join item */
+      &:where(:not(:nth-child(1 of .join-item))) {
+        margin-inline-start: 0;
+        margin-block-start: calc(var(--border, 1px) * -1);
+      }
+    }
+  }
+}
+
+@utility join-horizontal {
+  @layer components.l1.l2.l3 {
+    @apply flex-row;
+
+    /* Left Item */
+    > .join-item:nth-child(1 of .join-item) {
+      --join-ss: var(--radius-field);
+      --join-se: 0;
+      --join-es: var(--radius-field);
+      --join-ee: 0;
+    }
+
+    /* Right Item */
+    > .join-item:nth-last-child(1 of .join-item) {
+      --join-ss: 0;
+      --join-se: var(--radius-field);
+      --join-es: 0;
+      --join-ee: var(--radius-field);
+    }
+
+    /* Only Item */
+    > .join-item:nth-child(1 of .join-item):nth-last-child(1 of .join-item) {
+      --join-ss: var(--radius-field);
+      --join-se: var(--radius-field);
+      --join-es: var(--radius-field);
+      --join-ee: var(--radius-field);
+    }
+
+    .join-item {
+      &:where(:not(:nth-child(1 of .join-item))) {
+        margin-inline-start: calc(var(--border, 1px) * -1);
+        margin-block-start: 0;
+      }
+    }
+  }
+}
+
+/* --- mask.css --- */
+@utility mask {
+  @apply inline-block align-middle;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+@utility mask-half-1 {
+  @apply mask-size-[200%] mask-left rtl:mask-right;
+}
+
+@utility mask-half-2 {
+  @apply mask-size-[200%] mask-right rtl:mask-left;
+}
+
+@utility mask-squircle {
+  mask-image: url("data:image/svg+xml,%3csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M100 0C20 0 0 20 0 100s20 100 100 100 100-20 100-100S180 0 100 0Z'/%3e%3c/svg%3e");
+}
+
+@utility mask-decagon {
+  mask-image: url("data:image/svg+xml,%3csvg width='192' height='200' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='black' d='m96 0 58.779 19.098 36.327 50v61.804l-36.327 50L96 200l-58.779-19.098-36.327-50V69.098l36.327-50z' fill-rule='evenodd'/%3e%3c/svg%3e");
+}
+
+@utility mask-diamond {
+  mask-image: url("data:image/svg+xml,%3csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='black' d='m100 0 100 100-100 100L0 100z' fill-rule='evenodd'/%3e%3c/svg%3e");
+}
+
+@utility mask-heart {
+  mask-image: url("data:image/svg+xml,%3csvg width='200' height='185' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M100 184.606a15.384 15.384 0 0 1-8.653-2.678C53.565 156.28 37.205 138.695 28.182 127.7 8.952 104.264-.254 80.202.005 54.146.308 24.287 24.264 0 53.406 0c21.192 0 35.869 11.937 44.416 21.879a2.884 2.884 0 0 0 4.356 0C110.725 11.927 125.402 0 146.594 0c29.142 0 53.098 24.287 53.4 54.151.26 26.061-8.956 50.122-28.176 73.554-9.023 10.994-25.383 28.58-63.165 54.228a15.384 15.384 0 0 1-8.653 2.673Z' fill='black' fill-rule='nonzero'/%3e%3c/svg%3e");
+}
+
+@utility mask-hexagon {
+  mask-image: url("data:image/svg+xml,%3csvg width='182' height='201' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M.3 65.486c0-9.196 6.687-20.063 14.211-25.078l61.86-35.946c8.36-5.016 20.899-5.016 29.258 0l61.86 35.946c8.36 5.015 14.211 15.882 14.211 25.078v71.055c0 9.196-6.687 20.063-14.211 25.079l-61.86 35.945c-8.36 4.18-20.899 4.18-29.258 0L14.51 161.62C6.151 157.44.3 145.737.3 136.54V65.486Z' fill='black' fill-rule='nonzero'/%3e%3c/svg%3e");
+}
+
+@utility mask-hexagon-2 {
+  mask-image: url("data:image/svg+xml,%3csvg width='200' height='182' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M64.786 181.4c-9.196 0-20.063-6.687-25.079-14.21L3.762 105.33c-5.016-8.36-5.016-20.9 0-29.259l35.945-61.86C44.723 5.851 55.59 0 64.786 0h71.055c9.196 0 20.063 6.688 25.079 14.211l35.945 61.86c4.18 8.36 4.18 20.899 0 29.258l-35.945 61.86c-4.18 8.36-15.883 14.211-25.079 14.211H64.786Z' fill='black' fill-rule='nonzero'/%3e%3c/svg%3e");
+}
+
+@utility mask-circle {
+  mask-image: url("data:image/svg+xml,%3csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle fill='black' cx='100' cy='100' r='100' fill-rule='evenodd'/%3e%3c/svg%3e");
+}
+
+@utility mask-pentagon {
+  mask-image: url("data:image/svg+xml,%3csvg width='192' height='181' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='black' d='m96 0 95.106 69.098-36.327 111.804H37.22L.894 69.098z' fill-rule='evenodd'/%3e%3c/svg%3e");
+}
+
+@utility mask-star {
+  mask-image: url("data:image/svg+xml,%3csvg width='192' height='180' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='black' d='m96 137.263-58.779 42.024 22.163-68.389L.894 68.481l72.476-.243L96 0l22.63 68.238 72.476.243-58.49 42.417 22.163 68.389z' fill-rule='evenodd'/%3e%3c/svg%3e");
+}
+
+@utility mask-star-2 {
+  mask-image: url("data:image/svg+xml,%3csvg width='192' height='180' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='black' d='m96 153.044-58.779 26.243 7.02-63.513L.894 68.481l63.117-13.01L96 0l31.989 55.472 63.117 13.01-43.347 47.292 7.02 63.513z' fill-rule='evenodd'/%3e%3c/svg%3e");
+}
+
+@utility mask-triangle {
+  mask-image: url("data:image/svg+xml,%3csvg width='174' height='149' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='black' d='m87 148.476-86.603.185L43.86 74.423 87 0l43.14 74.423 43.463 74.238z' fill-rule='evenodd'/%3e%3c/svg%3e");
+}
+
+@utility mask-triangle-2 {
+  mask-image: url("data:image/svg+xml,%3csvg width='174' height='150' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='black' d='m87 .738 86.603-.184-43.463 74.238L87 149.214 43.86 74.792.397.554z' fill-rule='evenodd'/%3e%3c/svg%3e");
+}
+
+@utility mask-triangle-3 {
+  mask-image: url("data:image/svg+xml,%3csvg width='150' height='174' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='black' d='m149.369 87.107.185 86.603-74.239-43.463L.893 87.107l74.422-43.14L149.554.505z' fill-rule='evenodd'/%3e%3c/svg%3e");
+}
+
+@utility mask-triangle-4 {
+  mask-image: url("data:image/svg+xml,%3csvg width='150' height='174' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='black' d='M.631 87.107.446.505l74.239 43.462 74.422 43.14-74.422 43.14L.446 173.71z' fill-rule='evenodd'/%3e%3c/svg%3e");
+}
+
+/* --- preview.css --- */
+@utility preview {
+  @layer components.l1.l2.l3 {
+    @apply color-contrast-(--color-bg,var(--color-base-100));
+    --preview-bg: color-mix(in oklab, var(--color-contrast, var(--color-base-content)) 4%, #0000);
+    box-shadow: 0 0 0 1px var(--color-bg, var(--color-base-100)) inset;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--color-bg, var(--color-base-100)),
+      var(--color-bg, var(--color-base-100)) 13px,
+      var(--preview-bg) 13px,
+      var(--preview-bg) 14px
+    );
+    background-size: 40px 40px;
+  }
+}
+
+/* --- stack.css --- */
+@utility stack {
+  @apply inline-grid;
+  grid-template-columns: 3px 4px 1fr 4px 3px;
+  grid-template-rows: 3px 4px 1fr 4px 3px;
+
+  & > * {
+    @apply h-full w-full;
+    &:nth-child(n + 2) {
+      @apply w-full opacity-70;
+    }
+    &:nth-child(2) {
+      @apply z-2 opacity-90;
+    }
+    &:nth-child(1) {
+      @apply z-3 w-full;
+    }
+  }
+
+  &,
+  &.stack-bottom {
+    > * {
+      grid-column: 3 / 4;
+      grid-row: 3 / 6;
+      &:nth-child(2) {
+        grid-column: 2 / 5;
+        grid-row: 2 / 5;
+      }
+      &:nth-child(1) {
+        grid-column: 1 / 6;
+        grid-row: 1 / 4;
+      }
+    }
+  }
+  &.stack-top {
+    > * {
+      grid-column: 3 / 4;
+      grid-row: 1 / 4;
+      &:nth-child(2) {
+        grid-column: 2 / 5;
+        grid-row: 2 / 5;
+      }
+      &:nth-child(1) {
+        grid-column: 1 / 6;
+        grid-row: 3 / 6;
+      }
+    }
+  }
+  &.stack-start {
+    > * {
+      grid-column: 1 / 4;
+      grid-row: 3 / 4;
+      &:nth-child(2) {
+        grid-column: 2 / 5;
+        grid-row: 2 / 5;
+      }
+      &:nth-child(1) {
+        grid-column: 3 / 6;
+        grid-row: 1 / 6;
+      }
+    }
+  }
+  &.stack-end {
+    > * {
+      grid-column: 3 / 6;
+      grid-row: 3 / 4;
+      &:nth-child(2) {
+        grid-column: 2 / 5;
+        grid-row: 2 / 5;
+      }
+      &:nth-child(1) {
+        grid-column: 1 / 4;
+        grid-row: 1 / 6;
+      }
+    }
+  }
+}

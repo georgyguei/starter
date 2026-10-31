@@ -1,0 +1,18 @@
+@utility field {
+  @layer components.l1.l2.l3 {
+    @apply grid auto-rows-max grid-cols-[1fr] gap-1.5 py-1 text-xs;
+
+    &:is(fieldset:has(> legend)) {
+      @apply rounded-lg border p-4;
+      & > legend {
+        @apply px-1;
+      }
+    }
+  }
+}
+
+@utility field-legend {
+  @layer components.l1.l2.l3 {
+    @apply -mb-1 flex w-fit items-center gap-2 py-2 font-semibold;
+  }
+}

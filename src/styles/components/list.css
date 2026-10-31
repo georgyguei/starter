@@ -1,0 +1,53 @@
+@utility list {
+  @layer components.l1.l2.l3 {
+    @apply flex flex-col text-sm;
+  }
+}
+
+@utility list-row {
+  @layer components.l1.l2.l3 {
+    --list-grid-cols: minmax(0, auto) 1fr;
+    @apply relative grid grid-flow-col grid-cols-(--list-grid-cols) gap-4 rounded-lg p-4 [word-break:break-word];
+  }
+
+  @layer components.l1.l2 {
+    &:not(:last-child)::after {
+      @apply absolute inset-x-(--radius-lg) bottom-0 rounded-md border-b border-base-content/5 content-[""];
+    }
+
+    &:has(.list-col-grow:nth-child(1)) {
+      --list-grid-cols: 1fr;
+    }
+    &:has(.list-col-grow:nth-child(2)) {
+      --list-grid-cols: minmax(0, auto) 1fr;
+    }
+    &:has(.list-col-grow:nth-child(3)) {
+      --list-grid-cols: minmax(0, auto) minmax(0, auto) 1fr;
+    }
+    &:has(.list-col-grow:nth-child(4)) {
+      --list-grid-cols: minmax(0, auto) minmax(0, auto) minmax(0, auto) 1fr;
+    }
+    &:has(.list-col-grow:nth-child(5)) {
+      --list-grid-cols: minmax(0, auto) minmax(0, auto) minmax(0, auto) minmax(0, auto) 1fr;
+    }
+    &:has(.list-col-grow:nth-child(6)) {
+      --list-grid-cols: minmax(0, auto) minmax(0, auto) minmax(0, auto) minmax(0, auto) minmax(0, auto) 1fr;
+    }
+
+    > :not(.list-col-wrap) {
+      @apply row-start-1;
+    }
+  }
+}
+
+@utility list-col-grow {
+  @layer components.l1.l2 {
+    min-width: 0;
+  }
+}
+
+@utility list-col-wrap {
+  @layer components.l1.l2 {
+    @apply row-start-2;
+  }
+}

@@ -1,0 +1,119 @@
+/* --- fab.css --- */
+
+@property --degree {
+  syntax: "<angle>";
+  initial-value: 180deg;
+  inherits: true;
+}
+
+@property --position {
+  syntax: "<length-percentage>";
+  initial-value: 0rem;
+  inherits: true;
+}
+
+@utility fab {
+  @layer components.l1.l2.l3 {
+    @apply pointer-events-none fixed inset-e-4 bottom-4 z-999 flex flex-col-reverse items-end gap-2 text-sm whitespace-nowrap;
+    > * {
+      @apply pointer-events-auto flex items-center gap-2;
+      &:hover,
+      &:has(:focus-visible) {
+        @apply z-1;
+      }
+    }
+    > [tabindex] {
+      &:first-child {
+        @apply relative grid;
+        transition-property: opacity, visibility, rotate;
+        transition-duration: 0.2s;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    }
+
+    &:focus-within {
+      &:has(.fab-close),
+      &:has(.fab-main-action) {
+        > [tabindex] {
+          @apply rotate-90 opacity-0;
+        }
+      }
+    }
+    > :nth-child(n + 2) {
+      @apply invisible scale-80 opacity-0;
+      transition-property: opacity, scale, visibility;
+      transition-duration: 0.2s;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+      &.fab-main-action,
+      &.fab-close {
+        @apply scale-100;
+      }
+    }
+    > :nth-child(3) {
+      transition-delay: 30ms;
+    }
+    > :nth-child(4) {
+      transition-delay: 60ms;
+    }
+    > :nth-child(5) {
+      transition-delay: 90ms;
+    }
+    > :nth-child(6) {
+      transition-delay: 120ms;
+    }
+
+    &:focus-within {
+      > [tabindex]:first-child {
+        @apply pointer-events-none;
+      }
+      > :nth-child(n + 2) {
+        @apply visible scale-100 opacity-100;
+      }
+    }
+  }
+}
+
+@utility fab-close {
+  @layer components.l1.l2.l3 {
+    @apply absolute inset-e-0 bottom-0;
+  }
+}
+
+@utility fab-main-action {
+  @layer components.l1.l2.l3 {
+    @apply absolute inset-e-0 bottom-0;
+  }
+}
+
+@utility fab-flower {
+  @layer components.l1.l2.l3 {
+    @apply grid;
+
+    > * {
+      grid-area: 1 / 1;
+      --degree: 180deg;
+      --position: 0rem;
+      --flip-degree: calc(180deg - var(--degree));
+      transform: translateX(calc(cos(var(--degree)) * var(--position))) translateY(calc(sin(var(--degree)) * -1 * var(--position)));
+      [dir="rtl"] & {
+        transform: translateX(calc(cos(var(--flip-degree)) * var(--position))) translateY(calc(sin(var(--flip-degree)) * -1 * var(--position)));
+      }
+    }
+
+    /* Children 1-2 stay at position 0 (the main button) */
+    > :nth-child(-n + 2) {
+      --position: 0rem;
+    }
+
+    /* Children 3+ fan out — sibling-index() computes each child's angle */
+    > :nth-child(n + 3) {
+      --position: calc(100% + sibling-count() * 20%);
+      --degree: calc(180deg - (sibling-index() - 3) * (90deg / max(1, sibling-count() - 3)));
+    }
+
+    > :nth-child(n + 7) {
+      @apply hidden;
+    }
+  }
+}

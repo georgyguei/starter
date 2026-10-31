@@ -1,0 +1,92 @@
+@utility badge-* {
+  --badge-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number) %
+  );
+}
+
+@utility badge-* {
+  --badge-color: --value(--color-*, [*]);
+}
+
+@utility badge {
+  @layer components.l1.l2.l3 {
+    --badge-size: calc(var(--spacing, 0.25rem) * 6);
+    --badge-fs: 0.875rem;
+    --badge-bg: var(--badge-color, var(--color-base-300));
+    --badge-fg: var(--color-contrast, var(--color-base-content));
+    --badge-border-color: #0000;
+    --badge-p: 0.6em;
+    --badge-noise: var(--noise, 0);
+    --badge-fx-noise: var(--fx-noise, none);
+    @apply inline-flex h-(--badge-size) min-w-(--badge-size) items-center justify-center gap-1 rounded-full border border-(--badge-border-color) [background-color:var(--badge-bg)] [background-image:none,var(--badge-fx-noise)] bg-size-[auto,calc(var(--badge-noise)*100%)] px-(--badge-p) [font-size:var(--badge-fs)] text-(--badge-fg) tabular-nums color-contrast-(--badge-color);
+  }
+}
+
+@utility badge-plain {
+  @layer components.l1.l2 {
+    --badge-size: auto;
+    --badge-fs: inherit;
+    --badge-p: 0.125rem;
+  }
+}
+
+@utility badge-xs {
+  @layer components.l1.l2 {
+    --badge-size: calc(var(--spacing, 0.25rem) * 4);
+    --badge-fs: 0.625rem;
+    --badge-p: 0.4em;
+  }
+}
+
+@utility badge-sm {
+  @layer components.l1.l2 {
+    --badge-size: calc(var(--spacing, 0.25rem) * 5);
+    --badge-fs: 0.75rem;
+    --badge-p: 0.5em;
+  }
+}
+
+@utility badge-md {
+  @layer components.l1.l2 {
+    --badge-size: calc(var(--spacing, 0.25rem) * 6);
+    --badge-fs: 0.875rem;
+    --badge-p: 0.6em;
+  }
+}
+
+@utility badge-lg {
+  @layer components.l1.l2 {
+    --badge-size: calc(var(--spacing, 0.25rem) * 7);
+    --badge-fs: 1rem;
+    --badge-p: 0.7em;
+  }
+}
+
+@utility badge-xl {
+  @layer components.l1.l2 {
+    --badge-size: calc(var(--spacing, 0.25rem) * 8);
+    --badge-fs: 1.125rem;
+    --badge-p: 0.8em;
+  }
+}
+
+@utility badge-outline {
+  @layer components.l1 {
+    --badge-fg: var(--badge-color, var(--color-base-content));
+    --badge-bg: #0000;
+    --badge-border-color: currentColor;
+    --badge-noise: 0;
+    --badge-fx-noise: none;
+  }
+}
+
+@utility badge-soft {
+  @layer components.l1 {
+    --badge-fg: var(--badge-color, var(--color-base-content));
+    --badge-bg: color-mix(in oklab, var(--badge-color, var(--color-base-content)) 8%, var(--color-base-100));
+    --badge-border-color: color-mix(in oklab, var(--badge-color, var(--color-base-content)) 10%, var(--color-base-100));
+    --badge-noise: 0;
+    --badge-fx-noise: none;
+  }
+}

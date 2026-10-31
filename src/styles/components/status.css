@@ -1,0 +1,62 @@
+@utility status-* {
+  --status-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number)%
+  );
+}
+
+@utility status-* {
+  --status-color: --value(--color-*, [*]);
+}
+
+@utility status {
+  @layer components.l1.l2.l3 {
+    --status-size: calc(var(--spacing) * 2) /* 0.5rem = 8px */;
+    --status-bg: var(--status-color, --alpha(var(--color-base-content) / 20%));
+    --status-shadow: none;
+
+    @apply inline-block aspect-square size-(--status-size) rounded-lg align-middle;
+
+    background-color: var(--status-bg);
+    box-shadow: var(--status-shadow);
+    color: var(--status-bg);
+  }
+}
+
+@utility status-gloss {
+  @layer components.l1.l2.l3 {
+    background-image: radial-gradient(circle at 35% 30%, oklch(1 0 0 / calc(var(--depth, 1) * 0.5)), #0000);
+    @apply bg-position-[50%] bg-no-repeat;
+    --status-shadow: 0 2px 3px -1px --alpha(currentColor / calc(var(--depth, 1) * 100%));
+  }
+}
+
+@utility status-ring {
+  @layer components.l1.l2.l3 {
+    --status-shadow: 0 0 0 0.09375rem var(--color-bg);
+  }
+}
+
+@utility status-xs {
+  @layer components.l1.l2.l3 {
+    --status-size: calc(var(--spacing) * 2) /* 0.5rem = 8px */;
+  }
+}
+
+@utility status-sm {
+  @layer components.l1.l2.l3 {
+    --status-size: calc(var(--spacing) * 2.5) /* 0.625rem = 10px */;
+  }
+}
+
+@utility status-md {
+  @layer components.l1.l2.l3 {
+    --status-size: calc(var(--spacing) * 3) /* 0.75rem = 12px */;
+  }
+}
+
+@utility status-lg {
+  @layer components.l1.l2.l3 {
+    --status-size: calc(var(--spacing) * 4) /* 1rem = 16px */;
+  }
+}

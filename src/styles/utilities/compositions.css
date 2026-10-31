@@ -1,0 +1,83 @@
+/* --- Automatic contrast color ---
+   Generates a contrasting foreground color from any background color.
+   Uses oklch(from ...) for perceptually uniform contrast calculation.
+   Light backgrounds → dark tinted text. Dark backgrounds → light tinted text.
+   Always preserves 50% of the source hue/chroma so the contrast color
+   feels related to the original.                                              */
+@utility color-contrast-* {
+  --color-contrast: oklch(
+    from --value(--color-*, [*])
+      calc(
+        min(
+          1,
+          max(
+            0,
+            /* 1. LIGHT BACKGROUNDS (l > 0.675)
+           Result: Dark Text (~43% lightness of the bg) 
+        */ (min(1, max(0, (l - 0.675) * 30)) * (l * 0.43)) +
+              (
+                (
+                    1 -
+                      min(
+                        /* 2. DARK BACKGROUNDS (l <= 0.675)
+           Result: Light Text
+           THE FIX: We use max() to set a "floor".
+           (l * 6.88) attempts to scale contrast dynamically (which you liked).
+           0.96 ensures that if l=0 (black), we default to 96% lightness.
+        */ 1,
+                        max(0, (l - 0.675) * 30)
+                      )
+                  ) *
+                  max(0.96, l * 6.88)
+              )
+          )
+        )
+      )
+      /* 3. THE "SUBTLE TRACE"
+       We keep half the original chroma and the original hue.
+       This ensures the white/black is never "pure", but always tinted.
+    */
+      calc(c * 0.5) h / 1 /* Force text to be 100% opaque */
+  );
+}
+
+/* Apply contrast color to text, specifying the source color explicitly */
+@utility text-contrast-* {
+  @apply color-contrast-[--value(--color-*,[*])];
+  color: var(--color-contrast);
+}
+
+/* Apply contrast color to text using the current background */
+@utility text-contrast {
+  @apply color-contrast-(--color-bg);
+  color: var(--color-contrast);
+}
+
+/* --- Scroll lock ---
+   When applied to a popover, dialog, or <details>, locks the page scroll
+   and applies a semi-transparent backdrop overlay over the root.
+   Depends on bg-* being applied first (uses --color-bg).                    */
+@utility scroll-lock {
+  @layer components.l1.l2 {
+    &:is([open], :popover-open, :open) {
+      :root:has(&) {
+        --root-bg: var(--color-base-100);
+        --page-overflow: hidden;
+        --page-has-backdrop: 1;
+        --page-scroll-bg: linear-gradient(var(--root-bg), var(--root-bg))
+          color-mix(in srgb, var(--root-bg), oklch(0% 0 0) calc(var(--page-has-backdrop, 0) * 40%));
+
+        @apply scrollbar-gutter-stable [background:var(--page-scroll-bg)];
+
+        transition: background-color 0.3s ease-out;
+        @media (prefers-reduced-motion: reduce) {
+          transition: none !important;
+        }
+
+        &:not(span) {
+          overflow: var(--page-overflow);
+        }
+      }
+    }
+  }
+}

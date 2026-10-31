@@ -1,0 +1,66 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   Masonry — Columns  (column-count)
+   Items flow top-to-bottom, then left-to-right (newspaper column order).
+   Pure CSS, no fixed height required. Works in all modern browsers.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* --- Base container --- */
+@utility masonry {
+  @layer components.l1.l2.l3 {
+    --masonry-gap: 1rem;
+    @apply max-w-full columns-1 gap-(--masonry-gap);
+  }
+
+  @layer components.l1.l2 {
+    @media (width < 40rem) {
+      columns: 1;
+    }
+  }
+}
+
+/* --- Column-count variants --- */
+@utility masonry-cols-* {
+  @layer components.l1.l2.l3 {
+    columns: --value("1", "2", "3", "4", "5", "6");
+  }
+}
+
+/* --- Gap variants --- */
+@utility masonry-cols-gap-* {
+  @layer components.l1.l2.l3 {
+    --masonry-gap: calc(var(--spacing) * --value("0", "2", "4", "6", "8"));
+  }
+}
+
+/* --- Item: prevent splitting across columns --- */
+@utility masonry-item {
+  @layer components.l1.l2.l3 {
+    @apply mb-(--masonry-gap) break-inside-avoid;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    /*
+     * Let images reserve their space early via width/height attributes.
+     * Prevents layout shift as items flow through columns.
+     */
+    img {
+      height: auto;
+    }
+  }
+}
+
+/*
+ * Opt-in performance boost for large galleries (50+ items).
+ * Off-screen items skip rendering entirely — the browser only paints
+ * what's in the viewport. Pair with width/height on images so the
+ * column-count algorithm can estimate heights before render.
+ *
+ * contain-intrinsic-size: auto 300px gives a reasonable starting
+ * estimate for a card with a ~250px image + body text.
+ */
+@utility masonry-item-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 300px;
+}

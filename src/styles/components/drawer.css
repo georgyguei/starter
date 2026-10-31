@@ -1,0 +1,224 @@
+/* --- drawer.css --- */
+@utility drawer-* {
+  --drawer-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number)%
+  );
+}
+
+@utility drawer-* {
+  --drawer-color: --value(--color-*, [*]);
+}
+
+@utility drawer-offset-* {
+  @layer components.l1.l2 {
+    --drawer-offset: calc(
+      var(--spacing) *
+        --value(
+          "0",
+          "0.5",
+          "1",
+          "1.5",
+          "2",
+          "2.5",
+          "3",
+          "4",
+          "5",
+          "6",
+          "8",
+          "10",
+          "12",
+          "16",
+          "20",
+          "24",
+          "32",
+          "40",
+          "48",
+          "56",
+          "64",
+          "72",
+          "80",
+          "96",
+          number
+        )
+    );
+    --drawer-offset: --value([*]);
+  }
+}
+
+@utility -drawer-offset-* {
+  @layer components.l1.l2 {
+    --drawer-offset: calc(
+      var(--spacing) *
+        --value(
+          "0",
+          "0.5",
+          "1",
+          "1.5",
+          "2",
+          "2.5",
+          "3",
+          "4",
+          "5",
+          "6",
+          "8",
+          "10",
+          "12",
+          "16",
+          "20",
+          "24",
+          "32",
+          "40",
+          "48",
+          "56",
+          "64",
+          "72",
+          "80",
+          "96",
+          number
+        ) *
+        -1
+    );
+    --drawer-offset: --value([*]);
+  }
+}
+
+@utility drawer {
+  @layer components.l1.l2.l3 {
+    --drawer-bg: var(--drawer-color, oklch(0% _0_0/0));
+    --drawer-fg: var(--color-contrast, currentColor);
+    --drawer-duration: var(--tw-duration, 700ms);
+
+    @apply fixed m-0 h-(--drawer-h) max-h-none w-(--drawer-w) max-w-none origin-(--drawer-origin) scrollbar-gutter-auto overflow-visible overscroll-contain [background-color:var(--drawer-bg)] p-0 text-(--drawer-fg) color-contrast-(--drawer-color);
+
+    top: var(--drawer-top, auto);
+    right: var(--drawer-right, auto);
+    bottom: var(--drawer-bottom, auto);
+    left: var(--drawer-left, auto);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+
+    &::backdrop {
+      background-color: oklch(0% 0 0 / 0.2);
+    }
+  }
+}
+
+@utility drawer-modal {
+  @layer components.l1.l2 {
+    &:is([open], :popover-open, :open) {
+      pointer-events: auto;
+
+      :root:has(&) {
+        & > * {
+          pointer-events: none;
+        }
+      }
+    }
+  }
+}
+
+@utility drawer-animated {
+  @layer components.l1.l2 {
+    &:is([open], :popover-open, :open) {
+      transition:
+        scale 1550ms var(--ease-spring-heavy),
+        translate 1550ms var(--ease-spring-heavy),
+        opacity 1550ms ease;
+
+      &::backdrop {
+        @apply starting:opacity-0;
+        transition: opacity 300ms var(--ease-out);
+      }
+    }
+
+    @supports (transition-behavior: allow-discrete) and (selector(:popover-open)) and (overlay: auto) {
+      &:not(:is([open], :popover-open, :open)) {
+        transition: 650ms var(--ease-overshoot-in) allow-discrete;
+        transition-property: scale, opacity, translate, display, overlay;
+        &::backdrop {
+          @apply opacity-0;
+          transition: opacity 650ms var(--ease-in);
+        }
+      }
+    }
+  }
+}
+
+@utility drawer-top {
+  @layer components.l1.l2 {
+    --drawer-origin: top center;
+    --drawer-w: 100dvw;
+    --drawer-top: var(--drawer-offset, 0rem);
+    --drawer-left: 0;
+
+    &:is(.drawer-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply starting:-translate-y-2 starting:opacity-0;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply -translate-y-2 opacity-0;
+      }
+    }
+  }
+}
+
+@utility drawer-bottom {
+  @layer components.l1.l2 {
+    --drawer-origin: bottom center;
+    --drawer-w: 100dvw;
+    --drawer-bottom: var(--drawer-offset, 0rem);
+    --drawer-left: 0;
+
+    &:is(.drawer-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply starting:translate-y-2 starting:opacity-0;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply translate-y-2 opacity-0;
+      }
+    }
+  }
+}
+
+@utility drawer-left {
+  @layer components.l1.l2 {
+    --drawer-origin: 0;
+    --drawer-h: 100dvh;
+    --drawer-top: var(--drawer-offset, 0rem);
+    --drawer-left: 0;
+
+    &:is(.drawer-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply opacity-100 starting:-translate-x-2 starting:opacity-0;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply -translate-x-2 opacity-0;
+      }
+    }
+  }
+}
+
+@utility drawer-right {
+  @layer components.l1.l2 {
+    --drawer-origin: 100%;
+    --drawer-h: 100dvh;
+    --drawer-top: var(--drawer-offset, 0rem);
+    --drawer-right: 0;
+
+    &:is(.drawer-animated) {
+      &:is([open], :popover-open, :open) {
+        @apply starting:translate-x-2 starting:opacity-0;
+      }
+
+      &:not(:is([open], :popover-open, :open)) {
+        @apply translate-x-2 opacity-0;
+      }
+    }
+  }
+}

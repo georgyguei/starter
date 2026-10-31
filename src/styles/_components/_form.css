@@ -1,0 +1,1226 @@
+/* --- checkbox copy.css --- */
+@utility checkbox-* {
+  @apply color-contrast-(--input-color);
+  --input-color: --value(--color-*, [*]);
+}
+
+@utility checkbox {
+  @apply relative inline-block size-(--size) shrink-0 cursor-pointer appearance-none rounded-lg p-1 align-middle;
+  color: var(--color-contrast, var(--color-base-content));
+  border: var(--border) solid var(--input-color, color-mix(in oklab, var(--color-base-content) 20%, #0000));
+  box-shadow:
+    0 1px oklch(0% 0 0 / calc(var(--depth, 1) * 0.1)) inset,
+    0 0 #0000 inset,
+    0 0 #0000;
+  --size: calc(var(--size-selector, 0.25rem) * 6);
+  background-size: auto, calc(var(--noise) * 100%);
+  background-image: none, var(--fx-noise);
+  transition:
+    background-color var(--duration, 400ms) cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow var(--duration, 400ms) cubic-bezier(0.4, 0, 0.2, 1);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  &:before {
+    @apply block size-full rotate-45 bg-current text-md leading-3 opacity-0 content-[""];
+    box-shadow: 0px 3px 0 0px oklch(100% 0 0 / calc(var(--depth, 1) * 0.1)) inset;
+    clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 80%, 70% 80%, 70% 100%);
+    transition:
+      clip-path var(--duration, 400ms) cubic-bezier(0.4, 0, 0.2, 1),
+      rotate var(--duration, 400ms) cubic-bezier(0.4, 0, 0.2, 1),
+      translate var(--duration, 400ms) cubic-bezier(0.4, 0, 0.2, 1),
+      opacity var(--duration, 400ms) cubic-bezier(0.4, 0, 0.2, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--input-color, currentColor);
+    outline-offset: 2px;
+  }
+
+  &:checked,
+  &[aria-checked="true"] {
+    background-color: var(--input-color, #0000);
+    box-shadow:
+      0 0 #0000 inset,
+      0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth, 1) * 0.1)) inset,
+      0 1px oklch(0% 0 0 / calc(var(--depth, 1) * 0.1));
+
+    &:before {
+      @apply opacity-100;
+      clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 0%, 70% 0%, 70% 100%);
+    }
+    @media (forced-colors: active) {
+      &:before {
+        @apply rotate-0 bg-[#0000] [--tw-content:"✔︎"] [clip-path:none];
+      }
+    }
+    @media print {
+      &:before {
+        @apply rotate-0 bg-[#0000] [--tw-content:"✔︎"] [clip-path:none];
+      }
+    }
+  }
+
+  &:indeterminate {
+    background-color: var(--input-color, color-mix(in oklab, currentColor 20%, #0000));
+    &:before {
+      @apply rotate-0 opacity-100;
+      translate: 0 -35%;
+      clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 80%, 80% 80%, 80% 100%);
+    }
+  }
+  &:disabled {
+    @apply cursor-not-allowed opacity-20;
+  }
+}
+
+@utility checkbox-xs {
+  @apply p-0.5;
+  &:is([type="checkbox"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 4);
+  }
+}
+
+@utility checkbox-sm {
+  @apply p-0.75;
+  &:is([type="checkbox"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 5);
+  }
+}
+
+@utility checkbox-md {
+  @apply p-1;
+  &:is([type="checkbox"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 6);
+  }
+}
+
+@utility checkbox-lg {
+  @apply p-1.25;
+  &:is([type="checkbox"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 7);
+  }
+}
+
+@utility checkbox-xl {
+  @apply p-1.5;
+  &:is([type="checkbox"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 8);
+  }
+}
+
+/* --- checkbox.css --- */
+@utility checkbox-* {
+  @apply color-contrast-(--input-color);
+  --input-color: --value(--color-*, [*]);
+}
+
+@utility checkbox {
+  @layer components.l1.l2.l3 {
+    --checkbox-p: 0.25rem;
+    @apply relative inline-block size-(--size) shrink-0 cursor-pointer appearance-none rounded-lg p-(--checkbox-p) align-middle;
+    color: var(--color-contrast, var(--color-base-content));
+    border: var(--border) solid var(--input-color, color-mix(in oklab, var(--color-base-content) 20%, #0000));
+    box-shadow:
+      0 1px oklch(0% 0 0 / calc(var(--depth, 1) * 0.1)) inset,
+      0 0 #0000 inset,
+      0 0 #0000;
+    --size: calc(var(--size-selector, 0.25rem) * 6);
+    background-size: auto, calc(var(--noise) * 100%);
+    background-image: none, var(--fx-noise);
+    transition:
+      background-color var(--duration, 300ms) cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow var(--duration, 300ms) cubic-bezier(0.4, 0, 0.2, 1);
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:before {
+      @apply block size-full rotate-45 bg-current text-md leading-3 opacity-0 content-[""];
+      box-shadow: 0px 3px 0 0px oklch(100% 0 0 / calc(var(--depth, 1) * 0.1)) inset;
+      clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 80%, 70% 80%, 70% 100%);
+      transition:
+        clip-path calc(var(--duration, 300ms) + 100ms) cubic-bezier(0.4, 0, 0.2, 1),
+        rotate calc(var(--duration, 300ms) + 100ms) cubic-bezier(0.4, 0, 0.2, 1),
+        opacity calc(var(--duration, 300ms) + 300ms) cubic-bezier(0.4, 0, 0.2, 1);
+      transition-delay: 100ms;
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--input-color, currentColor);
+      outline-offset: 2px;
+    }
+
+    &:checked,
+    &[aria-checked="true"] {
+      background-color: var(--input-color, #0000);
+      box-shadow:
+        0 0 #0000 inset,
+        0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth, 1) * 0.1)) inset,
+        0 1px oklch(0% 0 0 / calc(var(--depth, 1) * 0.1));
+
+      &:before {
+        @apply opacity-100;
+        clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 0%, 70% 0%, 70% 100%);
+      }
+      @media (forced-colors: active) {
+        &:before {
+          @apply rotate-0 bg-[#0000] [--tw-content:"✔︎"] [clip-path:none];
+        }
+      }
+      @media print {
+        &:before {
+          @apply rotate-0 bg-[#0000] [--tw-content:"✔︎"] [clip-path:none];
+        }
+      }
+    }
+
+    &:indeterminate {
+      background-color: var(--input-color, color-mix(in oklab, currentColor 20%, #0000));
+      &:before {
+        @apply rotate-0 opacity-100;
+        translate: 0 -35%;
+        clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 80%, 80% 80%, 80% 100%);
+      }
+    }
+    &:disabled {
+      @apply cursor-not-allowed opacity-20;
+    }
+  }
+}
+
+@utility checkbox-xs {
+  @layer components.l1.l2 {
+    --checkbox-p: 0.125rem;
+    &:is([type="checkbox"]) {
+      --size: calc(var(--size-selector, 0.25rem) * 4);
+    }
+  }
+}
+
+@utility checkbox-sm {
+  @layer components.l1.l2 {
+    --checkbox-p: 0.1875rem;
+    &:is([type="checkbox"]) {
+      --size: calc(var(--size-selector, 0.25rem) * 5);
+    }
+  }
+}
+
+@utility checkbox-md {
+  @layer components.l1.l2 {
+    --checkbox-p: 0.25rem;
+    &:is([type="checkbox"]) {
+      --size: calc(var(--size-selector, 0.25rem) * 6);
+    }
+  }
+}
+
+@utility checkbox-lg {
+  @layer components.l1.l2 {
+    --checkbox-p: 0.3125rem;
+    &:is([type="checkbox"]) {
+      --size: calc(var(--size-selector, 0.25rem) * 7);
+    }
+  }
+}
+
+@utility checkbox-xl {
+  @layer components.l1.l2 {
+    --checkbox-p: 0.375rem;
+    &:is([type="checkbox"]) {
+      --size: calc(var(--size-selector, 0.25rem) * 8);
+    }
+  }
+}
+
+/* --- color.css --- */
+@utility color-preview {
+  @layer components.l1.l2.l3 {
+    /* Default variables */
+    --color: #0000;
+    --checker-size: 0.5rem;
+    --checker-color-1: #e4e4e7;
+    --checker-color-2: #ffffff;
+
+    /* Base Layout (The Wrapper) */
+    @apply relative inline-block size-4.5 shrink-0 cursor-pointer rounded-xs border border-base-content/10 align-middle shadow-sm;
+
+    /* Visuals (Applied to the Wrapper) */
+    background:
+      linear-gradient(var(--color), var(--color)),
+      repeating-conic-gradient(var(--checker-color-1) 0% 25%, var(--checker-color-2) 0% 50%) 0% 50% / var(--checker-size) var(--checker-size);
+
+    transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: background, border-color, box-shadow;
+
+    /* Interaction States on the Wrapper */
+    @media (hover: hover) {
+      &:not(:has(input[type="color"]:is(:disabled, [disabled], [aria-disabled="true"]))):hover {
+        @apply border-base-content/30;
+      }
+    }
+
+    &:focus-within {
+      @apply ring-primary ring-offset-1 outline;
+    }
+
+    &:focus-visible,
+    &:has(:focus-visible) {
+      @apply isolate outline-2 outline-solid;
+      outline-color: var(--color, currentcolor);
+    }
+
+    &:has(input[type="color"]:is(:disabled, [disabled], [aria-disabled="true"])) {
+      @apply cursor-not-allowed opacity-60 [box-shadow:none];
+    }
+
+    /* THE PHANTOM INPUT (Targeted Automatically) */
+    & > input[type="color"] {
+      @apply absolute inset-0 cursor-[inherit] appearance-none border-0 p-0 opacity-0;
+
+      /* Safety resets for different browsers */
+      &::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+      &::-webkit-color-swatch {
+        border: none;
+      }
+      &::-moz-color-swatch {
+        border: none;
+      }
+    }
+  }
+}
+
+/* --- field.css --- */
+@utility field {
+  @layer components.l1.l2.l3 {
+    @apply relative flex w-full flex-col gap-1.5;
+
+    /* Optional: If you want to strictly control width */
+    max-width: 100%;
+
+    /* Targets the label inside this wrapper */
+    & > .label {
+      @apply mb-0.5;
+    }
+
+    /* Targets the helper/error text at the bottom */
+    & > .validator-hint {
+      @apply mt-1;
+    }
+  }
+}
+
+@utility field-horizontal {
+  @layer components.l1.l2 {
+    @apply flex-row items-center justify-between;
+
+    & > .label {
+      @apply mr-2 mb-0;
+    }
+  }
+}
+
+/* --- input.css --- */
+@utility input-* {
+  --input-color: --value(--color-*, [*]);
+}
+
+@utility input {
+  @apply relative inline-flex h-(--size) shrink cursor-text touch-manipulation appearance-none items-center gap-2 rounded-md px-3 text-start align-middle text-sm whitespace-nowrap;
+  border: var(--border) solid #0000;
+  width: clamp(3rem, 20rem, 100%);
+  border-color: var(--input-color);
+  --size: calc(var(--size-field, 0.25rem) * 10);
+  --input-color: color-mix(in oklab, var(--color-base-content) 20%, #0000);
+  transition: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: background-color, color, box-shadow, font-size;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  &:where(input) {
+    @apply inline-flex;
+  }
+
+  :where(input) {
+    @apply inline-flex h-full w-full appearance-none bg-[#0000] [border:#0000];
+
+    &:focus,
+    &:focus-within,
+    &:focus-visible {
+      @apply outline-hidden;
+    }
+  }
+
+  :where(input[type="url"]),
+  :where(input[type="email"]) {
+    direction: ltr;
+  }
+
+  :where(input[type="date"]) {
+    @apply inline-flex;
+  }
+
+  &:is([data-invalid], [aria-invalid="true"], [data-state="invalid"]),
+  &:has(input:is([data-invalid], [aria-invalid="true"], [data-state="invalid"])) {
+    --input-color: var(--color-error);
+    &:focus,
+    &:focus-within,
+    &:focus-visible {
+      --input-color: var(--color-error);
+    }
+  }
+
+  &:focus,
+  &:focus-within,
+  &:focus-visible {
+    @apply isolate z-1;
+    outline: 2px solid var(--input-color);
+    outline-offset: 0px;
+  }
+
+  /* increase font size in iOS so the page won't zoom */
+  @media (pointer: coarse) {
+    @supports (-webkit-touch-callout: none) {
+      &:focus,
+      &:focus-within,
+      &:focus-visible {
+        --font-size: 1rem;
+      }
+    }
+  }
+
+  &:has(> input[disabled]),
+  &:is(:disabled, [disabled], [aria-disabled="true"]),
+  fieldset:disabled & {
+    @apply cursor-not-allowed border-base-200 bg-base-200 text-base-content/40 placeholder-base-content/20 [box-shadow:none];
+  }
+
+  &:has(> input[disabled]) > input[disabled] {
+    @apply cursor-not-allowed;
+  }
+
+  &::-webkit-date-and-time-value {
+    text-align: inherit;
+  }
+
+  &[type="number"] {
+    &::-webkit-inner-spin-button {
+      @apply -my-3 -me-3;
+    }
+  }
+
+  &::-webkit-calendar-picker-indicator {
+    @apply absolute end-3;
+  }
+
+  &:has(> input[type="date"]) {
+    :where(input[type="date"]) {
+      @apply inline-flex appearance-none;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      @apply absolute end-3 size-[1em] cursor-pointer;
+    }
+  }
+}
+
+@utility input-ghost {
+  @apply border-[#0000] bg-[#0000];
+}
+
+@utility input-soft {
+  background-color: color-mix(in oklab, var(--input-color, var(--color-base-200)) 8%, var(--color-base-100));
+  border-color: color-mix(in oklab, var(--input-color, var(--color-base-200)) 10%, var(--color-base-100));
+}
+
+@utility input-flushed {
+  @apply rounded-none bg-[#0000] p-0 [border:#0000];
+  border-bottom: 1px solid var(--input-color);
+  &:focus,
+  &:focus-within,
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 2px 0 0 var(--input-color);
+  }
+}
+
+@utility input-xs {
+  @apply text-[0.6875rem] leading-3.5;
+  --size: calc(var(--size-field, 0.25rem) * 6);
+
+  &[type="number"] {
+    &::-webkit-inner-spin-button {
+      @apply -my-1 -me-3;
+    }
+  }
+}
+
+@utility input-sm {
+  @apply text-xs;
+  --size: calc(var(--size-field, 0.25rem) * 8);
+
+  &[type="number"] {
+    &::-webkit-inner-spin-button {
+      @apply -my-2 -me-3;
+    }
+  }
+}
+
+@utility input-md {
+  @apply text-sm;
+  --size: calc(var(--size-field, 0.25rem) * 10);
+
+  &[type="number"] {
+    &::-webkit-inner-spin-button {
+      @apply -my-3 -me-3;
+    }
+  }
+}
+
+@utility input-lg {
+  @apply text-lg;
+  --size: calc(var(--size-field, 0.25rem) * 12);
+
+  &[type="number"] {
+    &::-webkit-inner-spin-button {
+      @apply -my-3 -me-3;
+    }
+  }
+}
+
+@utility input-xl {
+  @apply text-[1.375rem] leading-8.5;
+  --size: calc(var(--size-field, 0.25rem) * 14);
+
+  &[type="number"] {
+    &::-webkit-inner-spin-button {
+      @apply -my-4 -me-3;
+    }
+  }
+}
+
+/* --- label.css --- */
+@utility label {
+  @layer components.l1.l2.l3 {
+    @apply inline-flex items-center gap-1.5 whitespace-nowrap text-current/60;
+    &:has(input) {
+      @apply cursor-pointer;
+    }
+    &:is(.input > *, .select > *) {
+      @apply flex items-center px-3 whitespace-nowrap;
+      height: calc(100% - 0.5rem);
+      font-size: inherit;
+      &:first-child {
+        @apply -ms-3 me-3;
+        border-inline-end: var(--border) solid color-mix(in oklab, currentColor 10%, #0000);
+      }
+      &:last-child {
+        @apply ms-3 -me-3;
+        border-inline-start: var(--border) solid color-mix(in oklab, currentColor 10%, #0000);
+      }
+    }
+  }
+}
+
+@utility label-floating {
+  @layer components.l1.l2.l3 {
+    @apply relative block;
+
+    input {
+      @apply block;
+      &::placeholder {
+        transition:
+          top var(--duration, 300ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1)),
+          translate var(--duration, 300ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1)),
+          scale var(--duration, 300ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1)),
+          opacity var(--duration, 300ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1));
+
+        @media (prefers-reduced-motion: reduce) {
+          transition: none;
+        }
+      }
+    }
+
+    textarea {
+      &::placeholder {
+        transition:
+          top var(--duration, 300ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1)),
+          translate var(--duration, 300ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1)),
+          scale var(--duration, 300ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1)),
+          opacity var(--duration, 300ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1));
+
+        @media (prefers-reduced-motion: reduce) {
+          transition: none;
+        }
+      }
+    }
+
+    > span {
+      @apply pointer-events-none absolute start-3 z-1 -translate-y-1/2 rounded-xs px-1 text-sm leading-none opacity-0;
+      background-color: var(--color-bg);
+      top: calc(var(--size-field, 0.25rem) * 10 / 2);
+      transition:
+        top var(--duration, 300ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1)),
+        translate var(--duration, 300ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1)),
+        scale var(--duration, 300ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1)),
+        opacity var(--duration, 300ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1));
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+
+    &:focus-within,
+    &:not(:has(input:placeholder-shown, textarea:placeholder-shown)) {
+      ::placeholder {
+        @apply pointer-events-none top-0 scale-75 opacity-0;
+        translate: -12.5% calc(-50% - 0.125em);
+      }
+      > span {
+        @apply pointer-events-auto top-0 z-2 scale-75 opacity-100;
+        translate: -12.5% calc(-50% - 0.125em);
+      }
+    }
+
+    &:has(:disabled, [disabled], [aria-disabled="true"]) {
+      > span {
+        @apply opacity-0;
+      }
+    }
+
+    &:has(.input-xs, .select-xs, .textarea-xs) span {
+      @apply text-[0.6875rem];
+      top: calc(var(--size-field, 0.25rem) * 6 / 2);
+    }
+
+    &:has(.input-sm, .select-sm, .textarea-sm) span {
+      @apply text-[0.75rem];
+      top: calc(var(--size-field, 0.25rem) * 8 / 2);
+    }
+
+    &:has(.input-md, .select-md, .textarea-md) span {
+      @apply text-[0.875rem];
+      top: calc(var(--size-field, 0.25rem) * 10 / 2);
+    }
+
+    &:has(.input-lg, .select-lg, .textarea-lg) span {
+      @apply text-[1.125rem];
+      top: calc(var(--size-field, 0.25rem) * 12 / 2);
+    }
+
+    &:has(.input-xl, .select-xl, .textarea-xl) span {
+      @apply text-[1.375rem];
+      top: calc(var(--size-field, 0.25rem) * 14 / 2);
+    }
+  }
+}
+
+/* --- radio.css --- */
+@utility radio-* {
+  --input-color: --value(--color-*, [*]);
+}
+
+@utility radio {
+  @apply relative inline-block size-(--size) shrink-0 cursor-pointer appearance-none rounded-full p-1 align-middle text-base-content;
+  border: var(--border) solid var(--input-color, color-mix(in srgb, var(--color-base-content) 20%, #0000));
+  box-shadow: 0 1px oklch(0% 0 0 / calc(var(--depth, 1) * 0.1)) inset;
+  --size: calc(var(--size-selector, 0.25rem) * 6);
+
+  &:before {
+    @apply block size-full scale-0 rounded-full content-[""];
+    background-size: auto, calc(var(--noise) * 100%);
+    background-image: none, var(--fx-noise);
+    transition:
+      scale var(--duration, 400ms) var(--tw-ease, cubic-bezier(0.85, 2.06, 0.64, 1)),
+      background-color var(--duration, 400ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1)),
+      box-shadow var(--duration, 400ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1));
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 0px;
+  }
+
+  &:checked,
+  &[aria-checked="true"] {
+    @apply border-current;
+
+    &:before {
+      @apply scale-100 bg-current;
+      box-shadow:
+        0 -1px oklch(0% 0 0 / calc(var(--depth, 1) * 0.1)) inset,
+        0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth, 1) * 0.1)) inset,
+        0 1px oklch(0% 0 0 / calc(var(--depth, 1) * 0.1));
+    }
+
+    @media (forced-colors: active) {
+      &:before {
+        @apply outline -outline-offset-1;
+      }
+    }
+
+    @media print {
+      &:before {
+        outline: 0.25rem solid;
+        outline-offset: -1rem;
+      }
+    }
+  }
+
+  &:disabled {
+    @apply cursor-not-allowed opacity-20;
+  }
+}
+
+@utility radio-xs {
+  @apply p-0.5;
+  &:is([type="radio"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 4);
+  }
+}
+
+@utility radio-sm {
+  @apply p-0.75;
+  &:is([type="radio"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 5);
+  }
+}
+
+@utility radio-md {
+  @apply p-1;
+  &:is([type="radio"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 6);
+  }
+}
+
+@utility radio-lg {
+  @apply p-1.25;
+  &:is([type="radio"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 7);
+  }
+}
+
+@utility radio-xl {
+  @apply p-1.5;
+  &:is([type="radio"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 8);
+  }
+}
+
+/* --- range.css --- */
+@utility range-* {
+  --input-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number)%
+  );
+}
+
+@utility range-* {
+  --input-color: --value(--color-*, [*]);
+}
+
+@utility range {
+  @layer components.l1.l2.l3 {
+    --range-thumb: var(--color-contrast, var(--color-base-100));
+    --range-thumb-ring: "#0000";
+    --range-thumb-size: calc(var(--spacing) * 6);
+    --range-progress: currentColor;
+    --range-fill: 1;
+    --range-p: 0.25rem;
+    --range-bg: color-mix(in oklab, currentColor 10%, #0000);
+    --radius-selector-max: calc(var(--radius-selector) + var(--radius-selector) + var(--radius-selector));
+    @apply color-contrast-(--input-color);
+    @apply cursor-pointer appearance-none overflow-hidden bg-transparent align-middle text-(--input-color);
+    width: clamp(3rem, 20rem, 100%);
+    border-radius: calc(var(--radius-selector) + min(var(--range-p), var(--radius-selector-max)));
+    border: none;
+    height: var(--range-thumb-size);
+
+    [dir="rtl"] & {
+      --range-dir: -1;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid;
+      outline-offset: 2px;
+    }
+
+    &::-webkit-slider-runnable-track {
+      @apply w-full rounded-(--radius-selector) bg-(--range-bg);
+      height: calc(var(--range-thumb-size) * 0.5);
+    }
+
+    @media (forced-colors: active) {
+      &::-webkit-slider-runnable-track {
+        border: 1px solid;
+      }
+    }
+
+    &::-webkit-slider-thumb {
+      @apply relative top-1/2 box-border size-(--range-thumb-size) appearance-none rounded-full bg-(--range-thumb) text-(--range-progress);
+      border: var(--range-p) solid;
+      outline: var(--range-thumb-ring);
+      translate: 0 -50%;
+      box-shadow:
+        0 -1px oklch(0% 0 0 / calc(var(--depth, 1) * 0.1)) inset,
+        0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth, 1) * 0.1)) inset,
+        0 1px color-mix(in oklab, currentColor calc(var(--depth, 1) * 10%), #0000),
+        0 0 0 2rem var(--range-thumb) inset,
+        calc((var(--range-dir, 1) * -100rem) - (var(--range-dir, 1) * var(--range-thumb-size) / 2)) 0 0 calc(100rem * var(--range-fill));
+    }
+
+    &::-moz-range-track {
+      @apply w-full rounded-(--radius-selector) bg-(--range-bg);
+      height: calc(var(--range-thumb-size) * 0.5);
+    }
+    @media (forced-colors: active) {
+      &::-moz-range-track {
+        border: 1px solid;
+      }
+    }
+
+    &::-moz-range-thumb {
+      @apply relative top-1/2 box-border size-(--range-thumb-size) bg-current text-(--range-progress);
+      border-radius: calc(var(--radius-selector) + min(var(--range-p), var(--radius-selector-max)));
+      border: var(--range-p) solid;
+      outline: var(--range-thumb-ring);
+      box-shadow:
+        0 -1px oklch(0% 0 0 / calc(var(--depth, 1) * 0.1)) inset,
+        0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth, 1) * 0.1)) inset,
+        0 1px color-mix(in oklab, currentColor calc(var(--depth, 1) * 10%), #0000),
+        0 0 0 2rem var(--range-thumb) inset,
+        calc((var(--range-dir, 1) * -100rem) - (var(--range-dir, 1) * var(--range-thumb-size) / 2)) 0 0 calc(100rem * var(--range-fill));
+    }
+    &:disabled {
+      @apply cursor-not-allowed opacity-30;
+    }
+  }
+}
+
+@utility range-fill-* {
+  @layer components.l1.l2.l3 {
+    --range-fill: --value(integer);
+  }
+}
+
+@utility range-thumb-* {
+  @layer components.l1.l2.l3 {
+    --range-thumb: --value(--color-*, [*]);
+  }
+}
+
+@utility range-xs {
+  @layer components.l1.l2.l3 {
+    --range-thumb-size: calc(var(--spacing) * 4);
+  }
+}
+
+@utility range-sm {
+  @layer components.l1.l2.l3 {
+    --range-thumb-size: calc(var(--spacing) * 5);
+  }
+}
+
+@utility range-md {
+  @layer components.l1.l2.l3 {
+    --range-thumb-size: calc(var(--spacing) * 6);
+  }
+}
+
+@utility range-lg {
+  @layer components.l1.l2.l3 {
+    --range-thumb-size: calc(var(--spacing) * 7);
+  }
+}
+
+@utility range-xl {
+  @layer components.l1.l2.l3 {
+    --range-thumb-size: calc(var(--spacing) * 8);
+  }
+}
+
+/* --- rating.css --- */
+@utility rating {
+  @apply relative inline-flex align-middle;
+
+  & input {
+    border: none;
+    @apply appearance-none;
+  }
+
+  :where(*) {
+    @apply h-6 w-6 rounded-none bg-base-content opacity-20;
+    transition:
+      opacity var(--duration, 400ms) cubic-bezier(0.4, 0, 0.2, 1),
+      scale var(--duration, 400ms) cubic-bezier(0.9, 2.5, 0.64, 1),
+      filter var(--duration, 400ms) ease-out,
+      rotate var(--duration, 400ms) cubic-bezier(0.9, 2.5, 0.64, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:is(input) {
+      @apply cursor-pointer;
+    }
+  }
+
+  & .rating-hidden {
+    @apply w-2 bg-transparent;
+  }
+
+  input[type="radio"]:checked {
+    background-image: none;
+  }
+
+  * {
+    &:checked,
+    &[aria-checked="true"],
+    &[aria-current="true"],
+    &:has(~ *:checked, ~ *[aria-checked="true"], ~ *[aria-current="true"]) {
+      @apply opacity-100;
+      scale: 1.15;
+      filter: brightness(1.2) saturate(1.3) drop-shadow(0 0 8px currentColor);
+    }
+
+    &:hover {
+      scale: 1.2;
+      filter: brightness(1.15) contrast(1.1);
+      rotate: -5deg;
+    }
+
+    &:focus-visible {
+      scale: 1.25;
+      filter: brightness(1.3) contrast(1.15);
+      rotate: 5deg;
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+
+    &:active {
+      scale: 0.95;
+      filter: brightness(0.9);
+      rotate: 0deg;
+    }
+  }
+}
+
+@utility rating-xs {
+  :where(*:not(.rating-hidden)) {
+    @apply size-4;
+  }
+}
+
+@utility rating-sm {
+  :where(*:not(.rating-hidden)) {
+    @apply size-5;
+  }
+}
+
+@utility rating-md {
+  :where(*:not(.rating-hidden)) {
+    @apply size-6;
+  }
+}
+
+@utility rating-lg {
+  :where(*:not(.rating-hidden)) {
+    @apply size-7;
+  }
+}
+
+@utility rating-xl {
+  :where(*:not(.rating-hidden)) {
+    @apply size-8;
+  }
+}
+
+@utility rating-half {
+  :where(*:not(.rating-hidden)) {
+    @apply w-3;
+  }
+
+  &.rating-xs *:not(.rating-hidden) {
+    @apply w-2;
+  }
+
+  &.rating-sm *:not(.rating-hidden) {
+    @apply w-2.5;
+  }
+
+  &.rating-md *:not(.rating-hidden) {
+    @apply w-3;
+  }
+
+  &.rating-lg *:not(.rating-hidden) {
+    @apply w-3.5;
+  }
+
+  &.rating-xl *:not(.rating-hidden) {
+    @apply w-4;
+  }
+}
+
+/* --- toggle.css --- */
+@utility toggle-* {
+  --input-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number)%
+  );
+}
+
+@utility toggle-* {
+  --input-color: --value(--color-*, [*]);
+}
+
+@utility toggle {
+  --toggle-border: color-mix(in oklab, currentColor 10%, var(--color-base-100));
+  border: var(--border) solid;
+  border-color: var(--toggle-border);
+  --toggle-fg: var(--input-color, var(--color-base-content));
+  color: var(--toggle-fg);
+  @apply relative inline-grid shrink-0 cursor-pointer appearance-none place-content-center align-middle select-none;
+  background-color: var(--toggle-bg);
+  grid-template-columns: 0fr 1fr 1fr;
+  --radius-selector-max: calc(var(--radius-selector) + var(--radius-selector) + var(--radius-selector));
+  border-radius: calc(var(--radius-selector) + min(var(--toggle-p), var(--radius-selector-max)) + min(var(--border), var(--radius-selector-max)));
+
+  padding: var(--toggle-p);
+  box-shadow: 0 1px color-mix(in oklab, currentColor calc(var(--depth, 1) * 10%), #0000) inset;
+  --toggle-p: calc(var(--size) * 0.125);
+  --size: calc(var(--size-selector, 0.25rem) * 6);
+  width: calc((var(--size) * 2) - (var(--border) + var(--toggle-p)) * 2);
+  height: var(--size);
+  transition: all var(--duration, 700ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1));
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  /* icons in toggle */
+  & > * {
+    @apply z-1 col-span-1 col-start-2 row-start-1 h-full cursor-pointer appearance-none p-0.5;
+    border: none;
+    background-color: #0000;
+    transition:
+      opacity var(--duration, 700ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1)),
+      rotate var(--duration, 700ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1));
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:focus {
+      @apply outline-hidden;
+    }
+    &:nth-child(2) {
+      @apply text-(--color-contrast) color-contrast-[currentColor];
+      rotate: 0deg;
+    }
+    &:nth-child(3) {
+      @apply text-(--color-contrast) opacity-0 color-contrast-[currentColor];
+      rotate: -15deg;
+    }
+  }
+
+  &:has(:checked) {
+    & > :nth-child(2) {
+      @apply opacity-0;
+      rotate: 15deg;
+    }
+    & > :nth-child(3) {
+      @apply opacity-100;
+      rotate: 0deg;
+    }
+  }
+
+  &:before {
+    @apply relative start-0 col-start-2 row-start-1 aspect-square h-full rounded-full;
+    translate: 0;
+    --tw-content: "";
+    content: var(--tw-content);
+    box-shadow:
+      0 -1px oklch(0% 0 0 / calc(var(--depth, 1) * 0.1)) inset,
+      0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth, 1) * 0.1)) inset,
+      0 1px color-mix(in oklab, currentColor calc(var(--depth, 1) * 10%), #0000);
+
+    background-color: currentColor;
+    background-size: auto, calc(var(--noise) * 100%);
+    background-image: none, var(--fx-noise);
+  }
+  transition: all var(--duration, 700ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1));
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  @media (forced-colors: active) {
+    &:before {
+      @apply outline -outline-offset-1;
+    }
+  }
+  @media print {
+    &:before {
+      outline: 0.25rem solid;
+      outline-offset: -1rem;
+    }
+  }
+
+  &:focus-visible,
+  &:has(:focus-visible) {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  &:checked,
+  &[aria-checked="true"],
+  &:has(> input:checked) {
+    grid-template-columns: 1fr 1fr 0fr;
+    @apply color-contrast-(--input-color,var(--color-base-content));
+    --toggle-bg: var(--input-color, var(--color-base-content));
+    --toggle-fg: var(--color-contrast, var(--input-color, var(--color-base-content)));
+  }
+
+  &:indeterminate {
+    grid-template-columns: 0.5fr 1fr 0.5fr;
+  }
+
+  &:disabled {
+    @apply cursor-not-allowed opacity-30;
+
+    &:before {
+      @apply bg-transparent;
+      border: var(--border) solid currentColor;
+    }
+  }
+}
+
+/* responsive */
+
+@utility toggle-xs {
+  &:is([type="checkbox"]),
+  &:has([type="checkbox"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 4);
+  }
+}
+
+@utility toggle-sm {
+  &:is([type="checkbox"]),
+  &:has([type="checkbox"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 5);
+  }
+}
+
+@utility toggle-md {
+  &:is([type="checkbox"]),
+  &:has([type="checkbox"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 6);
+  }
+}
+
+@utility toggle-lg {
+  &:is([type="checkbox"]),
+  &:has([type="checkbox"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 7);
+  }
+}
+
+@utility toggle-xl {
+  &:is([type="checkbox"]),
+  &:has([type="checkbox"]) {
+    --size: calc(var(--size-selector, 0.25rem) * 8);
+  }
+}
+
+@utility toggle-outline {
+  --toggle-border: currentColor;
+  &:checked,
+  &[aria-checked="true"],
+  &:has(> input:checked) {
+    --color-contrast: var(--input-color);
+    --toggle-bg: "#0000";
+  }
+}
+
+@utility toggle-soft {
+  --toggle-bg: color-mix(in oklab, var(--input-color, var(--color-base-content)) 8%, var(--color-base-100));
+  --toggle-border: color-mix(in oklab, var(--input-color, var(--color-base-content)) 10%, var(--color-base-100));
+  --toggle-noise: none;
+}
+
+/* --- validator.css --- */
+@utility validator {
+  @layer components.l1.l2.l3 {
+    &:user-valid,
+    &:has(:user-valid) {
+      &,
+      &:focus,
+      &:checked,
+      &[aria-checked="true"],
+      &:focus-within {
+        --input-color: var(--color-success);
+      }
+    }
+
+    &:user-invalid,
+    &:has(:user-invalid),
+    &[aria-invalid]:not([aria-invalid="false"]),
+    &:has([aria-invalid]:not([aria-invalid="false"])) {
+      &,
+      &:focus,
+      &:checked,
+      &[aria-checked="true"],
+      &:focus-within {
+        --input-color: var(--color-error);
+      }
+
+      & ~ .validator-hint {
+        @apply text-error;
+        content-visibility: visible;
+        max-height: 200px;
+
+        @supports not (content-visibility: visible) {
+          visibility: visible;
+        }
+      }
+    }
+  }
+}
+
+@utility validator-hint {
+  @layer components.l1.l2.l3 {
+    @apply max-h-0 overflow-hidden text-xs;
+    content-visibility: hidden;
+    transition: all var(--duration, 700ms) var(--tw-ease, cubic-bezier(0.4, 0, 0.2, 1)) allow-discrete;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    @supports not (content-visibility: hidden) {
+      visibility: hidden;
+    }
+  }
+}

@@ -1,0 +1,211 @@
+@utility toggle-* {
+  --input-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number)%
+  );
+}
+
+@utility toggle-* {
+  --input-color: --value(--color-*, [*]);
+}
+
+@utility toggle {
+  @layer components.l1.l2.l3 {
+    --input-border-width: var(--border, 1px);
+    --input-border-color: color-mix(in oklab, var(--input-color, var(--color-base-content)) 30%, var(--color-base-100));
+    --toggle-thumb-color-contrast: var(--color-contrast, var(--color-base-100));
+    --toggle-fg: var(--input-color, var(--color-base-content));
+    --radius-selector-max: calc(0.5rem + 0.5rem + 0.5rem);
+    --input-size: calc(var(--spacing, 0.25rem) * 6);
+    --input-padding: calc(var(--input-size) * 0.125);
+    --toggle-duration: var(--tw-duration, 200ms);
+    --input-noise: var(--noise, 0);
+    --input-fx-noise: var(--fx-noise, none);
+
+    @apply relative inline-grid h-(--input-size) shrink-0 cursor-pointer appearance-none grid-cols-[0fr_1fr_1fr] place-content-center rounded-lg [background-color:var(--toggle-bg)] p-(--input-padding) align-middle text-(--toggle-fg) select-none color-contrast-(--input-color,var(--color-base-content));
+
+    border: var(--input-border-width) solid var(--input-border-color);
+    border-radius: calc(0.5rem + min(var(--input-padding), var(--radius-selector-max)) + min(var(--input-border-width), var(--radius-selector-max)));
+    box-shadow: 0 1px color-mix(in oklab, currentColor calc(var(--depth, 1) * 10%), oklch(0% 0 0 / 0)) inset;
+    width: calc((var(--input-size) * 2) - (var(--input-border-width) + var(--input-padding)) * 2);
+
+    transition:
+      color calc(var(--toggle-duration) * 1.5) cubic-bezier(0.4, 0, 0.2, 1),
+      background-color calc(var(--toggle-duration) * 2) cubic-bezier(0.4, 0, 0.2, 1),
+      border-color calc(var(--toggle-duration) * 1.5) cubic-bezier(0.4, 0, 0.2, 1),
+      grid-template-columns var(--toggle-duration) cubic-bezier(0.4, 0, 0.2, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+
+    @media (forced-colors: active) {
+      border-color: currentColor;
+    }
+
+    @media print {
+      border-width: 0.25rem;
+      border-color: currentColor;
+    }
+
+    /* icons in toggle */
+    & > * {
+      @apply z-1 col-span-1 col-start-2 row-start-1 h-full cursor-pointer appearance-none [background-color:oklch(0%_0_0/0)] p-0.5 [border:none];
+
+      transition:
+        opacity var(--toggle-duration) cubic-bezier(0.4, 0, 0.2, 1),
+        rotate calc(var(--toggle-duration) * 2) cubic-bezier(0.4, 0, 0.2, 1);
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none !important;
+      }
+
+      &:focus {
+        @apply outline-hidden;
+      }
+
+      &:nth-child(2) {
+        @apply rotate-0 text-(--color-contrast);
+      }
+
+      &:nth-child(3) {
+        @apply rotate-[-15deg] opacity-0;
+        color: var(--input-color, var(--color-base-content));
+      }
+    }
+
+    &:has(:checked) {
+      & > :nth-child(2) {
+        @apply rotate-15 opacity-0;
+      }
+      & > :nth-child(3) {
+        @apply rotate-0 opacity-100;
+      }
+    }
+
+    &:before {
+      @apply relative inset-s-0 col-start-2 row-start-1 aspect-square h-full rounded-full [background-color:currentColor] [background-image:none,var(--input-fx-noise)] bg-size-[auto,calc(var(--input-noise)*100%)] content-[""];
+
+      box-shadow:
+        0 -1px oklch(0% 0 0 / calc(var(--depth, 1) * 0.1)) inset,
+        0 8px 0 -4px color-mix(in oklab, var(--toggle-thumb-color-contrast) calc(var(--depth, 1) * 10%), oklch(0% 0 0 / 0)) inset,
+        /* 0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth, 1) * 0.1)) inset, */ 0 1px
+          color-mix(in oklab, currentColor calc(var(--depth, 1) * 10%), oklch(0% 0 0 / 0));
+
+      transition:
+        background-color calc(var(--toggle-duration) * 0.5) cubic-bezier(0.4, 0, 0.2, 1),
+        inset-inline-start var(--toggle-duration) cubic-bezier(0.4, 0, 0.2, 1);
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none !important;
+      }
+    }
+
+    @media (forced-colors: active) {
+      &:before {
+        @apply outline -outline-offset-1;
+      }
+    }
+
+    @media print {
+      &:before {
+        outline: 0.25rem solid;
+        outline-offset: -1rem;
+      }
+    }
+
+    &:focus-visible,
+    &:has(:focus-visible) {
+      @apply outline-2 outline-offset-2 outline-current;
+    }
+
+    &:checked,
+    &[aria-checked="true"],
+    &:has(> input:checked) {
+      @apply grid-cols-[1fr_1fr_0fr];
+      --toggle-bg: var(--input-color, var(--color-base-content));
+      --toggle-fg: var(--color-contrast, var(--input-color, var(--color-base-content)));
+      --toggle-thumb-color-contrast: var(--input-color, var(--color-base-content));
+    }
+
+    &:indeterminate {
+      grid-template-columns: 0.5fr 1fr 0.5fr;
+    }
+
+    &:disabled {
+      @apply cursor-not-allowed opacity-30;
+
+      &:before {
+        border: var(--input-border-width) solid currentColor;
+      }
+    }
+  }
+}
+
+/* responsive */
+
+@utility toggle-xs {
+  @layer components.l1.l2.l3 {
+    &:is([type="checkbox"]),
+    &:has([type="checkbox"]) {
+      --input-size: calc(var(--spacing, 0.25rem) * 4);
+    }
+  }
+}
+
+@utility toggle-sm {
+  @layer components.l1.l2.l3 {
+    &:is([type="checkbox"]),
+    &:has([type="checkbox"]) {
+      --input-size: calc(var(--spacing, 0.25rem) * 5);
+    }
+  }
+}
+
+@utility toggle-md {
+  @layer components.l1.l2.l3 {
+    &:is([type="checkbox"]),
+    &:has([type="checkbox"]) {
+      --input-size: calc(var(--spacing, 0.25rem) * 6);
+    }
+  }
+}
+
+@utility toggle-lg {
+  @layer components.l1.l2.l3 {
+    &:is([type="checkbox"]),
+    &:has([type="checkbox"]) {
+      --input-size: calc(var(--spacing, 0.25rem) * 7);
+    }
+  }
+}
+
+@utility toggle-xl {
+  @layer components.l1.l2.l3 {
+    &:is([type="checkbox"]),
+    &:has([type="checkbox"]) {
+      --input-size: calc(var(--spacing, 0.25rem) * 8);
+    }
+  }
+}
+
+@utility toggle-outline {
+  @layer components.l1.l2.l3 {
+    &:checked,
+    &[aria-checked="true"],
+    &:has(> input:checked) {
+      --input-border-color: currentColor;
+      --toggle-bg: oklch(0% 0 0 / 0);
+      --toggle-fg: var(--input-color, var(--color-base-content));
+      --toggle-thumb-color-contrast: var(--color-contrast, var(--color-base-100));
+    }
+  }
+}
+
+@utility toggle-soft {
+  @layer components.l1.l2.l3 {
+    --toggle-soft-bg: color-mix(in oklab, var(--input-color) 10%, var(--color-base-100));
+    --toggle-bg: var(--toggle-soft-bg, var(--color-base-200));
+    --input-border-color: color-mix(in oklab, var(--input-color, var(--color-base-content)) 10%, var(--color-base-100));
+  }
+}

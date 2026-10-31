@@ -1,0 +1,80 @@
+/* Background */
+@utility bg-* {
+  --color-bg: --alpha(--value("current") Color / --modifier(integer) * 1%);
+  --color-bg: --alpha(--value(--color-*, [*]) / --modifier(integer) * 1%);
+}
+
+@utility bg-* {
+  --color-bg: --value("current") Color;
+  --color-bg: --value(--color-*, [*]);
+}
+
+/* Animation */
+@utility delay-* {
+  --delay: --value(integer) ms;
+  --delay: --value(--delay-*, [*]);
+}
+
+@utility repeat-* {
+  animation-iteration-count: --value("infinite", "normal", integer);
+}
+
+/* Sizing */
+@utility w-* {
+  width: --value(--size-*);
+}
+
+@utility min-w-* {
+  min-width: --value(--size-*);
+}
+
+@utility max-w-* {
+  max-width: --value(--size-*);
+}
+
+@utility h-* {
+  height: --value(--size-*);
+}
+
+@utility min-h-* {
+  min-height: --value(--size-*);
+}
+
+@utility max-h-* {
+  max-height: --value(--size-*);
+}
+
+/* Anchor-size matching */
+@utility w-anchor {
+  width: anchor-size(width);
+}
+
+@utility min-w-anchor {
+  min-width: anchor-size(width);
+}
+
+@utility max-w-anchor {
+  max-width: anchor-size(width);
+}
+
+@utility h-anchor {
+  height: anchor-size(height);
+}
+
+@utility min-h-anchor {
+  min-height: anchor-size(height);
+}
+
+@utility max-h-anchor {
+  max-height: anchor-size(height);
+}
+
+/* Typography */
+@utility text-rendering-* {
+  text-rendering: --value("auto", "optimizeSpeed", "optimizeLegibility", "geometricPrecision");
+}
+
+/* Interaction */
+@utility touch-action-* {
+  touch-action: --value("auto", "none", "pan-x", "pan-left", "pan-right", "pan-y", "pan-up", "pan-down", "pinch-zoom", "manipulation");
+}

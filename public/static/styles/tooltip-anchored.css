@@ -1,0 +1,94 @@
+/* ─── Anchored container queries for tooltip arrow fallback ─── */
+/* Served as static CSS (bypasses PostCSS/LightningCSS) because   */
+/* Lightning CSS doesn't support the anchored() function yet.     */
+/* Baseline 2026 — works in modern browsers natively.             */
+
+@container anchored(fallback:--popper-flip-to-bottom) {
+  .tooltip-arrow, ::after {
+    --popper-arrow-bottom: auto;
+    --popper-tail-deg: 180deg;
+    --popper-arrow-left: calc(anchor(center) - calc(0.625rem * 0.5));
+    --popper-arrow-top: calc(anchor(top) + var(--popper-offset, 0.25rem) + 35.5px);
+  }
+}
+
+@container anchored(fallback:--popper-flip-to-bottom-start) {
+  .tooltip-arrow {
+    --popper-arrow-bottom: auto;
+    --popper-tail-deg: 180deg;
+    --popper-arrow-left: calc(anchor(center) + calc(0.625rem * 0.5));
+    --popper-arrow-top: calc(anchor(top) + var(--popper-offset, 0.25rem) + 35.5px);
+  }
+}
+
+@container anchored(fallback:--popper-flip-to-bottom-end) {
+  .tooltip-arrow {
+    --popper-arrow-bottom: auto;
+    --popper-tail-deg: 180deg;
+    --popper-arrow-left: calc(anchor(center) - calc(0.625rem * 1.5));
+    --popper-arrow-top: calc(anchor(top) + var(--popper-offset, 0.25rem) + 35.5px);
+  }
+}
+
+@container anchored(fallback:--popper-flip-to-top), anchored(fallback:--popper-flip-to-top-start), anchored(fallback:--popper-flip-to-top-end) {
+  .tooltip-arrow {
+    --popper-arrow-top: auto;
+    --popper-tail-deg: 0deg;
+    --popper-arrow-left: calc(anchor(center) - calc(0.625rem * 0.5));
+    --popper-arrow-bottom: calc(anchor(top) + var(--popper-offset, 0.25rem) - 0.5px);
+  }
+}
+
+@container anchored(fallback:--popper-flip-to-right) {
+  .tooltip-arrow {
+    --popper-arrow-right: auto;
+    --popper-tail-deg: 90deg;
+    --popper-arrow-top: calc(anchor(center) + calc(0.625rem * 0.3));
+    --popper-arrow-left: calc(anchor(right) + var(--popper-offset, 0.25rem) - 8.5px);
+  }
+}
+
+@container anchored(fallback:--popper-flip-to-right-start) {
+  .tooltip-arrow {
+    --popper-arrow-right: auto;
+    --popper-tail-deg: 90deg;
+    --popper-arrow-top: calc(anchor(center) + calc(0.625rem * 0.5));
+    --popper-arrow-left: calc(anchor(right) + var(--popper-offset, 0.25rem) - 6.5px);
+  }
+}
+
+@container anchored(fallback:--popper-flip-to-right-end) {
+  .tooltip-arrow {
+    --popper-arrow-right: auto;
+    --popper-tail-deg: 90deg;
+    --popper-arrow-top: calc(anchor(center) + calc(0.625rem * 0.1));
+    --popper-arrow-left: calc(anchor(right) + var(--popper-offset, 0.25rem) - 10.5px);
+  }
+}
+
+@container anchored(fallback:--popper-flip-to-left) {
+  .tooltip-arrow {
+    --popper-arrow-left: auto;
+    --popper-tail-deg: -90deg;
+    --popper-arrow-top: calc(anchor(center) + calc(0.625rem * 0.3));
+    --popper-arrow-right: calc(anchor(left) + var(--popper-offset, 0.25rem) - 8.5px);
+  }
+}
+
+@container anchored(fallback:--popper-flip-to-left-start) {
+  .tooltip-arrow {
+    --popper-arrow-left: auto;
+    --popper-tail-deg: -90deg;
+    --popper-arrow-top: calc(anchor(center) + calc(0.625rem * 0.5));
+    --popper-arrow-right: calc(anchor(left) + var(--popper-offset, 0.25rem) - 6.5px);
+  }
+}
+
+@container anchored(fallback:--popper-flip-to-left-end) {
+  .tooltip-arrow {
+    --popper-arrow-left: auto;
+    --popper-tail-deg: -90deg;
+    --popper-arrow-top: calc(anchor(center) + calc(0.625rem * 0.1));
+    --popper-arrow-right: calc(anchor(left) + var(--popper-offset, 0.25rem) - 10.5px);
+  }
+}

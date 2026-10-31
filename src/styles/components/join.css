@@ -1,0 +1,180 @@
+@utility join-rounded-* {
+  @layer components.l1.l2.l3 {
+    --join-radius: --value(--radius-*, [*]);
+  }
+}
+
+@utility join {
+  @layer components.l1.l2.l3 {
+    @apply inline-flex items-stretch;
+    --join-ss: 0;
+    --join-se: 0;
+    --join-es: 0;
+    --join-ee: 0;
+    --join-border: 1px;
+    --join-radius: 0.25rem;
+
+    /* Apply border-radius to ALL nested .join-item elements via inherited
+       CSS custom properties. Inherited variables flow down automatically,
+       so even deeply-nested .join-items get the correct corners. */
+    :where(.join-item) {
+      border-start-start-radius: var(--join-ss, 0);
+      border-start-end-radius: var(--join-se, 0);
+      border-end-start-radius: var(--join-es, 0);
+      border-end-end-radius: var(--join-ee, 0);
+
+      /* Reset the variables inside a join-item, so children of the
+         join-item (e.g. a nested .join) start fresh with full radius. */
+      * {
+        --join-ss: var(--join-radius);
+        --join-se: var(--join-radius);
+        --join-es: var(--join-radius);
+        --join-ee: var(--join-radius);
+      }
+    }
+
+    /*
+      ─── SLOT PATTERN ────────────────────────────────────────────────────
+      A "slot" is a direct child of .join that either:
+        (a) IS a .join-item itself, or
+        (b) CONTAINS a .join-item at any depth (:has(.join-item))
+
+      By setting --join-* on the slot element, CSS custom property
+      inheritance propagates the value down to any nested .join-item
+      automatically — no matter how deep it lives in the subtree.
+      ─────────────────────────────────────────────────────────────────── */
+
+    /* FIRST SLOT */
+    > :where(.join-item, :has(.join-item)):nth-child(1 of :where(.join-item, :has(.join-item))) {
+      --join-ss: var(--join-radius);
+      --join-se: 0;
+      --join-es: var(--join-radius);
+      --join-ee: 0;
+    }
+
+    /* LAST SLOT */
+    > :where(.join-item, :has(.join-item)):nth-last-child(1 of :where(.join-item, :has(.join-item))) {
+      --join-ss: 0;
+      --join-se: var(--join-radius);
+      --join-es: 0;
+      --join-ee: var(--join-radius);
+    }
+
+    /* ONLY SLOT */
+    > :where(.join-item, :has(.join-item)):nth-child(1 of :where(.join-item, :has(.join-item))):nth-last-child(1 of :where(.join-item, :has(.join-item))) {
+      --join-ss: var(--join-radius);
+      --join-se: var(--join-radius);
+      --join-es: var(--join-radius);
+      --join-ee: var(--join-radius);
+    }
+
+    /* NEGATIVE MARGIN for border merging.
+       Applied to every non-first slot — the slot element itself (wrapper
+       or .join-item). Putting it here (not on .join-item) ensures the
+       outer box collapses even when the .join-item is nested inside. */
+    > :where(.join-item, :has(.join-item)):not(:nth-child(1 of :where(.join-item, :has(.join-item)))):not(
+        :disabled,
+        [disabled],
+        [aria-disabled="true"],
+        .btn-disabled
+      ) {
+      margin-inline-start: calc(var(--join-border) * -1);
+      margin-block-start: 0;
+    }
+  }
+}
+
+@utility join-item {
+  @layer components.l1.l2.l3 {
+    /* Radius and margin are managed by the parent .join via CSS variable
+       inheritance and slot selectors. This class simply marks an element
+       as a join participant. */
+
+    /* Disabled items retain their own left border instead of collapsing it. */
+    &:where(:is(:disabled, [disabled], [aria-disabled="true"], .btn-disabled)) {
+      border-width: var(--join-border) 0 var(--join-border) var(--join-border);
+    }
+  }
+}
+
+@utility join-vertical {
+  @layer components.l1.l2.l3 {
+    @apply flex-col;
+
+    /* TOP SLOT */
+    > :where(.join-item, :has(.join-item)):nth-child(1 of :where(.join-item, :has(.join-item))) {
+      --join-ss: var(--join-radius);
+      --join-se: var(--join-radius);
+      --join-es: 0;
+      --join-ee: 0;
+    }
+
+    /* BOTTOM SLOT */
+    > :where(.join-item, :has(.join-item)):nth-last-child(1 of :where(.join-item, :has(.join-item))) {
+      --join-ss: 0;
+      --join-se: 0;
+      --join-es: var(--join-radius);
+      --join-ee: var(--join-radius);
+    }
+
+    /* ONLY SLOT */
+    > :where(.join-item, :has(.join-item)):nth-child(1 of :where(.join-item, :has(.join-item))):nth-last-child(1 of :where(.join-item, :has(.join-item))) {
+      --join-ss: var(--join-radius);
+      --join-se: var(--join-radius);
+      --join-es: var(--join-radius);
+      --join-ee: var(--join-radius);
+    }
+
+    /* NEGATIVE MARGIN (block direction) for non-first slots */
+    > :where(.join-item, :has(.join-item)):not(:nth-child(1 of :where(.join-item, :has(.join-item)))):not(
+        :disabled,
+        [disabled],
+        [aria-disabled="true"],
+        .btn-disabled
+      ) {
+      margin-inline-start: 0;
+      margin-block-start: calc(var(--join-border) * -1);
+    }
+  }
+}
+
+@utility join-horizontal {
+  @layer components.l1.l2.l3 {
+    @apply flex-row;
+
+    /* LEFT SLOT */
+    > :where(.join-item, :has(.join-item)):nth-child(1 of :where(.join-item, :has(.join-item))) {
+      --join-ss: var(--join-radius);
+      --join-se: 0;
+      --join-es: var(--join-radius);
+      --join-ee: 0;
+    }
+
+    /* RIGHT SLOT */
+    > :where(.join-item, :has(.join-item)):nth-last-child(1 of :where(.join-item, :has(.join-item))) {
+      --join-ss: 0;
+      --join-se: var(--join-radius);
+      --join-es: 0;
+      --join-ee: var(--join-radius);
+    }
+
+    /* ONLY SLOT */
+    > :where(.join-item, :has(.join-item)):nth-child(1 of :where(.join-item, :has(.join-item))):nth-last-child(1 of :where(.join-item, :has(.join-item))) {
+      --join-ss: var(--join-radius);
+      --join-se: var(--join-radius);
+      --join-es: var(--join-radius);
+      --join-ee: var(--join-radius);
+    }
+
+    /* NEGATIVE MARGIN (inline direction) for non-first slots */
+    > :where(.join-item, :has(.join-item)):not(:nth-child(1 of :where(.join-item, :has(.join-item)))):not(
+        :disabled,
+        [disabled],
+        [aria-disabled="true"],
+        .btn-disabled
+      ) {
+      margin-inline-start: calc(var(--join-border) * -1);
+      margin-block-start: 0;
+    }
+  }
+}

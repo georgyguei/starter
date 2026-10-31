@@ -1,0 +1,92 @@
+/* ── Sibling-only utilities ──
+   Utilities that encode sibling semantics no core utility can express:
+   parity detection and staggered animation delays (no core animation-delay
+   utility exists). Everything else extends the core namespaces below. */
+
+@utility si-even {
+  &:nth-child(even) {
+    --si-parity: mod(sibling-index(), 2);
+  }
+}
+
+@utility si-odd {
+  &:nth-child(odd) {
+    --si-parity: mod(sibling-index(), 2);
+  }
+}
+
+@utility w-step-* {
+  width: calc(
+    var(--spacing) * sibling-index() *
+      --value("0", "0.5", "1", "1.5", "2", "2.5", "3", "4", "5", "6", "8", "10", "12", "16", "20", "24", "32", "40", "48", "56", "64", "72", "80", "96", number)
+  );
+  width: calc(sibling-index() * --value(--size-*, [*]));
+}
+
+@utility w-even {
+  width: calc(100% / sibling-count());
+}
+
+@utility w-step-* {
+  width: calc(100% * --value("0", "1", "2", "3", "4", "5", integer) / sibling-count());
+}
+
+@utility min-w-step-* {
+  min-width: calc(
+    var(--spacing) * sibling-index() *
+      --value("0", "0.5", "1", "1.5", "2", "2.5", "3", "4", "5", "6", "8", "10", "12", "16", "20", "24", "32", "40", "48", "56", "64", "72", "80", "96", number)
+  );
+  min-width: calc(sibling-index() * --value(--size-*, [*]));
+}
+
+@utility ml-step-* {
+  margin-left: calc(
+    var(--spacing) * (sibling-index() - 1) *
+      --value("0", "0.5", "1", "1.5", "2", "2.5", "3", "4", "5", "6", "8", "10", "12", "16", "20", "24", "32", "40", "48", "56", "64", "72", "80", "96", number)
+  );
+  margin-left: calc((sibling-index() - 1) * --value([*]));
+}
+
+@utility pl-step-* {
+  padding-left: calc(
+    var(--spacing) * sibling-index() *
+      --value("0", "0.5", "1", "1.5", "2", "2.5", "3", "4", "5", "6", "8", "10", "12", "16", "20", "24", "32", "40", "48", "56", "64", "72", "80", "96", number)
+  );
+  padding-left: calc(sibling-index() * --value([*]));
+}
+
+@utility text-step-* {
+  font-size: calc(1rem + 1px * sibling-index() * --value(integer));
+  font-size: calc(sibling-index() * --value(--text-*, [*]));
+}
+
+@utility opacity-step-* {
+  opacity: calc(
+    100% - (sibling-index() - 1) *
+      --value("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", integer) * 1%
+  );
+}
+
+@utility z-step {
+  z-index: calc(sibling-index());
+}
+
+@utility z-step-rev {
+  z-index: calc(sibling-count() - sibling-index());
+}
+
+@utility delay-stagger-* {
+  animation-fill-mode: backwards;
+  animation-delay: calc(sibling-index() * --value("75", "100", "150", "200", "300", "500", "700", "1000", integer) ms);
+}
+
+/* ── Fallbacks ── */
+
+/* Browsers without sibling-index()/sibling-count() degrade automatically:
+   the calc() becomes invalid and the declaration is dropped. Only the
+   staggered delays need an explicit reduced-motion override. */
+@media (prefers-reduced-motion: reduce) {
+  [class*="delay-stagger-"] {
+    animation-delay: 0s;
+  }
+}

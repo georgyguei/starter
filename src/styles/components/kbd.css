@@ -1,0 +1,42 @@
+.kbd {
+  @layer components.l1.l2.l3 {
+    --size: calc(var(--spacing, 0.25rem) * 6);
+    @apply inline-flex h-(--size) min-w-(--size) items-center justify-center rounded-lg border border-b-2 bg-base-200 px-2 align-middle text-sm [box-shadow:none];
+    border-color: color-mix(in oklch, var(--color-base-content) 20%, oklch(0% 0 0 / 0));
+  }
+}
+
+.kbd-xs {
+  @layer components.l1.l2 {
+    --size: calc(var(--spacing, 0.25rem) * 4);
+    @apply text-2xs;
+  }
+}
+
+.kbd-sm {
+  @layer components.l1.l2 {
+    --size: calc(var(--spacing, 0.25rem) * 5);
+    @apply text-xs;
+  }
+}
+
+.kbd-md {
+  @layer components.l1.l2 {
+    --size: calc(var(--spacing, 0.25rem) * 6);
+    @apply text-sm;
+  }
+}
+
+.kbd-lg {
+  @layer components.l1.l2 {
+    --size: calc(var(--spacing, 0.25rem) * 7);
+    @apply text-md;
+  }
+}
+
+.kbd-xl {
+  @layer components.l1.l2 {
+    --size: calc(var(--spacing, 0.25rem) * 8);
+    @apply text-lg;
+  }
+}

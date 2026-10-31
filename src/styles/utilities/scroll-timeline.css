@@ -1,0 +1,121 @@
+/* ── Keyframes ──
+   Nested in @theme so Tailwind emits them ONLY when their matching
+   --animate-scroll-scrub-* variable is used by a scroll-scrub-* class.
+   Plain from/to — the ENTIRE scrollable range is the timeline:
+   0% = scroller at start, 100% = scroller at end. */
+
+@theme default {
+  --animate-scroll-scrub: rise-scroll;
+  --animate-scroll-scrub-fade: fade-scroll;
+  --animate-scroll-scrub-zoom: zoom-scroll;
+  --animate-scroll-scrub-blur: blur-scroll;
+  --animate-scroll-scrub-grow: grow-scroll;
+
+  @keyframes rise-scroll {
+    from {
+      opacity: 0;
+      transform: translateY(2rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-scroll {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes zoom-scroll {
+    from {
+      opacity: 0;
+      transform: scale(0.85);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes blur-scroll {
+    from {
+      opacity: 0;
+      filter: blur(8px);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0);
+    }
+  }
+
+  @keyframes grow-scroll {
+    from {
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+    }
+    to {
+      transform: scaleX(1);
+      transform-origin: 0 50%;
+    }
+  }
+}
+
+/* ── The utilities ── */
+
+@utility scroll-scrub-* {
+  animation-name: --value(--animate-scroll-scrub-*, [*]);
+  animation-timeline: scroll();
+  animation-duration: auto;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+
+@utility scroll-scrub {
+  animation-name: var(--animate-scroll-scrub);
+  animation-timeline: scroll();
+  animation-duration: auto;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+
+/* Modifiers — declared AFTER the base utilities so they win the cascade. */
+
+@utility scroll-scroller-* {
+  animation-timeline: scroll(--value("nearest", "root", "self"));
+}
+
+@utility scroll-axis-* {
+  animation-timeline: scroll(--value("block", "inline", "x", "y"));
+}
+
+@utility scroll-range-* {
+  animation-range: --value([*]);
+}
+
+/* ── Fallbacks ── */
+
+/* Browsers without scroll() (e.g. stable Firefox): show content statically. */
+@supports not (animation-timeline: scroll()) {
+  .scroll-scrub,
+  .scroll-scrub-fade,
+  .scroll-scrub-zoom,
+  .scroll-scrub-blur,
+  .scroll-scrub-grow {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-scrub,
+  .scroll-scrub-fade,
+  .scroll-scrub-zoom,
+  .scroll-scrub-blur,
+  .scroll-scrub-grow {
+    animation: none;
+  }
+}

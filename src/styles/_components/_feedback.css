@@ -1,0 +1,1391 @@
+/* --- alert.css --- */
+@utility alert-* {
+  @apply color-contrast-(--alert-color);
+  --alert-color: --value(--color-*, [*]);
+}
+
+@utility alert {
+  /* override the border style of Tailwind CSS Typography plugin */
+  --depth: 1;
+  --alert-color: var(--color-base-200);
+  --alert-bg: var(--alert-color);
+  --alert-border: var(--alert-color);
+  border-width: var(--border);
+  border-color: var(--alert-border);
+  border-style: solid;
+  @apply flex items-center gap-4 rounded-lg px-4 py-3;
+  color: var(--color-contrast, var(--color-base-content));
+  background-color: var(--alert-color);
+  text-align: start;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  box-shadow:
+    0 3px 0 -2px oklch(100% 0 0 / calc(var(--depth, 1) * 0.08)) inset,
+    0 1px color-mix(in oklab, color-mix(in oklab, #000 20%, var(--alert-color)) calc(var(--depth, 1) * 20%), #0000),
+    0 4px 3px -2px oklch(0% 0 0 / calc(var(--depth, 1) * 0.08));
+  &:has(:nth-child(2)) {
+    grid-template-columns: auto minmax(auto, 1fr);
+  }
+}
+
+@utility alert-soft {
+  color: var(--alert-color);
+  background: color-mix(in oklab, var(--alert-color) 8%, var(--color-base-100));
+  border-color: color-mix(in oklab, var(--alert-color) 10%, var(--color-base-100));
+  box-shadow: none;
+  background-image: none;
+}
+
+@utility alert-outline {
+  background-color: #0000;
+  color: var(--alert-color);
+  box-shadow: none;
+  background-image: none;
+}
+
+/* --- animation.css --- */
+
+/* --- loading.css --- */
+@utility loading {
+  @layer components.l1.l2.l3 {
+    --loading-size: 1.5rem;
+    --mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' stroke='black' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform-origin='center'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='none' stroke-width='2.2' stroke-linecap='round'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='2s' repeatCount='indefinite'/%3E%3Canimate attributeName='stroke-dasharray' values='0,150;42,150;42,150' keyTimes='0;0.475;1' dur='1.5s' repeatCount='indefinite'/%3E%3Canimate attributeName='stroke-dashoffset' values='0;-16;-59' keyTimes='0;0.475;1' dur='1.5s' repeatCount='indefinite'/%3E%3C/circle%3E%3C/g%3E%3C/svg%3E");
+
+    @apply pointer-events-none relative inline-block aspect-square w-(--loading-size) shrink-0 align-middle;
+
+    &::before {
+      @apply absolute content-[""];
+      inset: 0;
+      background: currentColor;
+      mask-image: var(--mask-image);
+      mask-size: 100%;
+      mask-repeat: no-repeat;
+      mask-position: center;
+    }
+  }
+}
+
+@utility loading-spinner {
+  @layer components.l1.l2 {
+    --mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' stroke='black' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform-origin='center'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='none' stroke-width='2.2' stroke-linecap='round'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='2s' repeatCount='indefinite'/%3E%3Canimate attributeName='stroke-dasharray' values='0,150;42,150;42,150' keyTimes='0;0.475;1' dur='1.5s' repeatCount='indefinite'/%3E%3Canimate attributeName='stroke-dashoffset' values='0;-16;-59' keyTimes='0;0.475;1' dur='1.5s' repeatCount='indefinite'/%3E%3C/circle%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+
+@utility loading-dots {
+  @layer components.l1.l2 {
+    --mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='4' cy='12' r='3'%3E%3Canimate attributeName='cy' values='12;6;12;12' keyTimes='0;0.286;0.571;1' dur='1.05s' repeatCount='indefinite' keySplines='.33,0,.66,.33;.33,.66,.66,1'/%3E%3C/circle%3E%3Ccircle cx='12' cy='12' r='3'%3E%3Canimate attributeName='cy' values='12;6;12;12' keyTimes='0;0.286;0.571;1' dur='1.05s' repeatCount='indefinite' keySplines='.33,0,.66,.33;.33,.66,.66,1' begin='0.1s'/%3E%3C/circle%3E%3Ccircle cx='20' cy='12' r='3'%3E%3Canimate attributeName='cy' values='12;6;12;12' keyTimes='0;0.286;0.571;1' dur='1.05s' repeatCount='indefinite' keySplines='.33,0,.66,.33;.33,.66,.66,1' begin='0.2s'/%3E%3C/circle%3E%3C/svg%3E");
+  }
+}
+
+@utility loading-ring {
+  @layer components.l1.l2 {
+    --mask-image: url("data:image/svg+xml,%3Csvg width='44' height='44' viewBox='0 0 44 44' xmlns='http://www.w3.org/2000/svg' stroke='white'%3E%3Cg fill='none' fill-rule='evenodd' stroke-width='2'%3E%3Ccircle cx='22' cy='22' r='1'%3E%3Canimate attributeName='r' begin='0s' dur='1.8s' values='1;20' calcMode='spline' keyTimes='0;1' keySplines='0.165,0.84,0.44,1' repeatCount='indefinite'/%3E%3Canimate attributeName='stroke-opacity' begin='0s' dur='1.8s' values='1;0' calcMode='spline' keyTimes='0;1' keySplines='0.3,0.61,0.355,1' repeatCount='indefinite'/%3E%3C/circle%3E%3Ccircle cx='22' cy='22' r='1'%3E%3Canimate attributeName='r' begin='-0.9s' dur='1.8s' values='1;20' calcMode='spline' keyTimes='0;1' keySplines='0.165,0.84,0.44,1' repeatCount='indefinite'/%3E%3Canimate attributeName='stroke-opacity' begin='-0.9s' dur='1.8s' values='1;0' calcMode='spline' keyTimes='0;1' keySplines='0.3,0.61,0.355,1' repeatCount='indefinite'/%3E%3C/circle%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+
+@utility loading-ball {
+  @layer components.l1.l2 {
+    --mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cellipse cx='12' cy='5' rx='4' ry='4'%3E%3Canimate attributeName='cy' values='5;20;20.5;20;5' keyTimes='0;0.469;0.5;0.531;1' dur='.8s' repeatCount='indefinite' keySplines='.33,0,.66,.33;.33,.66,.66,1'/%3E%3Canimate attributeName='rx' values='4;4;4.8;4;4' keyTimes='0;0.469;0.5;0.531;1' dur='.8s' repeatCount='indefinite'/%3E%3Canimate attributeName='ry' values='4;4;3;4;4' keyTimes='0;0.469;0.5;0.531;1' dur='.8s' repeatCount='indefinite'/%3E%3C/ellipse%3E%3C/svg%3E");
+  }
+}
+
+@utility loading-bars {
+  @layer components.l1.l2 {
+    --mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1' y='1' width='6' height='22'%3E%3Canimate attributeName='y' values='1;5;1' keyTimes='0;0.938;1' dur='.8s' repeatCount='indefinite'/%3E%3Canimate attributeName='height' values='22;14;22' keyTimes='0;0.938;1' dur='.8s' repeatCount='indefinite'/%3E%3Canimate attributeName='opacity' values='1;0.2;1' keyTimes='0;0.938;1' dur='.8s' repeatCount='indefinite'/%3E%3C/rect%3E%3Crect x='9' y='1' width='6' height='22'%3E%3Canimate attributeName='y' values='1;5;1' keyTimes='0;0.938;1' dur='.8s' repeatCount='indefinite' begin='-0.65s'/%3E%3Canimate attributeName='height' values='22;14;22' keyTimes='0;0.938;1' dur='.8s' repeatCount='indefinite' begin='-0.65s'/%3E%3Canimate attributeName='opacity' values='1;0.2;1' keyTimes='0;0.938;1' dur='.8s' repeatCount='indefinite' begin='-0.65s'/%3E%3C/rect%3E%3Crect x='17' y='1' width='6' height='22'%3E%3Canimate attributeName='y' values='1;5;1' keyTimes='0;0.938;1' dur='.8s' repeatCount='indefinite' begin='-0.5s'/%3E%3Canimate attributeName='height' values='22;14;22' keyTimes='0;0.938;1' dur='.8s' repeatCount='indefinite' begin='-0.5s'/%3E%3Canimate attributeName='opacity' values='1;0.2;1' keyTimes='0;0.938;1' dur='.8s' repeatCount='indefinite' begin='-0.5s'/%3E%3C/rect%3E%3C/svg%3E");
+  }
+}
+
+@utility loading-infinity {
+  @layer components.l1.l2 {
+    --mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' style='shape-rendering:auto;' width='200px' height='200px' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid'%3E%3Cpath fill='none' stroke='black' stroke-width='10' stroke-dasharray='205.271 51.318' d='M24.3 30C11.4 30 5 43.3 5 50s6.4 20 19.3 20c19.3 0 32.1-40 51.4-40C88.6 30 95 43.3 95 50s-6.4 20-19.3 20C56.4 70 43.6 30 24.3 30z' stroke-linecap='round' style='transform:scale(0.8);transform-origin:50px 50px'%3E%3Canimate attributeName='stroke-dashoffset' repeatCount='indefinite' dur='2s' keyTimes='0;1' values='0;256.589'/%3E%3C/path%3E%3C/svg%3E");
+  }
+}
+
+@utility loading-pulse {
+  @layer components.l1.l2 {
+    --mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='10' fill='black'%3E%3Canimate attributeName='opacity' values='1;0.2;1' keyTimes='0;0.5;1' dur='1.2s' repeatCount='indefinite'/%3E%3Canimate attributeName='r' values='10;11;10' keyTimes='0;0.5;1' dur='1.2s' repeatCount='indefinite'/%3E%3C/circle%3E%3C/svg%3E");
+  }
+}
+
+@utility loading-ripple {
+  @layer components.l1.l2 {
+    --mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='2' fill='none' stroke='black' stroke-width='2'%3E%3Canimate attributeName='r' values='2;10' keyTimes='0;1' dur='1.5s' repeatCount='indefinite'/%3E%3Canimate attributeName='opacity' values='1;0' keyTimes='0;1' dur='1.5s' repeatCount='indefinite'/%3E%3C/circle%3E%3Ccircle cx='12' cy='12' r='2' fill='none' stroke='black' stroke-width='2'%3E%3Canimate attributeName='r' values='2;10' keyTimes='0;1' dur='1.5s' repeatCount='indefinite' begin='0.5s'/%3E%3Canimate attributeName='opacity' values='1;0' keyTimes='0;1' dur='1.5s' repeatCount='indefinite' begin='0.5s'/%3E%3C/circle%3E%3Ccircle cx='12' cy='12' r='2' fill='none' stroke='black' stroke-width='2'%3E%3Canimate attributeName='r' values='2;10' keyTimes='0;1' dur='1.5s' repeatCount='indefinite' begin='1s'/%3E%3Canimate attributeName='opacity' values='1;0' keyTimes='0;1' dur='1.5s' repeatCount='indefinite' begin='1s'/%3E%3C/circle%3E%3C/svg%3E");
+  }
+}
+
+@utility loading-square {
+  @layer components.l1.l2 {
+    --mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1' y='1' width='10' height='10' rx='2'%3E%3CanimateTransform attributeName='transform' type='rotate' values='0 6 6;360 6 6' dur='1.2s' repeatCount='indefinite'/%3E%3C/rect%3E%3Crect x='13' y='1' width='10' height='10' rx='2'%3E%3CanimateTransform attributeName='transform' type='rotate' values='0 18 6;360 18 6' dur='1.2s' repeatCount='indefinite' begin='-0.4s'/%3E%3C/rect%3E%3Crect x='1' y='13' width='10' height='10' rx='2'%3E%3CanimateTransform attributeName='transform' type='rotate' values='0 6 18;360 6 18' dur='1.2s' repeatCount='indefinite' begin='-0.8s'/%3E%3C/rect%3E%3Crect x='13' y='13' width='10' height='10' rx='2'%3E%3CanimateTransform attributeName='transform' type='rotate' values='0 18 18;360 18 18' dur='1.2s' repeatCount='indefinite' begin='-0.6s'/%3E%3C/rect%3E%3C/svg%3E");
+  }
+}
+
+@utility loading-clock {
+  @layer components.l1.l2 {
+    --mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='10' fill='none' stroke='black' stroke-width='2'/%3E%3Cline x1='12' y1='12' x2='12' y2='6' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='2s' repeatCount='indefinite'/%3E%3C/line%3E%3Cline x1='12' y1='12' x2='16' y2='12' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='8s' repeatCount='indefinite'/%3E%3C/line%3E%3C/svg%3E");
+  }
+}
+
+@utility loading-orbit {
+  @layer components.l1.l2 {
+    --mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform-origin='center'%3E%3Ccircle cx='12' cy='4' r='2' fill='black'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='1s' repeatCount='indefinite'/%3E%3C/circle%3E%3Ccircle cx='12' cy='20' r='2' fill='black' opacity='0.3'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='1s' repeatCount='indefinite'/%3E%3C/circle%3E%3Ccircle cx='4' cy='12' r='2' fill='black' opacity='0.6'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='1s' repeatCount='indefinite'/%3E%3C/circle%3E%3Ccircle cx='20' cy='12' r='2' fill='black' opacity='0.8'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='1s' repeatCount='indefinite'/%3E%3C/circle%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+
+@utility loading-gradient {
+  @layer components.l1.l2 {
+    --mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='black' stop-opacity='0.2'/%3E%3Cstop offset='50%25' stop-color='black' stop-opacity='1'/%3E%3Cstop offset='100%25' stop-color='black' stop-opacity='0.2'/%3E%3Canimate attributeName='x1' values='0%25;100%25;0%25' dur='1.5s' repeatCount='indefinite'/%3E%3Canimate attributeName='x2' values='100%25;200%25;100%25' dur='1.5s' repeatCount='indefinite'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='0' y='0' width='24' height='24' fill='url(%23grad)' rx='4'/%3E%3C/svg%3E");
+  }
+}
+
+@utility loading-dots-horizontal {
+  @layer components.l1.l2 {
+    --mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='4' cy='12' r='2'%3E%3Canimate attributeName='opacity' values='1;0.2;1' keyTimes='0;0.5;1' dur='1s' repeatCount='indefinite'/%3E%3C/circle%3E%3Ccircle cx='12' cy='12' r='2'%3E%3Canimate attributeName='opacity' values='1;0.2;1' keyTimes='0;0.5;1' dur='1s' repeatCount='indefinite' begin='0.2s'/%3E%3C/circle%3E%3Ccircle cx='20' cy='12' r='2'%3E%3Canimate attributeName='opacity' values='1;0.2;1' keyTimes='0;0.5;1' dur='1s' repeatCount='indefinite' begin='0.4s'/%3E%3C/circle%3E%3C/svg%3E");
+  }
+}
+
+@utility loading-grid {
+  @layer components.l1.l2 {
+    --mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1' y='1' width='6' height='6' rx='1'%3E%3Canimate attributeName='opacity' values='1;0.2;1' keyTimes='0;0.5;1' dur='1.2s' repeatCount='indefinite'/%3E%3C/rect%3E%3Crect x='9' y='1' width='6' height='6' rx='1'%3E%3Canimate attributeName='opacity' values='1;0.2;1' keyTimes='0;0.5;1' dur='1.2s' repeatCount='indefinite' begin='0.1s'/%3E%3C/rect%3E%3Crect x='17' y='1' width='6' height='6' rx='1'%3E%3Canimate attributeName='opacity' values='1;0.2;1' keyTimes='0;0.5;1' dur='1.2s' repeatCount='indefinite' begin='0.2s'/%3E%3C/rect%3E%3Crect x='1' y='9' width='6' height='6' rx='1'%3E%3Canimate attributeName='opacity' values='1;0.2;1' keyTimes='0;0.5;1' dur='1.2s' repeatCount='indefinite' begin='0.3s'/%3E%3C/rect%3E%3Crect x='9' y='9' width='6' height='6' rx='1'%3E%3Canimate attributeName='opacity' values='1;0.2;1' keyTimes='0;0.5;1' dur='1.2s' repeatCount='indefinite' begin='0.4s'/%3E%3C/rect%3E%3Crect x='17' y='9' width='6' height='6' rx='1'%3E%3Canimate attributeName='opacity' values='1;0.2;1' keyTimes='0;0.5;1' dur='1.2s' repeatCount='indefinite' begin='0.5s'/%3E%3C/rect%3E%3Crect x='1' y='17' width='6' height='6' rx='1'%3E%3Canimate attributeName='opacity' values='1;0.2;1' keyTimes='0;0.5;1' dur='1.2s' repeatCount='indefinite' begin='0.6s'/%3E%3C/rect%3E%3Crect x='9' y='17' width='6' height='6' rx='1'%3E%3Canimate attributeName='opacity' values='1;0.2;1' keyTimes='0;0.5;1' dur='1.2s' repeatCount='indefinite' begin='0.7s'/%3E%3C/rect%3E%3Crect x='17' y='17' width='6' height='6' rx='1'%3E%3Canimate attributeName='opacity' values='1;0.2;1' keyTimes='0;0.5;1' dur='1.2s' repeatCount='indefinite' begin='0.8s'/%3E%3C/rect%3E%3C/svg%3E");
+  }
+}
+
+@utility loading-xs {
+  @layer components.l1.l2 {
+    @apply w-4;
+  }
+}
+
+@utility loading-sm {
+  @layer components.l1.l2 {
+    @apply w-5;
+  }
+}
+
+@utility loading-md {
+  @layer components.l1.l2 {
+    @apply w-6;
+  }
+}
+
+@utility loading-lg {
+  @layer components.l1.l2 {
+    @apply w-7;
+  }
+}
+
+@utility loading-xl {
+  @layer components.l1.l2 {
+    @apply w-8;
+  }
+}
+
+/* --- popover.css --- */
+@utility popover-* {
+  @layer components.l1.l2 {
+    --popover-bg: --value(--color-*, [*]);
+    --popover-fg: var(--color-contrast);
+    @apply color-contrast-(--popover-bg);
+  }
+}
+
+@utility popover {
+  @layer components.l1.l2.l3 {
+    @apply relative inline-block duration-0;
+    --popover-bg: var(--color-neutral);
+    --popover-fg: var(--color-neutral-content);
+    --popover-dim: calc(100% + 0.25rem - 1px);
+    --popover-tail: calc(100% + 0.25rem);
+    --popover-offset: 0.25rem;
+    --popover-mask: url("data:image/svg+xml,%3Csvg width='10' height='4' viewBox='0 0 8 4' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.500009 1C3.5 1 3.00001 4 5.00001 4C7 4 6.5 1 9.5 1C10 1 10 0.499897 10 0H0C-1.99338e-08 0.5 0 1 0.500009 1Z' fill='black'/%3E%3C/svg%3E%0A");
+
+    &[data-tip]:before {
+      --popover-pos: auto auto calc(var(--popover-dim) + var(--popover-offset)) 50%;
+      --popover-pos-adjust: -50% 0%;
+      --popover-origin: bottom;
+      @apply pointer-events-auto absolute w-max max-w-80 rounded-sm px-2 py-1 text-center text-sm whitespace-normal content-[attr(data-tip)];
+      color: var(--popover-fg);
+      background-color: var(--popover-bg);
+      inset: var(--popover-pos, 0);
+      translate: var(--popover-pos-adjust, 0);
+      transform-origin: var(--popover-origin);
+      transition: all allow-discrete var(--duration, 200ms) cubic-bezier(0.4, 0, 0.2, 1);
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+
+      content-visibility: hidden;
+      @supports not (content-visibility: hidden) {
+        visibility: hidden;
+      }
+    }
+
+    &:is([data-tip]),
+    &:has(.popover-content) {
+      &:after {
+        --popover-pos: auto auto calc(var(--popover-tail) - 0.25rem + var(--popover-offset)) 50%;
+        --popover-pos-adjust: calc(-50% + 0.125rem - 1px) 0;
+        --popover-origin: bottom;
+        --popover-tail-deg: 0deg;
+        @apply pointer-events-none absolute block h-1 w-2.5 rotate-(--popover-tail-deg) content-[""];
+        color: var(--popover-fg);
+        background-color: var(--popover-bg);
+        mask-repeat: no-repeat;
+        mask-position: -1px 0;
+        mask-image: var(--popover-mask);
+        inset: var(--popover-pos, 0);
+        translate: var(--popover-pos-adjust, 0);
+        transform-origin: var(--popover-origin);
+
+        transition: all allow-discrete var(--duration, 200ms) cubic-bezier(0.4, 0, 0.2, 1);
+        @media (prefers-reduced-motion: reduce) {
+          transition: none;
+        }
+
+        content-visibility: hidden;
+        @supports not (content-visibility: hidden) {
+          visibility: hidden;
+        }
+      }
+    }
+  }
+
+  @layer components.l1.l2 {
+    &:is([data-tip]:not([data-tip=""]), :has(.popover-content:not(:empty))):not(.popover-manual) {
+      &:focus-within,
+      &:has(:focus-visible) {
+        & > .popover-content,
+        &[data-tip]:before,
+        &:after {
+          content-visibility: visible;
+          @supports not (content-visibility: visible) {
+            visibility: visible;
+          }
+        }
+      }
+
+      &:not(:is(:focus-within, .popover-open), :has(:focus-visible)) {
+        & > .popover-content,
+        &[data-tip]:before,
+        &:after {
+          @apply invisible;
+        }
+      }
+    }
+  }
+}
+
+@utility popover-content {
+  @layer components.l1.l2.l3 {
+    --popover-pos: auto auto calc(var(--popover-dim) + var(--popover-offset)) 50%;
+    --popover-pos-adjust: -50% 0%;
+    --popover-origin: bottom;
+    @apply pointer-events-auto absolute w-max max-w-80 text-center text-sm whitespace-normal;
+    color: var(--popover-fg);
+    background-color: var(--popover-bg);
+    inset: var(--popover-pos, 0);
+    translate: var(--popover-pos-adjust, 0);
+    transform-origin: var(--popover-origin);
+    transition: all allow-discrete var(--duration, 200ms) cubic-bezier(0.4, 0, 0.2, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    content-visibility: hidden;
+    @supports not (content-visibility: hidden) {
+      visibility: hidden;
+    }
+  }
+}
+
+@utility popover-open {
+  @layer components.l1.l2 {
+    &:is([data-tip]:not([data-tip=""]), :has(.popover-content:not(:empty))) {
+      & > .popover-content,
+      &[data-tip]:before,
+      &:after {
+        content-visibility: visible;
+
+        @supports not (content-visibility: visible) {
+          visibility: visible;
+        }
+      }
+    }
+  }
+}
+
+@utility popover-manual {
+  @layer components.l1.l2 {
+    &:is([data-tip]:not([data-tip=""]), :has(.popover-content:not(:empty))) {
+      &:is([open], :popover-open, :open) {
+        & > .popover-content,
+        &[data-tip]:before,
+        &:after {
+          content-visibility: visible;
+          @supports not (content-visibility: visible) {
+            visibility: visible;
+          }
+        }
+      }
+
+      &:not(:is([open], :popover-open, :open, .popover-open)) {
+        & > .popover-content,
+        &[data-tip]:before,
+        &:after {
+          @apply invisible;
+        }
+      }
+    }
+  }
+}
+
+@utility popover-animated {
+  @layer components.l1.l2 {
+    /* Opening animation - auto */
+    &:is(:focus-within, &:has(:focus-visible)):not(.popover-manual) {
+      & > .popover-content,
+      &[data-tip]:before,
+      &:after {
+        @apply scale-[1] opacity-[1] [transition-duration:var(--duration)] [transition-timing-function:cubic-bezier(0.9,2.5,0.64,1)] [--duration:700ms];
+      }
+    }
+
+    /* Opening animation - manual (popover-api) */
+    &:is(.popover-manual, :popover-open, :open) {
+      & > .popover-content,
+      &[data-tip]:before,
+      &:after {
+        @apply scale-[1] opacity-[1] [transition-duration:var(--duration)] [transition-timing-function:cubic-bezier(0.9,2.5,0.64,1)] [--duration:700ms] starting:scale-[0.75] starting:opacity-[0];
+      }
+    }
+
+    /* Opening animation - manual (native open attribute) */
+    &:is(.popover-manual, [open]) {
+      & > .popover-content,
+      &[data-tip]:before,
+      &:after {
+        @apply scale-[1] opacity-[1] [transition-duration:var(--duration)] [transition-timing-function:cubic-bezier(0.9,2.5,0.64,1)] [--duration:700ms];
+      }
+    }
+
+    /* Closing animation - auto */
+    &:not(:focus-within, .popover-open, .popover-manual) {
+      & > .popover-content,
+      &[data-tip]:before,
+      &:after {
+        @apply scale-[0.75] opacity-[0] [transition-duration:var(--duration)] [transition-timing-function:cubic-bezier(0.36,0,0.1,-1.5)] [--duration:700ms];
+      }
+    }
+
+    /* Closing animation - manual */
+    &:is(.popover-manual):not([open], :popover-open, :open, .popover-open) {
+      & > .popover-content,
+      &[data-tip]:before,
+      &:after {
+        @apply scale-[0.75] opacity-[0] [transition-duration:var(--duration)] [transition-timing-function:cubic-bezier(0.36,0,0.1,-1.5)] [--duration:700ms];
+      }
+    }
+  }
+}
+
+@utility popover-offset-* {
+  @layer components.l1.l2 {
+    --popover-offset: calc(
+      var(--spacing) *
+        --value(
+          "0",
+          "0.5",
+          "1",
+          "1.5",
+          "2",
+          "2.5",
+          "3",
+          "4",
+          "5",
+          "6",
+          "8",
+          "10",
+          "12",
+          "16",
+          "20",
+          "24",
+          "32",
+          "40",
+          "48",
+          "56",
+          "64",
+          "72",
+          "80",
+          "96",
+          number
+        )
+    );
+    --popover-offset: --value([*]);
+  }
+}
+
+@utility popover-top {
+  @layer components.l1.l2 {
+    & > .popover-content,
+    &[data-tip]:before {
+      --popover-pos: auto auto calc(var(--popover-dim) + var(--popover-offset)) 50%;
+      --popover-pos-adjust: -50% 0;
+      --popover-origin: bottom;
+    }
+
+    &:after {
+      --popover-pos: auto auto calc(var(--popover-tail) - 0.25rem + var(--popover-offset)) 50%;
+      --popover-pos-adjust: calc(-50% + 0.125rem - 1px) 0;
+      --popover-origin: bottom;
+      --popover-tail-deg: 0deg;
+    }
+  }
+}
+
+@utility popover-top-start {
+  @layer components.l1.l2 {
+    & > .popover-content,
+    &[data-tip]:before {
+      --popover-pos: auto auto calc(var(--popover-dim) + var(--popover-offset)) 0;
+      --popover-pos-adjust: 0 0;
+      --popover-origin: 0 100%;
+    }
+
+    &:after {
+      --popover-pos: auto auto calc(var(--popover-tail) - 0.25rem + var(--popover-offset)) 50%;
+      --popover-pos-adjust: calc(-50% + 0.125rem - 1px) 0;
+      --popover-origin: bottom;
+      --popover-tail-deg: 0deg;
+    }
+  }
+}
+
+@utility popover-top-end {
+  @layer components.l1.l2 {
+    & > .popover-content,
+    &[data-tip]:before {
+      --popover-pos: auto 0 calc(var(--popover-dim) + var(--popover-offset)) auto;
+      --popover-pos-adjust: 0 0;
+      --popover-origin: 100% 100%;
+    }
+
+    &:after {
+      --popover-pos: auto auto calc(var(--popover-tail) - 0.25rem + var(--popover-offset)) 50%;
+      --popover-pos-adjust: calc(-50% + 0.125rem - 1px) 0;
+      --popover-origin: bottom;
+      --popover-tail-deg: 0deg;
+    }
+  }
+}
+
+@utility popover-bottom {
+  @layer components.l1.l2 {
+    & > .popover-content,
+    &[data-tip]:before {
+      --popover-pos: calc(var(--popover-dim) + var(--popover-offset)) auto auto 50%;
+      --popover-pos-adjust: -50% 0;
+      --popover-origin: top;
+    }
+
+    &:after {
+      --popover-pos: calc(var(--popover-tail) + var(--popover-offset)) auto auto 50%;
+      --popover-pos-adjust: calc(-50% + 0.125rem - 1px) 0;
+      --popover-origin: top;
+      --popover-tail-deg: 180deg;
+    }
+  }
+}
+
+@utility popover-bottom-start {
+  @layer components.l1.l2 {
+    & > .popover-content,
+    &[data-tip]:before {
+      --popover-pos: calc(var(--popover-dim) + var(--popover-offset)) auto auto 0;
+      --popover-pos-adjust: 0 0;
+      --popover-origin: 0 0;
+    }
+
+    &:after {
+      --popover-pos: calc(var(--popover-tail) + var(--popover-offset)) auto auto 50%;
+      --popover-pos-adjust: calc(-50% + 0.125rem - 1px) 0;
+      --popover-origin: top;
+      --popover-tail-deg: 180deg;
+    }
+  }
+}
+
+@utility popover-bottom-end {
+  @layer components.l1.l2 {
+    & > .popover-content,
+    &[data-tip]:before {
+      --popover-pos: calc(var(--popover-dim) + var(--popover-offset)) 0 auto auto;
+      --popover-pos-adjust: 0 0;
+      --popover-origin: 100% 0;
+    }
+
+    &:after {
+      --popover-pos: calc(var(--popover-tail) + var(--popover-offset)) auto auto 50%;
+      --popover-pos-adjust: calc(-50% + 0.125rem - 1px) 0;
+      --popover-origin: top;
+      --popover-tail-deg: 180deg;
+    }
+  }
+}
+
+@utility popover-left {
+  @layer components.l1.l2 {
+    & > .popover-content,
+    &[data-tip]:before {
+      --popover-pos: 50% calc(var(--popover-dim) + var(--popover-offset)) auto auto;
+      --popover-pos-adjust: 0 -50%;
+      --popover-origin: 100%;
+    }
+
+    &:after {
+      --popover-pos: 50% calc(var(--popover-tail) - 2px + var(--popover-offset)) auto auto;
+      --popover-pos-adjust: 0 calc(-50% - 0.25rem - 1px);
+      --popover-origin: 100%;
+      --popover-tail-deg: 270deg;
+    }
+  }
+}
+
+@utility popover-left-start {
+  @layer components.l1.l2 {
+    & > .popover-content,
+    &[data-tip]:before {
+      --popover-pos: 0 calc(var(--popover-dim) + var(--popover-offset)) auto auto;
+      --popover-pos-adjust: 0 0;
+      --popover-origin: 100% 0;
+    }
+
+    &:after {
+      --popover-pos: 50% calc(var(--popover-tail) - 2px + var(--popover-offset)) auto auto;
+      --popover-pos-adjust: 0 calc(-50% - 0.25rem - 1px);
+      --popover-origin: 100%;
+      --popover-tail-deg: 270deg;
+    }
+  }
+}
+
+@utility popover-left-end {
+  @layer components.l1.l2 {
+    & > .popover-content,
+    &[data-tip]:before {
+      --popover-pos: auto calc(var(--popover-dim) + var(--popover-offset)) 0 auto;
+      --popover-pos-adjust: 0 0;
+      --popover-origin: 100% 100%;
+    }
+
+    &:after {
+      --popover-pos: 50% calc(var(--popover-tail) - 2px + var(--popover-offset)) auto auto;
+      --popover-pos-adjust: 0 calc(-50% - 0.25rem - 1px);
+      --popover-origin: 100%;
+      --popover-tail-deg: 270deg;
+    }
+  }
+}
+
+@utility popover-right {
+  @layer components.l1.l2 {
+    & > .popover-content,
+    &[data-tip]:before {
+      --popover-pos: 50% auto auto calc(var(--popover-dim) + var(--popover-offset));
+      --popover-pos-adjust: 0 -50%;
+      --popover-origin: 0;
+    }
+
+    &:after {
+      --popover-pos: 50% auto auto calc(var(--popover-tail) - 2px + var(--popover-offset));
+      --popover-pos-adjust: 0 calc(-50% - 0.25rem - 1px);
+      --popover-origin: 0;
+      --popover-tail-deg: 90deg;
+    }
+  }
+}
+
+@utility popover-right-start {
+  @layer components.l1.l2 {
+    & > .popover-content,
+    &[data-tip]:before {
+      --popover-pos: 0 auto auto calc(var(--popover-dim) + var(--popover-offset));
+      --popover-pos-adjust: 0 0;
+      --popover-origin: 0 0;
+    }
+
+    &:after {
+      --popover-pos: 50% auto auto calc(var(--popover-tail) - 2px + var(--popover-offset));
+      --popover-pos-adjust: 0 calc(-50% - 0.25rem - 1px);
+      --popover-origin: 0;
+      --popover-tail-deg: 90deg;
+    }
+  }
+}
+
+@utility popover-right-end {
+  @layer components.l1.l2 {
+    & > .popover-content,
+    &[data-tip]:before {
+      --popover-pos: auto auto 0 calc(var(--popover-dim) + var(--popover-offset));
+      --popover-pos-adjust: 0 0;
+      --popover-origin: 0 100%;
+    }
+
+    &:after {
+      --popover-pos: 50% auto auto calc(var(--popover-tail) - 2px + var(--popover-offset));
+      --popover-pos-adjust: 0 calc(-50% - 0.25rem - 1px);
+      --popover-origin: 0;
+      --popover-tail-deg: 90deg;
+    }
+  }
+}
+
+/* --- progress.css --- */
+@utility progress {
+  @layer components.l1.l2.l3 {
+    @apply relative block w-full appearance-none overflow-hidden rounded-md text-base-content;
+    --track-color: color-mix(in oklab, currentColor 8%, transparent);
+    --size: 8px;
+    background-color: var(--track-color);
+    height: var(--size);
+
+    &:indeterminate {
+      background-image: repeating-linear-gradient(90deg, currentColor -1%, currentColor 10%, #0000 10%, #0000 90%);
+      background-size: 200%;
+      background-position-x: 15%;
+      @media (prefers-reduced-motion: no-preference) {
+        @apply animate-progress;
+      }
+
+      @supports (-moz-appearance: none) {
+        &::-moz-progress-bar {
+          @apply bg-transparent;
+          @media (prefers-reduced-motion: no-preference) {
+            @apply animate-progress;
+            background-image: repeating-linear-gradient(90deg, currentColor -1%, currentColor 10%, #0000 10%, #0000 90%);
+            background-size: 200%;
+            background-position-x: 15%;
+          }
+        }
+      }
+    }
+
+    &[aria-label]::after {
+      content: attr(aria-label);
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      color: white;
+      mix-blend-mode: difference;
+    }
+
+    @supports (-moz-appearance: none) {
+      &::-moz-progress-bar {
+        @apply rounded-md bg-current;
+      }
+    }
+
+    @supports (-webkit-appearance: none) {
+      &::-webkit-progress-bar {
+        @apply rounded-md bg-transparent;
+      }
+
+      &::-webkit-progress-value {
+        @apply rounded-md;
+        background-color: currentColor;
+      }
+    }
+  }
+}
+
+@utility progress-radial {
+  @layer components.l1.l2.l3 {
+    @apply relative box-content inline-grid place-content-center rounded-full align-middle;
+    --value: 0;
+    --size: 5rem;
+    --thickness: calc(var(--size) / 10);
+    --radialprogress: calc(var(--value) * 1%);
+    --track-color: color-mix(in oklab, currentColor 8%, transparent);
+    width: var(--size);
+    height: var(--size);
+    background-color: transparent;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: --radialprogress 0.3s linear;
+    }
+
+    /* Background track (remaining value) */
+    &:before {
+      @apply absolute inset-0 rounded-full;
+      content: "";
+      background:
+        radial-gradient(farthest-side, currentColor 98%, #0000) top / var(--thickness) var(--thickness) no-repeat,
+        conic-gradient(currentColor var(--radialprogress), var(--track-color) var(--radialprogress));
+      -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - var(--thickness)), #000 calc(100% + 0.5px - var(--thickness)));
+      mask: radial-gradient(farthest-side, #0000 calc(100% - var(--thickness)), #000 calc(100% + 0.5px - var(--thickness)));
+    }
+
+    /* Progress indicator dot */
+    &:after {
+      @apply absolute rounded-full bg-current;
+      content: "";
+      inset: calc(50% - var(--thickness) / 2);
+
+      @media (prefers-reduced-motion: no-preference) {
+        transition: transform 0.3s linear;
+      }
+
+      transform: rotate(calc(var(--value) * 3.6deg - 90deg)) translate(calc(var(--size) / 2 - 50%));
+    }
+
+    /* Indeterminate state - spinning loader */
+    &[aria-busy="true"] {
+      @apply loading pointer-events-auto inline-grid w-(--size) truncate;
+      &:after {
+        @apply hidden;
+      }
+    }
+  }
+}
+
+@utility progress-radial-filled {
+  @layer components.l1.l2.l3 {
+    @apply relative box-content inline-grid place-content-center rounded-full align-middle;
+    --value: 0;
+    --size: 5rem;
+    --thickness: calc(var(--size) / 10);
+    --radialprogress: calc(var(--value) * 1%);
+    --track-color: color-mix(in oklab, currentColor 8%, transparent);
+    --fill-color: currentColor;
+    width: var(--size);
+    height: var(--size);
+    background-color: transparent;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: --radialprogress 0.3s linear;
+    }
+
+    /* Filled circle background using conic-gradient */
+    &:before {
+      @apply absolute inset-0 rounded-full;
+      content: "";
+      background: conic-gradient(var(--fill-color) var(--radialprogress), var(--track-color) var(--radialprogress));
+      @media (prefers-reduced-motion: no-preference) {
+        transition: background 0.3s linear;
+      }
+    }
+  }
+}
+
+/* Existing utilities */
+@utility progress-xs {
+  @layer components.l1.l2 {
+    @apply text-2xs;
+    --size: 1.5rem;
+  }
+}
+
+@utility progress-sm {
+  @layer components.l1.l2 {
+    @apply text-xs;
+    --size: 2rem;
+  }
+}
+
+@utility progress-md {
+  @layer components.l1.l2 {
+    @apply text-xs;
+    --size: 2.5rem;
+  }
+}
+
+@utility progress-lg {
+  @layer components.l1.l2 {
+    @apply text-sm;
+    --size: 3rem;
+  }
+}
+
+@utility progress-xl {
+  @layer components.l1.l2 {
+    @apply text-md;
+    --size: 4rem;
+  }
+}
+
+@utility progress-size-* {
+  @layer components.l1.l2 {
+    --size: calc(var(--spacing) * --value(number));
+    --size: --value([*]);
+  }
+}
+
+@utility progress-thickness-* {
+  @layer components.l1.l2 {
+    --thickness: calc(var(--spacing) * --value(number));
+    --thickness: --value([*]);
+  }
+}
+
+@utility progress-track-* {
+  @layer components.l1.l2 {
+    --track-color: --value(--color-*, [*]);
+    --track-color: --value("current") color;
+  }
+}
+
+@utility progress-fill-* {
+  @layer components.l1.l2 {
+    --fill-color: --value(--color-*, [*]);
+    --fill-color: --value("current") color;
+  }
+}
+
+@theme inline {
+  --animate-progress: progress 5s ease-in-out infinite;
+  @keyframes progress {
+    50% {
+      background-position-x: -115%;
+    }
+  }
+}
+
+/* --- skeleton.css --- */
+@utility skeleton {
+  @apply rounded-md bg-base-300 motion-reduce:[transition-duration:15s];
+  will-change: background-position;
+  background-image: linear-gradient(105deg, #0000 0% 40%, var(--color-base-100) 50%, #0000 60% 100%);
+  background-size: 200% auto;
+  background-position-x: -50%;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: skeleton 1.8s ease-in-out infinite;
+  }
+}
+
+@utility skeleton-text {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(
+    105deg,
+    color-mix(in oklab, var(--color-base-content) 20%, transparent) 0% 40%,
+    var(--color-base-content) 50%,
+    color-mix(in oklab, var(--color-base-content) 20%, transparent) 60% 100%
+  );
+}
+
+@keyframes skeleton {
+  0% {
+    background-position: 150%;
+  }
+
+  100% {
+    background-position: -50%;
+  }
+}
+
+/* --- tooltip.css --- */
+@utility tooltip-* {
+  @layer components.l1.l2 {
+    --tooltip-bg: --value(--color-*, [*]);
+    --tooltip-fg: var(--color-contrast);
+    @apply color-contrast-(--tooltip-bg);
+  }
+}
+
+@utility tooltip {
+  @layer components.l1.l2.l3 {
+    @apply relative inline-block duration-0;
+    --tooltip-bg: var(--color-neutral);
+    --tooltip-fg: var(--color-neutral-content);
+    --tooltip-dim: calc(100% + 0.25rem - 1px);
+    --tooltip-tail: calc(100% + 0.25rem);
+    --tooltip-offset: 0.25rem;
+    --tooltip-mask: url("data:image/svg+xml,%3Csvg width='10' height='4' viewBox='0 0 8 4' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.500009 1C3.5 1 3.00001 4 5.00001 4C7 4 6.5 1 9.5 1C10 1 10 0.499897 10 0H0C-1.99338e-08 0.5 0 1 0.500009 1Z' fill='black'/%3E%3C/svg%3E%0A");
+
+    &[data-tip]:before {
+      --tooltip-pos: auto auto calc(var(--tooltip-dim) + var(--tooltip-offset)) 50%;
+      --tooltip-pos-adjust: -50% 0%;
+      --tooltip-origin: bottom;
+      @apply pointer-events-none absolute w-max max-w-80 rounded-sm px-2 py-1 text-center text-sm whitespace-normal content-[attr(data-tip)];
+      color: var(--tooltip-fg);
+      background-color: var(--tooltip-bg);
+      inset: var(--tooltip-pos, 0);
+      translate: var(--tooltip-pos-adjust, 0);
+      transform-origin: var(--tooltip-origin);
+      transition: all allow-discrete var(--duration, 200ms) cubic-bezier(0.4, 0, 0.2, 1);
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none !important;
+      }
+
+      content-visibility: hidden;
+      @supports not (content-visibility: hidden) {
+        visibility: hidden;
+      }
+    }
+
+    &:is([data-tip]),
+    &:has(.tooltip-content) {
+      &:after {
+        --tooltip-pos: auto auto calc(var(--tooltip-tail) - 0.25rem + var(--tooltip-offset)) 50%;
+        --tooltip-pos-adjust: calc(-50% + 0.125rem - 1px) 0;
+        --tooltip-origin: bottom;
+        --tooltip-tail-deg: 0deg;
+        @apply pointer-events-none absolute block h-1 w-2.5 rotate-(--tooltip-tail-deg) content-[""];
+        color: var(--tooltip-fg);
+        background-color: var(--tooltip-bg);
+        mask-repeat: no-repeat;
+        mask-position: -1px 0;
+        mask-image: var(--tooltip-mask);
+        inset: var(--tooltip-pos, 0);
+        translate: var(--tooltip-pos-adjust, 0);
+        transform-origin: var(--tooltip-origin);
+        transition: all allow-discrete var(--duration, 200ms) cubic-bezier(0.4, 0, 0.2, 1);
+
+        @media (prefers-reduced-motion: reduce) {
+          transition: none !important;
+        }
+
+        content-visibility: hidden;
+        @supports not (content-visibility: hidden) {
+          visibility: hidden;
+        }
+      }
+    }
+  }
+
+  @layer components.l1.l2 {
+    &:is([data-tip]:not([data-tip=""]), :has(.tooltip-content:not(:empty))):not(.tooltip-manual) {
+      &:hover,
+      &:focus-visible,
+      &:has(:focus-visible) {
+        & > .tooltip-content,
+        &[data-tip]:before,
+        &:after {
+          content-visibility: visible;
+          @supports not (content-visibility: visible) {
+            visibility: visible;
+          }
+        }
+      }
+
+      &:not(:is(:hover, :focus-visible, .tooltip-open), :has(:focus-visible)) {
+        & > .tooltip-content,
+        &[data-tip]:before,
+        &:after {
+          @apply invisible;
+        }
+      }
+    }
+  }
+}
+
+@utility tooltip-content {
+  @layer components.l1.l2.l3 {
+    --tooltip-pos: auto auto calc(var(--tooltip-dim) + var(--tooltip-offset)) 50%;
+    --tooltip-pos-adjust: -50% 0%;
+    --tooltip-origin: bottom;
+    @apply pointer-events-none absolute w-max max-w-80 text-center text-sm whitespace-normal;
+    color: var(--tooltip-fg);
+    background-color: var(--tooltip-bg);
+    inset: var(--tooltip-pos, 0);
+    translate: var(--tooltip-pos-adjust, 0);
+    transform-origin: var(--tooltip-origin);
+    transition: all allow-discrete var(--duration, 200ms) cubic-bezier(0.4, 0, 0.2, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none !important;
+    }
+
+    content-visibility: hidden;
+    @supports not (content-visibility: hidden) {
+      visibility: hidden;
+    }
+  }
+}
+
+@utility tooltip-open {
+  @layer components.l1 {
+    &:is([data-tip]:not([data-tip=""]), :has(.tooltip-content:not(:empty))) {
+      & > .tooltip-content,
+      &[data-tip]:before,
+      &:after {
+        content-visibility: visible;
+
+        @supports not (content-visibility: visible) {
+          visibility: visible;
+        }
+      }
+    }
+  }
+}
+
+@utility tooltip-manual {
+  @layer components.l1.l2 {
+    &:is([data-tip]:not([data-tip=""]), :has(.tooltip-content:not(:empty))) {
+      &:is([open], :popover-open, :open) {
+        & > .tooltip-content,
+        &[data-tip]:before,
+        &:after {
+          content-visibility: visible;
+          @supports not (content-visibility: visible) {
+            visibility: visible;
+          }
+        }
+      }
+
+      &:not(:is([open], :popover-open, :open, .tooltip-open)) {
+        & > .tooltip-content,
+        &[data-tip]:before,
+        &:after {
+          @apply invisible;
+        }
+      }
+    }
+  }
+}
+
+@utility tooltip-interactive {
+  @layer components.l1 {
+    &:is([data-tip]:not([data-tip=""]), :has(.tooltip-content:not(:empty))) {
+      &:is(:hover, :focus-visible, &:has(:focus-visible)):not(.tooltip-manual) {
+        & > .tooltip-content,
+        &[data-tip]:before,
+        &:after {
+          @apply pointer-events-auto;
+        }
+      }
+
+      &:is(.tooltip-manual, [open], :popover-open, :open) {
+        & > .tooltip-content,
+        &[data-tip]:before,
+        &:after {
+          @apply pointer-events-auto;
+        }
+      }
+
+      &:not(:hover, :focus-visible, &:has(:focus-visible), .tooltip-open) {
+        & > .tooltip-content,
+        &[data-tip]:before,
+        &:after {
+          @apply delay-200;
+        }
+      }
+
+      &:is(.tooltip-manual):not([open], :popover-open, :open, .tooltip-open) {
+        & > .tooltip-content,
+        &[data-tip]:before,
+        &:after {
+          @apply delay-200;
+        }
+      }
+    }
+  }
+}
+
+@utility tooltip-animated {
+  @layer components.l1.l2 {
+    /* Opening animation - auto */
+    &:is(:hover, :focus-visible, &:has(:focus-visible)):not(.tooltip-manual) {
+      & > .tooltip-content,
+      &[data-tip]:before,
+      &:after {
+        @apply scale-[1] opacity-[1] [transition-duration:var(--duration)] [transition-timing-function:cubic-bezier(0.9,2.5,0.64,1)] [--duration:700ms];
+      }
+    }
+
+    /* Opening animation - manual (popover-api) */
+    &:is(.tooltip-manual, :popover-open, :open) {
+      & > .tooltip-content,
+      &[data-tip]:before,
+      &:after {
+        @apply scale-[1] opacity-[1] [transition-duration:var(--duration)] [transition-timing-function:cubic-bezier(0.9,2.5,0.64,1)] [--duration:700ms] starting:scale-[0.75] starting:opacity-[0];
+      }
+    }
+
+    /* Opening animation - manual (native open attribute) */
+    &:is(.tooltip-manual, [open]) {
+      & > .tooltip-content,
+      &[data-tip]:before,
+      &:after {
+        @apply scale-[1] opacity-[1] [transition-duration:var(--duration)] [transition-timing-function:cubic-bezier(0.9,2.5,0.64,1)] [--duration:700ms];
+      }
+    }
+
+    /* Closing animation - auto */
+    &:not(:hover, :focus-visible, .tooltip-open, .tooltip-manual) {
+      & > .tooltip-content,
+      &[data-tip]:before,
+      &:after {
+        @apply scale-[0.75] opacity-[0] [transition-duration:var(--duration)] [transition-timing-function:cubic-bezier(0.36,0,0.1,-1.5)] [--duration:700ms];
+      }
+    }
+
+    /* Closing animation - manual */
+    &:is(.tooltip-manual):not([open], :popover-open, :open, .tooltip-open) {
+      & > .tooltip-content,
+      &[data-tip]:before,
+      &:after {
+        @apply scale-[0.75] opacity-[0] [transition-duration:var(--duration)] [transition-timing-function:cubic-bezier(0.36,0,0.1,-1.5)] [--duration:700ms];
+      }
+    }
+  }
+}
+
+@utility tooltip-offset-* {
+  @layer components.l1.l2 {
+    --tooltip-offset: calc(
+      var(--spacing) *
+        --value(
+          "0",
+          "0.5",
+          "1",
+          "1.5",
+          "2",
+          "2.5",
+          "3",
+          "4",
+          "5",
+          "6",
+          "8",
+          "10",
+          "12",
+          "16",
+          "20",
+          "24",
+          "32",
+          "40",
+          "48",
+          "56",
+          "64",
+          "72",
+          "80",
+          "96",
+          number
+        )
+    );
+    --tooltip-offset: --value([*]);
+  }
+}
+
+@utility tooltip-top {
+  @layer components.l1.l2 {
+    & > .tooltip-content,
+    &[data-tip]:before {
+      --tooltip-pos: auto auto calc(var(--tooltip-dim) + var(--tooltip-offset)) 50%;
+      --tooltip-pos-adjust: -50% 0;
+      --tooltip-origin: bottom;
+    }
+
+    &:after {
+      --tooltip-pos: auto auto calc(var(--tooltip-tail) - 0.25rem + var(--tooltip-offset)) 50%;
+      --tooltip-pos-adjust: calc(-50% + 0.125rem - 1px) 0;
+      --tooltip-origin: bottom;
+      --tooltip-tail-deg: 0deg;
+    }
+  }
+}
+
+@utility tooltip-top-start {
+  @layer components.l1.l2 {
+    & > .tooltip-content,
+    &[data-tip]:before {
+      --tooltip-pos: auto auto calc(var(--tooltip-dim) + var(--tooltip-offset)) 0;
+      --tooltip-pos-adjust: 0 0;
+      --tooltip-origin: 0 100%;
+    }
+
+    &:after {
+      --tooltip-pos: auto auto calc(var(--tooltip-tail) - 0.25rem + var(--tooltip-offset)) 50%;
+      --tooltip-pos-adjust: calc(-50% + 0.125rem - 1px) 0;
+      --tooltip-origin: bottom;
+      --tooltip-tail-deg: 0deg;
+    }
+  }
+}
+
+@utility tooltip-top-end {
+  @layer components.l1.l2 {
+    & > .tooltip-content,
+    &[data-tip]:before {
+      --tooltip-pos: auto 0 calc(var(--tooltip-dim) + var(--tooltip-offset)) auto;
+      --tooltip-pos-adjust: 0 0;
+      --tooltip-origin: 100% 100%;
+    }
+
+    &:after {
+      --tooltip-pos: auto auto calc(var(--tooltip-tail) - 0.25rem + var(--tooltip-offset)) 50%;
+      --tooltip-pos-adjust: calc(-50% + 0.125rem - 1px) 0;
+      --tooltip-origin: bottom;
+      --tooltip-tail-deg: 0deg;
+    }
+  }
+}
+
+@utility tooltip-bottom {
+  @layer components.l1.l2 {
+    & > .tooltip-content,
+    &[data-tip]:before {
+      --tooltip-pos: calc(var(--tooltip-dim) + var(--tooltip-offset)) auto auto 50%;
+      --tooltip-pos-adjust: -50% 0;
+      --tooltip-origin: top;
+    }
+
+    &:after {
+      --tooltip-pos: calc(var(--tooltip-tail) + var(--tooltip-offset)) auto auto 50%;
+      --tooltip-pos-adjust: calc(-50% + 0.125rem - 1px) 0;
+      --tooltip-origin: top;
+      --tooltip-tail-deg: 180deg;
+    }
+  }
+}
+
+@utility tooltip-bottom-start {
+  @layer components.l1.l2 {
+    & > .tooltip-content,
+    &[data-tip]:before {
+      --tooltip-pos: calc(var(--tooltip-dim) + var(--tooltip-offset)) auto auto 0;
+      --tooltip-pos-adjust: 0 0;
+      --tooltip-origin: 0 0;
+    }
+
+    &:after {
+      --tooltip-pos: calc(var(--tooltip-tail) + var(--tooltip-offset)) auto auto 50%;
+      --tooltip-pos-adjust: calc(-50% + 0.125rem - 1px) 0;
+      --tooltip-origin: top;
+      --tooltip-tail-deg: 180deg;
+    }
+  }
+}
+
+@utility tooltip-bottom-end {
+  @layer components.l1.l2 {
+    & > .tooltip-content,
+    &[data-tip]:before {
+      --tooltip-pos: calc(var(--tooltip-dim) + var(--tooltip-offset)) 0 auto auto;
+      --tooltip-pos-adjust: 0 0;
+      --tooltip-origin: 100% 0;
+    }
+
+    &:after {
+      --tooltip-pos: calc(var(--tooltip-tail) + var(--tooltip-offset)) auto auto 50%;
+      --tooltip-pos-adjust: calc(-50% + 0.125rem - 1px) 0;
+      --tooltip-origin: top;
+      --tooltip-tail-deg: 180deg;
+    }
+  }
+}
+
+@utility tooltip-left {
+  @layer components.l1.l2 {
+    & > .tooltip-content,
+    &[data-tip]:before {
+      --tooltip-pos: 50% calc(var(--tooltip-dim) + var(--tooltip-offset)) auto auto;
+      --tooltip-pos-adjust: 0 -50%;
+      --tooltip-origin: 100%;
+    }
+
+    &:after {
+      --tooltip-pos: 50% calc(var(--tooltip-tail) - 2px + var(--tooltip-offset)) auto auto;
+      --tooltip-pos-adjust: 0 calc(-50% - 0.25rem - 1px);
+      --tooltip-origin: 100%;
+      --tooltip-tail-deg: 270deg;
+    }
+  }
+}
+
+@utility tooltip-left-start {
+  @layer components.l1.l2 {
+    & > .tooltip-content,
+    &[data-tip]:before {
+      --tooltip-pos: 0 calc(var(--tooltip-dim) + var(--tooltip-offset)) auto auto;
+      --tooltip-pos-adjust: 0 0;
+      --tooltip-origin: 100% 0;
+    }
+
+    &:after {
+      --tooltip-pos: 50% calc(var(--tooltip-tail) - 2px + var(--tooltip-offset)) auto auto;
+      --tooltip-pos-adjust: 0 calc(-50% - 0.25rem - 1px);
+      --tooltip-origin: 100%;
+      --tooltip-tail-deg: 270deg;
+    }
+  }
+}
+
+@utility tooltip-left-end {
+  @layer components.l1.l2 {
+    & > .tooltip-content,
+    &[data-tip]:before {
+      --tooltip-pos: auto calc(var(--tooltip-dim) + var(--tooltip-offset)) 0 auto;
+      --tooltip-pos-adjust: 0 0;
+      --tooltip-origin: 100% 100%;
+    }
+
+    &:after {
+      --tooltip-pos: 50% calc(var(--tooltip-tail) - 2px + var(--tooltip-offset)) auto auto;
+      --tooltip-pos-adjust: 0 calc(-50% - 0.25rem - 1px);
+      --tooltip-origin: 100%;
+      --tooltip-tail-deg: 270deg;
+    }
+  }
+}
+
+@utility tooltip-right {
+  @layer components.l1.l2 {
+    & > .tooltip-content,
+    &[data-tip]:before {
+      --tooltip-pos: 50% auto auto calc(var(--tooltip-dim) + var(--tooltip-offset));
+      --tooltip-pos-adjust: 0 -50%;
+      --tooltip-origin: 0;
+    }
+
+    &:after {
+      --tooltip-pos: 50% auto auto calc(var(--tooltip-tail) - 2px + var(--tooltip-offset));
+      --tooltip-pos-adjust: 0 calc(-50% - 0.25rem - 1px);
+      --tooltip-origin: 0;
+      --tooltip-tail-deg: 90deg;
+    }
+  }
+}
+
+@utility tooltip-right-start {
+  @layer components.l1.l2 {
+    & > .tooltip-content,
+    &[data-tip]:before {
+      --tooltip-pos: 0 auto auto calc(var(--tooltip-dim) + var(--tooltip-offset));
+      --tooltip-pos-adjust: 0 0;
+      --tooltip-origin: 0 0;
+    }
+
+    &:after {
+      --tooltip-pos: 50% auto auto calc(var(--tooltip-tail) - 2px + var(--tooltip-offset));
+      --tooltip-pos-adjust: 0 calc(-50% - 0.25rem - 1px);
+      --tooltip-origin: 0;
+      --tooltip-tail-deg: 90deg;
+    }
+  }
+}
+
+@utility tooltip-right-end {
+  @layer components.l1.l2 {
+    & > .tooltip-content,
+    &[data-tip]:before {
+      --tooltip-pos: auto auto 0 calc(var(--tooltip-dim) + var(--tooltip-offset));
+      --tooltip-pos-adjust: 0 0;
+      --tooltip-origin: 0 100%;
+    }
+
+    &:after {
+      --tooltip-pos: 50% auto auto calc(var(--tooltip-tail) - 2px + var(--tooltip-offset));
+      --tooltip-pos-adjust: 0 calc(-50% - 0.25rem - 1px);
+      --tooltip-origin: 0;
+      --tooltip-tail-deg: 90deg;
+    }
+  }
+}

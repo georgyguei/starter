@@ -1,0 +1,23 @@
+@utility link {
+  @layer components.l1.l2.l3 {
+    @apply inline-flex cursor-pointer items-center gap-1.5 decoration-current/20 underline-offset-3 hover:underline;
+  }
+}
+
+@utility link-box {
+  @layer components.l1.l2.l3 {
+    @apply relative;
+    .link {
+      @apply relative z-2;
+    }
+  }
+}
+
+@utility link-overlay {
+  @layer components.l1.l2.l3 {
+    @apply static hover:no-underline;
+    &::before {
+      @apply absolute inset-0 z-1 block cursor-[inherit] content-[""];
+    }
+  }
+}

@@ -1,0 +1,100 @@
+/* ─── Anchored container queries for popover arrow fallback ─── */
+/* Served as static CSS (bypasses PostCSS/LightningCSS) because   */
+/* Lightning CSS doesn't support the anchored() function yet.     */
+/* Baseline 2026 — works in modern browsers natively.             */
+
+/* Top → Bottom (top, top-start, top-end): arrow flips to top, points up */
+@container anchored(fallback:--popper-flip-to-bottom) {
+  .popover-arrow::after {
+    --popover-arrow-bottom: auto;
+    --popover-tail-deg: 180deg;
+    --popover-arrow-top: calc(anchor(bottom) + var(--popover-tail-height, 0rem) + var(--popover-offset, 0.25rem));
+    --popover-arrow-left: calc(anchor(center) - calc(var(--popover-tail-width) * 0.5));
+  }
+}
+
+@container anchored(fallback:--popper-flip-to-bottom-start) {
+  .popover-arrow::after {
+    --popover-arrow-bottom: auto;
+    --popover-tail-deg: 180deg;
+    --popover-arrow-top: calc(anchor(bottom) + var(--popover-tail-height, 0rem) + var(--popover-offset, 0.25rem));
+    --popover-arrow-left: calc(anchor(center) + calc(var(--popover-tail-width) * 0.5));
+  }
+}
+
+@container anchored(fallback:--popper-flip-to-bottom-end) {
+  .popover-arrow::after {
+    --popover-arrow-bottom: auto;
+    --popover-tail-deg: 180deg;
+    --popover-arrow-top: calc(anchor(bottom) + var(--popover-tail-height, 0rem) + var(--popover-offset, 0.25rem));
+    --popover-arrow-left: calc(anchor(center) - calc(var(--popover-tail-width) * 1.5));
+  }
+}
+
+/* Bottom → Top (bottom, bottom-start, bottom-end): arrow flips to bottom, points down */
+@container anchored(fallback:--popper-flip-to-top),
+       anchored(fallback:--popper-flip-to-top-start),
+       anchored(fallback:--popper-flip-to-top-end) {
+  .popover-arrow::after {
+    --popover-arrow-top: auto;
+    --popover-tail-deg: 0deg;
+    --popover-arrow-bottom: calc(anchor(top) + var(--popover-offset, 0.25rem) + 1px);
+    --popover-arrow-left: calc(anchor(center) - calc(var(--popover-tail-width) * 0.5));
+  }
+}
+
+/* Left → Right (left, left-start, left-end): arrow flips to left, points right */
+@container anchored(fallback:--popper-flip-to-right) {
+  .popover-arrow::after {
+    --popover-arrow-right: auto;
+    --popover-tail-deg: 90deg;
+    --popover-arrow-top: calc(anchor(center) - calc(var(--popover-tail-width) * 0.7));
+    --popover-arrow-left: calc(anchor(right) + calc(var(--popover-tail-height, 0rem) * 0.5) + var(--popover-offset, 0.25rem));
+  }
+}
+
+@container anchored(fallback:--popper-flip-to-right-start) {
+  .popover-arrow::after {
+    --popover-arrow-right: auto;
+    --popover-tail-deg: 90deg;
+    --popover-arrow-top: calc(anchor(center) - calc(var(--popover-tail-width) * 0.5));
+    --popover-arrow-left: calc(anchor(right) + var(--popover-tail-height, 0rem) + var(--popover-offset, 0.25rem));
+  }
+}
+
+@container anchored(fallback:--popper-flip-to-right-end) {
+  .popover-arrow::after {
+    --popover-arrow-right: auto;
+    --popover-tail-deg: 90deg;
+    --popover-arrow-top: calc(anchor(center) - calc(var(--popover-tail-width) * 0.9));
+    --popover-arrow-left: calc(anchor(right) + var(--popover-offset, 0.25rem));
+  }
+}
+
+/* Right → Left (right, right-start, right-end): arrow flips to right, points left */
+@container anchored(fallback:--popper-flip-to-left) {
+  .popover-arrow::after {
+    --popover-arrow-left: auto;
+    --popover-tail-deg: -90deg;
+    --popover-arrow-top: calc(anchor(center) - calc(var(--popover-tail-width) * 0.7));
+    --popover-arrow-right: calc(anchor(left) + calc(var(--popover-tail-height, 0rem) * 0.5) + var(--popover-offset, 0.25rem));
+  }
+}
+
+@container anchored(fallback:--popper-flip-to-left-start) {
+  .popover-arrow::after {
+    --popover-arrow-left: auto;
+    --popover-tail-deg: -90deg;
+    --popover-arrow-top: calc(anchor(center) - calc(var(--popover-tail-width) * 0.5));
+    --popover-arrow-right: calc(anchor(left) + var(--popover-tail-height, 0rem) + var(--popover-offset, 0.25rem));
+  }
+}
+
+@container anchored(fallback:--popper-flip-to-left-end) {
+  .popover-arrow::after {
+    --popover-arrow-left: auto;
+    --popover-tail-deg: -90deg;
+    --popover-arrow-top: calc(anchor(center) - calc(var(--popover-tail-width) * 0.9));
+    --popover-arrow-right: calc(anchor(left) + var(--popover-offset, 0.25rem));
+  }
+}

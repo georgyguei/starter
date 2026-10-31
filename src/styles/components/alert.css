@@ -1,0 +1,72 @@
+@utility alert-* {
+  --alert-color: --alpha(
+    --value(--color-*, [*]) /
+      --modifier("0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100", number)%
+  );
+}
+
+@utility alert-* {
+  --alert-color: --value(--color-*, [*]);
+}
+
+@utility alert {
+  @layer components.l1.l2.l3 {
+    --alert-bg: var(--alert-color, var(--color-base-200));
+    --alert-border-color: var(--alert-color, var(--color-base-200));
+    --alert-fg: var(--color-contrast, var(--color-base-content));
+    --alert-noise: var(--noise, 0);
+    --alert-fx-noise: var(--fx-noise, none);
+    --alert-shadow:
+      0 3px 0 -2px oklch(100% 0 0 / calc(var(--depth, 0) * 0.08)) inset,
+      0 1px color-mix(in oklab, color-mix(in oklab, #000 20%, var(--alert-color)) calc(var(--depth, 0) * 20%), #0000),
+      0 4px 3px -2px oklch(0% 0 0 / calc(var(--depth, 0) * 0.08));
+
+    @apply grid grid-flow-col grid-cols-[auto] items-center [justify-content:start] justify-items-start gap-4 rounded-lg border border-(--alert-border-color) [background-color:var(--alert-bg)] [background-image:none,var(--alert-fx-noise)] bg-size-[auto,calc(var(--noise)*100%)] px-4 py-3 text-start text-[0.875rem] leading-5 text-(--alert-fg) [box-shadow:var(--alert-shadow)] color-contrast-(--alert-color);
+
+    &:has(:nth-child(2)) {
+      @apply grid-cols-[auto_minmax(auto,1fr)];
+    }
+  }
+}
+
+@utility alert-soft {
+  @layer components.l1 {
+    --alert-fg: var(--alert-color, var(--color-base-content));
+    --alert-bg: color-mix(in oklab, currentColor 8%, var(--color-base-100));
+    --alert-border-color: color-mix(in oklab, currentColor 10%, var(--color-base-100));
+    --alert-shadow: none;
+    --alert-noise: 0;
+    --alert-fx-noise: none;
+  }
+}
+
+@utility alert-outline {
+  @layer components.l1 {
+    --alert-fg: var(--alert-color, var(--color-base-content));
+    --alert-bg: #0000;
+    --alert-border: currentColor;
+    --alert-shadow: none;
+    --alert-noise: 0;
+    --alert-fx-noise: none;
+  }
+}
+
+@utility alert-vertical {
+  @layer components.l1.l2 {
+    @apply grid-flow-row grid-cols-[auto] justify-center justify-items-center text-center;
+
+    &:has(:nth-child(2)) {
+      @apply grid-cols-[auto];
+    }
+  }
+}
+
+@utility alert-horizontal {
+  @layer components.l1.l2 {
+    @apply grid-flow-col grid-cols-[auto] [justify-content:start] justify-items-start text-start;
+
+    &:has(:nth-child(2)) {
+      @apply grid-cols-[auto_minmax(auto,1fr)];
+    }
+  }
+}
